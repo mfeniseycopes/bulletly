@@ -26,7 +26,8 @@
 
 ## Note
 - `id`: int, primary key
-- `body`: text, not null
+- `title`: string, not null
+- `body`: text, not null, default ''
 - `body_type`: enum, `['markdown', 'latex', 'plain']`, not null, default: `plain`
 
 ## User
