@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "console": "node util/console.js",
+    "c": "node util/console.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,7 @@
     "express": "^4.15.3",
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
+    "repl-promised": "^0.1.0",
     "sequelize": "^4.2.1"
   }
 }
