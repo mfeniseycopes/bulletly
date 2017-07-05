@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "console": "node util/console.js",
     "c": "node util/console.js"
   },
@@ -14,7 +15,10 @@
     "express": "^4.15.3",
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
-    "repl-promised": "^0.1.0",
     "sequelize": "^4.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "repl-promised": "^0.1.0"
   }
 }
