@@ -13,6 +13,14 @@ db.authenticate()
   .then(() => console.log('Connected to db'))
   .catch((e) => console.log('Failed to connect to db: ', e))
 
-db.import('./note.js')
+const Note = db.import('./note.js')
+const Bullet = db.import('./bullet.js')
+
+debugger
+
+Note.associate(db)
+Bullet.associate(db)
+
+console.log(db.Note)
 
 module.exports = db
