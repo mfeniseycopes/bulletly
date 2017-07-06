@@ -9,18 +9,16 @@ const db = new Sequelize('bullet_journal_dev', '', '', {
   }
 })
 
-db.authenticate()
-  .then(() => console.log('Connected to db'))
-  .catch((e) => console.log('Failed to connect to db: ', e))
+// db.authenticate()
+//   .then(() => console.log('Connected to db'))
+//   .catch((e) => console.log('Failed to connect to db: ', e))
 
-const Note = db.import('./note.js')
 const Bullet = db.import('./bullet.js')
+const Note = db.import('./note.js')
+const Task = db.import('./task.js')
 
-debugger
-
-Note.associate(db)
 Bullet.associate(db)
-
-console.log(db.Note)
+Note.associate(db)
+Task.associate(db)
 
 module.exports = db

@@ -1,4 +1,5 @@
 const noteDefn = (db, DataTypes) => {
+
   const Note = db.define('Note', {
     title: {
       type: DataTypes.STRING,
@@ -12,11 +13,12 @@ const noteDefn = (db, DataTypes) => {
   })
 
   Note.associate = db => {
-    
-    Note.belongsTo(db.models.Bullet, {
-      foreignKey: {
-        name: 'bullet_id',
-        allowNull: false,
+
+    Note.hasOne(db.models.Bullet, {
+      foreignKey: 'bulletable_id',
+      constraints: false,
+      scope: {
+        bulletable: 'Note'
       }
     })
   }
