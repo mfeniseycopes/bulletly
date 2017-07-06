@@ -41,6 +41,11 @@ const bulletDefn = (db, DataTypes) => {
       as: 'Task',
     })
 
+    Bullet.belongsTo(db.models.Event, {
+      foreignKey: 'bulletable_id',
+      constraints: false,
+      as: 'Event',
+    })
   }
 
   return Bullet

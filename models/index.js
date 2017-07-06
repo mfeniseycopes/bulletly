@@ -16,9 +16,11 @@ const db = new Sequelize('bullet_journal_dev', '', '', {
 const Bullet = db.import('./bullet.js')
 const Note = db.import('./note.js')
 const Task = db.import('./task.js')
+const Event = db.import('./event.js')
 
 Bullet.associate(db)
 Note.associate(db)
 Task.associate(db)
+Event.associate(db)
 
 module.exports = db
