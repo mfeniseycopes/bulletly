@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-
+console.log('----> DB CONNECTION')
 const db = new Sequelize('bullet_journal_dev', '', '', {
   dialect: 'postgres',
   pool: {
