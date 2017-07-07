@@ -1,8 +1,11 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
 const app = express()
 
 const taskRouter = require('./routes/taskRouter.js')
 
+app.use(bodyParser.json())
 app.use('/tasks', taskRouter)
 
 app.get('*', (req, res) => {

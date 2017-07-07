@@ -20,4 +20,62 @@ taskRouter.get('/', (req, res) => {
           .send(err))
 })
 
+taskRouter.post('/', (req, res) => {
+  db.models.Task
+    .create(req.body.task)
+    .then(
+      task => 
+        res
+          .status(200)
+          .send(task.toJSON()),
+      err =>
+        res
+          .status(500)
+          .send(err))
+})
+
+taskRouter.put('/:id', (req, res) => {
+  db.models.Task
+    .findById(req.params.id)
+    .then(
+      task => 
+        task
+          .update(req.body.task),
+      err => 
+        res
+          .status(404)
+          .send("The requested resource could not be found"))
+    .then(
+      task =>
+        res
+          .status(200)
+          .send(task.toJSON()),
+      err =>
+        res
+          .status(421)
+          .send(err))
+})
+
+taskRouter.delete('/:id', (req, res) => {
+  db.models.Task
+    .findById(req.params.id)
+    .then(
+      task =>
+        task.destroy()
+        .then(
+          () => 
+          res
+            .status(200)
+            .send(task.toJSON()),
+          err =>
+            res
+              .status(421)
+              .send(err)),
+      err => 
+        res
+          .status(404)
+          .send("The requested resource could not be found"))
+})
+
+
 module.exports = taskRouter
