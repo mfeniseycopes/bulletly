@@ -14,7 +14,6 @@ const bulletDefn = (db, DataTypes) => {
     parent_id: DataTypes.INTEGER,
   })
 
-
   Bullet.associate = db => {
 
     Bullet.belongsTo(db.models.Bullet, {
@@ -39,8 +38,9 @@ const bulletDefn = (db, DataTypes) => {
       },
       as: 'children',
     })
+  }
 
-    return Bullet
-  };
+  return Bullet
+}
 
   module.exports = bulletDefn
