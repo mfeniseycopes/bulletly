@@ -1,24 +1,35 @@
 const bulletDefn = (db, DataTypes) => {
 
   const Bullet = db.define('Bullet', {
-    topic_id: {
-      type: DataTypes.INTEGER
-    },
-    bulletable: {
-      type: DataTypes.STRING,
-    },
-    bulletable_id: {
-      type: DataTypes.INTEGER,
-    },
+
+    type: DataTypes.ENUM('task', 'note', 'event'),
+    title: DataTypes.STRING,
+    body: DataTypes.TEXT,
+    body_type: DataTypes.ENUM('markdown', 'latex'),
+    due_date: DataTypes.DATE,
+    completed_on: DataTypes.DATE,
+    recurrence: DataTypes.STRING,
+
+    topic_id: DataTypes.INTEGER,
+    parent_id: DataTypes.INTEGER,
   })
 
+
   Bullet.associate = db => {
-    Bullet.hasOne(db.models.Bullet, {
+
+    Bullet.belongsTo(db.models.Bullet, {
+      foreignKey: {
+        name: 'topic_id',
+      },
+      as: 'topic',
+    })
+
+    Bullet.belongsTo(db.models.Bullet, {
       foreignKey: {
         name: 'parent_id',
         allowNull: true,
       },
-      as: 'Parent' 
+      as: 'parent',
     })
 
     Bullet.hasMany(db.models.Bullet, {
@@ -26,29 +37,10 @@ const bulletDefn = (db, DataTypes) => {
         name: 'parent_id',
         allowNull: true,
       },
-      as: 'Children'
+      as: 'children',
     })
 
-    Bullet.belongsTo(db.models.Note, {
-      foreignKey: 'bulletable_id',
-      constraints: false,
-      as: 'Note',
-    })
+    return Bullet
+  };
 
-    Bullet.belongsTo(db.models.Task, {
-      foreignKey: 'bulletable_id',
-      constraints: false,
-      as: 'Task',
-    })
-
-    Bullet.belongsTo(db.models.Event, {
-      foreignKey: 'bulletable_id',
-      constraints: false,
-      as: 'Event',
-    })
-  }
-
-  return Bullet
-};
-
-module.exports = bulletDefn
+  module.exports = bulletDefn
