@@ -9,11 +9,10 @@ const topicRouter = require('./routes/topicRouter')
 app.use(bodyParser.json())
 app.use('/bullets', bulletRouter)
 app.use('/topics', topicRouter)
+app.use('/static', express.static('public'))
 
-app.get('*', (req, res) => {
-  res.status(200).send({
-    message: 'Everything is a success!',
-  })
+app.get('/', (req, res) => {
+  res.render('index.pug')
 })
 
 const startServer = () => 
