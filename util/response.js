@@ -18,4 +18,8 @@ const four04Response = res => () =>
     .status(404)
     .send("The requested resource could not be found")
 
-module.exports = { singleResponse, arrayResponse }
+module.exports = { 
+  singleResponse, 
+  arrayResponse, 
+  four04Response 
+}

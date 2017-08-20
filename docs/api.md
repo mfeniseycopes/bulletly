@@ -9,7 +9,6 @@
 
 ## Bullet
 - `GET /bullets`
-- `GET /topics/:topicId/bullets`
 - `GET /bullets/:id`
 - `POST /bullets`
 - `POST /topics/:topicId/bullets`

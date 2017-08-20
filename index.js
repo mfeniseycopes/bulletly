@@ -3,10 +3,12 @@ const bodyParser = require('body-parser')
 
 const app = express()
 
-const bulletRouter = require('./routes/bulletRouter.js')
+const bulletRouter = require('./routes/bulletRouter')
+const topicRouter = require('./routes/topicRouter')
 
 app.use(bodyParser.json())
 app.use('/bullets', bulletRouter)
+app.use('/topics', topicRouter)
 
 app.get('*', (req, res) => {
   res.status(200).send({

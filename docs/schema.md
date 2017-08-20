@@ -14,7 +14,7 @@
 
 ## Topic
 - `id`: int, primary key
-- `name`: string, not null
+- `title`: string, not null
 
 ## User
 - TBD
