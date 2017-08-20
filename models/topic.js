@@ -14,7 +14,9 @@ const topicDefn = (db, DataTypes) => {
       foreignKey: {
         name: 'topic_id',
       },
-      as: 'bullets'
+      as: 'bullets',
+      hooks: true,
+      onDelete: 'CASCADE',
     })
   }
 

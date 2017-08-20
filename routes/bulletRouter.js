@@ -35,7 +35,7 @@ bulletRouter.post('/', (req, res) =>
     .then(singleResponse(res))
     .catch(console.warn))
 
-bulletRouter.post('/:parentId', (req, res) =>
+bulletRouter.post('/:parentId/bullets', (req, res) =>
   Bullet
     .findById(req.params.parentId)
     .then(createBullet(req.body.bullet))

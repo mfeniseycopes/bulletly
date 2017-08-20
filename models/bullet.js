@@ -47,6 +47,8 @@ const bulletDefn = (db, DataTypes) => {
         allowNull: true,
       },
       as: 'children',
+      hooks: true,
+      onDelete: 'CASCADE',
     })
   }
 
