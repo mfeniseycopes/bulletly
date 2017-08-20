@@ -1,8 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 
+import store from './reducers'
 import components from './components/'
 const { App, Topics, Bullets } = components
+
+window.store = store
 
 const dummyTopics = [
   { id: 1, title: 'topic 1' },
@@ -25,10 +29,12 @@ const dummyBullets = [
 ]
 
 const app = (
-  <App>
-    <Topics topics={dummyTopics} />
-    <Bullets bullets={dummyBullets} />
-  </App>
+  <Provider store={ store }>
+    <App>
+      <Topics topics={dummyTopics} />
+      <Bullets bullets={dummyBullets} />
+    </App>
+  </Provider>
 )
 
 const renderReact = () => ReactDOM.render(app,  document.getElementById('react-root'))
