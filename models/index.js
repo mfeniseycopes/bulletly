@@ -17,6 +17,6 @@ const Bullet = db.import('./bullet.js')
 
 Bullet.associate(db)
 
-db.sync({force: true})
+//db.sync({force: true})
 
 module.exports = db
