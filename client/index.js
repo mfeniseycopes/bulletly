@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import components from './components/index.js'
+import components from './components/'
 const { App, Topics, Bullets } = components
 
 const dummyTopics = [
