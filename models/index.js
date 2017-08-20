@@ -14,8 +14,10 @@ const db = new Sequelize('bullet_journal_dev', '', '', {
 //   .catch((e) => console.log('Failed to connect to db: ', e))
 
 const Bullet = db.import('./bullet.js')
+const Topic = db.import('./topic.js')
 
 Bullet.associate(db)
+Topic.associate(db)
 
 //db.sync({force: true})
 

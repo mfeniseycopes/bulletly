@@ -1,7 +1,5 @@
 # Schema
 
-## UPDATE
-
 ## Bullet
 - `id`: int, primary key
 - `type`: enum, `['task', 'note', 'event']`, not null
