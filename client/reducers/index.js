@@ -5,13 +5,8 @@ import {
 } from 'redux'
 import logger from 'redux-logger'
 
-const topics = (state, action) => {
-  return{}
-}
-
-const bullets = (state, action) => {
-  return {}
-}
+import topics from './topics'
+import bullets from './bullets'
 
 const root = combineReducers({
   entities: combineReducers({ topics, bullets })
