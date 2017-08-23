@@ -23,10 +23,10 @@ topicRouter.get('/', (req, res) =>
     .then(arrayResponse(res))
     .catch(console.log))
 
-topicRouter.get('/:topicId', (req, res) =>
+topicRouter.get('/:topicId/bullets', (req, res) =>
   Topic
-    .findById(req.params.topicId, 
-      { include: { model: Bullet, as: 'bullets', include: 'children' } })
+    .findById(req.params.topicId)
+    .then(t => t.getBullets())
     .then(singleResponse(res)))
 
 topicRouter.post('/', (req, res) =>

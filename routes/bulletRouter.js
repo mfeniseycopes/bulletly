@@ -24,8 +24,8 @@ bulletRouter.get('/', (req, res) =>
 
 bulletRouter.get('/:id', (req, res) =>
   Bullet
-    .findAll({ include: 'children', where: { id: req.params.id } })
-    .then(singleResponse(res[0])))
+    .findById(req.params.id)
+    .then(singleResponse(res)))
 
 bulletRouter.post('/', (req, res) =>
   Bullet

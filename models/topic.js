@@ -11,9 +11,7 @@ const topicDefn = (db, DataTypes) => {
   Topic.associate = db => {
   
     Topic.hasMany(db.models.Bullet, {
-      foreignKey: {
-        name: 'topic_id',
-      },
+      foreignKey: 'topic_id',
       as: 'bullets',
       hooks: true,
       onDelete: 'CASCADE',

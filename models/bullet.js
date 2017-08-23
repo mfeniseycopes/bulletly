@@ -23,29 +23,22 @@ const bulletDefn = (db, DataTypes) => {
     },
     parent_id: DataTypes.INTEGER,
   })
+  
 
   Bullet.associate = db => {
 
     Bullet.belongsTo(db.models.Topic, {
-      foreignKey: {
-        name: 'topic_id',
-      },
+      foreignKey: 'topic_id',
       as: 'topic',
     })
 
     Bullet.belongsTo(db.models.Bullet, {
-      foreignKey: {
-        name: 'parent_id',
-        allowNull: true,
-      },
+      foreignKey: 'parent_id',
       as: 'parent',
     })
 
     Bullet.hasMany(db.models.Bullet, {
-      foreignKey: {
-        name: 'parent_id',
-        allowNull: true,
-      },
+      foreignKey: 'parent_id',
       as: 'children',
       hooks: true,
       onDelete: 'CASCADE',
