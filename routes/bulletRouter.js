@@ -20,40 +20,34 @@ bulletRouter.all('/', (req, res, next) => {
 bulletRouter.get('/', (req, res) =>
   Bullet
     .findAll()
-    .then(arrayResponse(res))
-    .catch(console.warn))
+    .then(arrayResponse(res)))
 
 bulletRouter.get('/:id', (req, res) =>
   Bullet
     .findById(req.params.id)
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 bulletRouter.post('/', (req, res) =>
   Bullet
     .create(req.body.bullet)
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 bulletRouter.post('/:parentId/bullets', (req, res) =>
   Bullet
     .findById(req.params.parentId)
     .then(createBullet(req.body.bullet))
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 bulletRouter.put('/:id', (req, res) =>
   Bullet
     .findById(req.params.id)
     .then(update(req.body.bullet))
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 bulletRouter.delete('/:id', (req, res) =>
   Bullet
     .findById(req.params.id)
     .then(destroy())
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 module.exports = bulletRouter

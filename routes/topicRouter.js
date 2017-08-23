@@ -21,39 +21,34 @@ topicRouter.get('/', (req, res) =>
   Topic
     .findAll()
     .then(arrayResponse(res))
-    .catch(console.warn))
+    .catch(console.log))
 
 topicRouter.get('/:topicId', (req, res) =>
   Topic
     .findById(req.params.topicId, { include: 'bullets' })
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 topicRouter.post('/', (req, res) =>
   Topic
     .create(req.body.topic)
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 topicRouter.post('/:topicId/bullets', (req, res) =>
   Topic
     .findById(req.params.topicId)
     .then(createBullet(req.body.bullet))
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 topicRouter.put('/:topicId', (req, res) =>
   Topic
     .findById(req.params.topicId)
     .then(update(req.body.topic))
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 topicRouter.delete('/:topicId', (req, res) =>
   Topic
     .findById(req.params.topicId)
     .then(destroy())
-    .then(singleResponse(res))
-    .catch(console.warn))
+    .then(singleResponse(res)))
 
 module.exports = topicRouter
