@@ -1,26 +1,46 @@
 import { normalizeArr, identity } from './util.js'
 import { 
-  RECEIVE_NEW_TOPIC, 
+  RECEIVE_TOPIC, 
   RECEIVE_UPDATED_TOPIC, 
   REMOVE_TOPIC, 
   RECEIVE_BULLET, 
+  RECEIVE_BULLETS, 
   REMOVE_BULLET 
 } from '../actions'
 
 const bullets = (state = {}, { type, payload }) => {
+
+  let newState
+
   switch(type) {
     case RECEIVE_BULLET:
-      return Object.assign({}, state, normalizeArr([payload.bullet]))
-    case RECEIVE_NEW_TOPIC:
-      return Object.assign({}, state, normalizeArr(payload.bullets))
+      newState = Object.assign({}, state, normalizeArr([payload.bullet]))
+      break
+      
+    case RECEIVE_BULLETS:
+      newState = 
+        Object.assign({}, state, normalizeArr(payload.bullets))
+      break
+
+    case RECEIVE_TOPIC:
+      newState = 
+        Object.assign({}, state, normalizeArr(payload.topic.bullets))
+      break
+
     case REMOVE_TOPIC:
-      // this will need removal of all bullets with removed topicId
+      newState = Object.keys(state)
+        .filter(key => state[key].topic_id !== payload.topic_id)
+        .reduce((obj, key) => { obj[key] = state[key]; return obj; }, {})
+      break
+
     case REMOVE_BULLET:
-      // this will need recursive deletion
-      return state
+      break
+
     default:
       return state
   }
+
+  return newState
 }
 
 export default bullets

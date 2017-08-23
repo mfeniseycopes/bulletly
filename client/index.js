@@ -12,6 +12,12 @@ import {
   createTopic,
   updateTopic,
   destroyTopic,
+  retrieveBullets,
+  retrieveBullet,
+  createTopicBullet,
+  createSubBullet,
+  updateBullet,
+  destroyBullet,
 } from './actions'
 window.store = store
 
@@ -21,6 +27,12 @@ window.actions = {
   createTopic,
   updateTopic,
   destroyTopic,
+  retrieveBullets,
+  retrieveBullet,
+  createTopicBullet,
+  createSubBullet,
+  updateBullet,
+  destroyBullet,
 }
 
 const dummyTopics = [

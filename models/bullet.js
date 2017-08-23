@@ -26,7 +26,7 @@ const bulletDefn = (db, DataTypes) => {
 
   Bullet.associate = db => {
 
-    Bullet.belongsTo(db.models.Bullet, {
+    Bullet.belongsTo(db.models.Topic, {
       foreignKey: {
         name: 'topic_id',
       },
