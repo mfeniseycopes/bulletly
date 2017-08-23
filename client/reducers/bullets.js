@@ -4,36 +4,40 @@ import {
   RECEIVE_UPDATED_TOPIC, 
   REMOVE_TOPIC, 
   RECEIVE_BULLET, 
+  RECEIVE_NEW_BULLET, 
   RECEIVE_BULLETS, 
   REMOVE_BULLET 
 } from '../actions'
 
+const withChildIds = (bullet, state) => {
+  const newBullet = Object.assign({}, bullet)
+
+  newBullet.child_ids = Object.keys(state)
+    .filter(key => state[key].parent_id === bullet.id)
+
+  return newBullet
+}
+
+
 const bullets = (state = {}, { type, payload }) => {
 
-  let newState
+  let bullet, newState
 
   switch(type) {
     case RECEIVE_BULLET:
-      newState = Object.assign({}, state, normalizeArr([payload.bullet]))
+      bullet = withChildIds(payload.bullet, state)
+      newState = Object.assign({}, state, normalizeArr([bullet]))
       break
       
     case RECEIVE_BULLETS:
       newState = 
-        Object.assign({}, state, normalizeArr(payload.bullets))
-      break
-
-    case RECEIVE_TOPIC:
-      newState = 
-        Object.assign({}, state, normalizeArr(payload.topic.bullets))
-      break
-
-    case REMOVE_TOPIC:
-      newState = Object.keys(state)
-        .filter(key => state[key].topic_id !== payload.topic_id)
-        .reduce((obj, key) => { obj[key] = state[key]; return obj; }, {})
+        Object.assign({}, state)
+      payload.bullets.forEach(bullet => newState[bullet.id] = withChildIds(bullet, newState)) 
       break
 
     case REMOVE_BULLET:
+      newState = Object.assign({}, state)
+      delete newState[payload.bullet.id]
       break
 
     default:
