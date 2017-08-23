@@ -6,6 +6,23 @@ import store from './reducers'
 import components from './components'
 const { App, Topics, Bullets } = components
 
+import { 
+  retrieveTopics,
+  retrieveTopic,
+  createTopic,
+  updateTopic,
+  destroyTopic,
+} from './actions'
+window.store = store
+
+window.actions = {
+  retrieveTopics,
+  retrieveTopic,
+  createTopic,
+  updateTopic,
+  destroyTopic,
+}
+
 const dummyTopics = [
   { id: 1, title: 'topic 1' },
   { id: 2, title: 'topic 2' },

@@ -1,14 +1,26 @@
-import { normalizeArr, identity } from './util.js'
+import { 
+  normalizeArr, 
+  identity 
+} from './util'
 
-const RECEIVE_SINGLE_TOPIC = 'RECEIVE_SINGLE_TOPIC'
-const RECEIVE_MULTIPLE_TOPICS = 'RECEIVE_MULTIPLE_TOPICS'
+import { 
+  RECEIVE_NEW_TOPIC, 
+  RECEIVE_UPDATED_TOPIC, 
+  RECEIVE_TOPICS, 
+  REMOVE_TOPIC 
+} from '../actions'
 
-const topics = (state = {}, action) => {
-  switch(action.type) {
-    case RECEIVE_SINGLE_TOPIC:
-      return Object.assign({}, state, normalizeArr(...payload.topic))
-    case RECEIVE_MULTIPLE_TOPICS:
+const topics = (state = {}, { type, payload }) => {
+  switch(type) {
+    case RECEIVE_NEW_TOPIC:
+    case RECEIVE_UPDATED_TOPIC:
+      return Object.assign({}, state, normalizeArr([payload.topic]))
+    case RECEIVE_TOPICS:
       return Object.assign({}, state, normalizeArr(payload.topics))
+    case REMOVE_TOPIC:
+      const newState = Object.assign({}, state)
+      delete newState[payload.topic.id]
+      return newState
     default:
       return state
   }
