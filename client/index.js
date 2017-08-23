@@ -5,13 +5,6 @@ import { Provider } from 'react-redux'
 import store from './reducers'
 import components from './components'
 const { App, Topics, Bullets } = components
-import { fetchTopics, fetchTopic, postTopic, putTopic, deleteTopic } from './api'
-
-window.fetchTopic = fetchTopic
-window.fetchTopics = fetchTopics
-window.postTopic = postTopic
-window.putTopic = putTopic
-window.deleteTopic = deleteTopic
 
 const dummyTopics = [
   { id: 1, title: 'topic 1' },
