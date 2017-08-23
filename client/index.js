@@ -3,10 +3,15 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
 import store from './reducers'
-import components from './components/'
+import components from './components'
 const { App, Topics, Bullets } = components
+import { fetchTopics, fetchTopic, postTopic, putTopic, deleteTopic } from './api'
 
-window.store = store
+window.fetchTopic = fetchTopic
+window.fetchTopics = fetchTopics
+window.postTopic = postTopic
+window.putTopic = putTopic
+window.deleteTopic = deleteTopic
 
 const dummyTopics = [
   { id: 1, title: 'topic 1' },
@@ -28,7 +33,7 @@ const dummyBullets = [
   { id: 7, title: 'bullet 7' },
 ]
 
-const app = (
+const root = (
   <Provider store={ store }>
     <App>
       <Topics topics={dummyTopics} />
@@ -37,6 +42,7 @@ const app = (
   </Provider>
 )
 
-const renderReact = () => ReactDOM.render(app,  document.getElementById('react-root'))
+const renderReact = () =>
+  ReactDOM.render(root,  document.getElementById('react-root'))
 
 document.addEventListener('DOMContentLoaded', renderReact)

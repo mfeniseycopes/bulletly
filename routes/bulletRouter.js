@@ -29,19 +29,19 @@ bulletRouter.get('/:id', (req, res) =>
 
 bulletRouter.post('/', (req, res) =>
   Bullet
-    .create(req.body.bullet)
+    .create(req.body)
     .then(singleResponse(res)))
 
 bulletRouter.post('/:parentId/bullets', (req, res) =>
   Bullet
     .findById(req.params.parentId)
-    .then(createBullet(req.body.bullet))
+    .then(createBullet(req.body))
     .then(singleResponse(res)))
 
 bulletRouter.put('/:id', (req, res) =>
   Bullet
     .findById(req.params.id)
-    .then(update(req.body.bullet))
+    .then(update(req.body))
     .then(singleResponse(res)))
 
 bulletRouter.delete('/:id', (req, res) =>

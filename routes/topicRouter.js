@@ -30,19 +30,19 @@ topicRouter.get('/:topicId', (req, res) =>
 
 topicRouter.post('/', (req, res) =>
   Topic
-    .create(req.body.topic)
+    .create(req.body)
     .then(singleResponse(res)))
 
 topicRouter.post('/:topicId/bullets', (req, res) =>
   Topic
     .findById(req.params.topicId)
-    .then(createBullet(req.body.bullet))
+    .then(createBullet(req.body))
     .then(singleResponse(res)))
 
 topicRouter.put('/:topicId', (req, res) =>
   Topic
     .findById(req.params.topicId)
-    .then(update(req.body.topic))
+    .then(update(req.body))
     .then(singleResponse(res)))
 
 topicRouter.delete('/:topicId', (req, res) =>
