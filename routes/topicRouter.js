@@ -25,7 +25,8 @@ topicRouter.get('/', (req, res) =>
 
 topicRouter.get('/:topicId', (req, res) =>
   Topic
-    .findById(req.params.topicId, { include: 'bullets' })
+    .findById(req.params.topicId, 
+      { include: { model: Bullet, as: 'bullets', include: 'children' } })
     .then(singleResponse(res)))
 
 topicRouter.post('/', (req, res) =>
