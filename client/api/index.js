@@ -17,6 +17,8 @@ const betterFetch = (path, options) =>
 
 // API CALLS 
 
+// TOPICS
+
 export const fetchTopics = () =>
   betterFetch('/topics')
 
@@ -34,8 +36,13 @@ export const putTopic = topic =>
 export const deleteTopic = id =>
   betterFetch(`/topics/${id}`, { method: 'delete' })
 
+// BULLETS
+
 export const fetchBullets = () =>
   betterFetch('/bullets')
+
+export const fetchTopicBullets = id =>
+  betterFetch(`/topics/${id}/bullets`)
 
 export const fetchBullet = id =>
   betterFetch(`/bullets/${id}`)

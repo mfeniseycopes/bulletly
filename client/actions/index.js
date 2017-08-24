@@ -1,6 +1,6 @@
 import { 
   fetchTopics, 
-  fetchTopic,
+  fetchTopicBullets,
   postTopic,
   putTopic,
   deleteTopic,
@@ -17,44 +17,30 @@ const dispatchAction = (dispatch, action) => payload =>
 
 export const [
   RECEIVE_BULLET,
-  RECEIVE_NEW_BULLET,
   RECEIVE_BULLETS,
   REMOVE_BULLET,
   RECEIVE_TOPIC,
-  RECEIVE_NEW_TOPIC,
-  RECEIVE_UPDATED_TOPIC,
-  REMOVE_TOPIC,
   RECEIVE_TOPICS,
+  REMOVE_TOPIC,
 ] = [
   'RECEIVE_BULLET',
-  'RECEIVE_NEW_BULLET',
   'RECEIVE_BULLETS',
   'REMOVE_BULLET',
   'RECEIVE_TOPIC',
-  'RECEIVE_NEW_TOPIC',
-  'RECEIVE_UPDATED_TOPIC',
-  'REMOVE_TOPIC',
   'RECEIVE_TOPICS',
+  'REMOVE_TOPIC',
 ]
 
-const receiveTopics = topics => ({
-  type: RECEIVE_TOPICS,
-  payload: { topics },
-})
+// ACTION CREATORS
 
 const receiveTopic = topic => ({
   type: RECEIVE_TOPIC,
   payload: { topic },
 })
 
-const receiveNewTopic = topic => ({
-  type: RECEIVE_NEW_TOPIC,
-  payload: { topic, bullets: topic.bullets },
-})
-
-const receiveUpdatedTopic = topic => ({
-  type: RECEIVE_UPDATED_TOPIC,
-  payload: { topic },
+const receiveTopics = topics => ({
+  type: RECEIVE_TOPICS,
+  payload: { topics },
 })
 
 const removeTopic = topic => ({
@@ -62,19 +48,14 @@ const removeTopic = topic => ({
   payload: { topic },
 })
 
-const receiveBullets = bullets => ({
-  type: RECEIVE_BULLETS,
-  payload: { bullets },
-})
-
 const receiveBullet = bullet => ({
   type: RECEIVE_BULLET,
   payload: { bullet },
 })
 
-const receiveNewBullet = bullet => ({
-  type: RECEIVE_NEW_BULLET,
-  payload: { bullet },
+const receiveBullets = bullets => ({
+  type: RECEIVE_BULLETS,
+  payload: { bullets },
 })
 
 const removeBullet = bullet => ({
@@ -88,17 +69,17 @@ export const retrieveTopics = () => dispatch =>
   fetchTopics()
     .then(dispatchAction(dispatch, receiveTopics))
 
-export const retrieveTopic = id => dispatch =>
-  fetchTopic(id)
-    .then(dispatchAction(dispatch, receiveTopic))
+export const retrieveTopicBullets = id => dispatch =>
+  fetchTopicBullets(id)
+    .then(dispatchAction(dispatch, receiveBullets))
 
 export const createTopic = topic => dispatch =>
   postTopic(topic)
-    .then(dispatchAction(dispatch, receiveNewTopic))
+    .then(dispatchAction(dispatch, receiveTopic))
 
 export const updateTopic = topic => dispatch =>
   putTopic(topic)
-    .then(dispatchAction(dispatch, receiveUpdatedTopic))
+    .then(dispatchAction(dispatch, receiveTopic))
 
 export const destroyTopic = id => dispatch =>
   deleteTopic(id)
@@ -116,11 +97,11 @@ export const retrieveBullet = id => dispatch =>
 
 export const createTopicBullet = (topicId, bullet) => dispatch =>
   postTopicBullet(topicId, bullet)
-    .then(dispatchAction(dispatch, receiveNewBullet))
+    .then(dispatchAction(dispatch, receiveBullet))
 
 export const createSubBullet = (parentId, bullet) => dispatch =>
   postSubBullet(parentId, bullet)
-    .then(dispatchAction(dispatch, receiveNewBullet))
+    .then(dispatchAction(dispatch, receiveBullet))
 
 export const updateBullet = bullet => dispatch =>
   putBullet(bullet)
