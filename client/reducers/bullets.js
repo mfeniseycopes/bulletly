@@ -56,9 +56,9 @@ const bullets = (state = {}, { type, payload }) => {
       break
 
     case REMOVE_TOPIC:
-      newState = Object.keys
+      newState = Object.keys(state)
         .filter(id => state[id].topic_id !== payload.topic.id)
-        .reduce((obj, id) => state[id])
+        .map((obj, id) => state[id])
 
     default:
       return state
