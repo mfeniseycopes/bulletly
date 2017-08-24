@@ -19,9 +19,8 @@ const topics = (state = {}, { type, payload }) => {
   switch(type) {
 
     case RECEIVE_TOPIC:
-      topic = Object.assign({}, payload.topic)
-      topic.bullet_ids = topic.bullets.map(bullet => bullet.id)
-      delete topic.bullets
+      topic = Object.assign({}, state[payload.topic.id], payload.topic)
+      debugger
       newState = Object.assign({}, state, normalizeArr([topic]))
       break
 

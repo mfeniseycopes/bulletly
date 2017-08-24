@@ -1863,6 +1863,10 @@ mem@^1.1.0:
   dependencies:
     mimic-fn "^1.0.0"
 
+memoized-change-handler@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/memoized-change-handler/-/memoized-change-handler-1.0.1.tgz#fc91fe946df7f4a1d8f143fb506d67a621a0ceb6"
+
 memory-fs@^0.4.0, memory-fs@~0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"

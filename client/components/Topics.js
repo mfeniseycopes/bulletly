@@ -1,7 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { values } from 'ramda'
+import { 
+  clone,
+  values,
+} from 'ramda'
+import changeHandler from 'memoized-change-handler'
 
 import {
   retrieveTopics,
@@ -10,14 +14,53 @@ import {
   destroyTopic,
 } from '../actions'
 
-const topicLi = topic => (
-  <li key={topic.id}>{topic.title}</li>
-)
+class TopicItem extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = clone(props.topic)
+    this.handleChange = changeHandler(this)
+  }
 
-const Topics = ({ topics, retrieveTopics }) => (
+  componentWillReceiveProps(newProps) {
+    this.setState(newProps.topic)
+  }
+
+  render() {
+    const { topic, updateTopic, destroyTopic } = this.props
+
+    return ( 
+    <li key={topic.id}>
+      <form 
+        onSubmit={ e => { e.preventDefault(); updateTopic(this.state)  }} >
+        <input
+          value={this.state.title}
+          placeholder='Rename Topic' 
+          onChange={this.handleChange('title')}/>
+      </form>
+      <button
+        onClick={() => destroyTopic(topic.id) }
+        title='delete'>
+        ⓧ 
+      </button>
+    </li>
+    )
+  }
+}
+
+const Topics = ({ topics, retrieveTopics, createTopic, updateTopic, destroyTopic }) => (
   <section>
     <ul>
-      { topics.map(topicLi) }
+
+      { topics.map(topic => <TopicItem { ...{ topic, updateTopic, destroyTopic } } />) }
+
+      <li key={null}>
+        <form 
+          onSubmit={ e => { e.preventDefault(); createTopic({ title: e.target.firstElementChild.value })  }} >
+          <input 
+            placeholder='New Topic' />
+        </form>
+      </li>
+
     </ul>
     <button onClick={retrieveTopics} >
       Fetch Topics
