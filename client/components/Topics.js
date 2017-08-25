@@ -43,7 +43,7 @@ class TopicItem extends React.Component {
       <button
         onClick={() => destroyTopic(topic.id) }
         title='delete'>
-        ⓧ 
+       ╳ 
       </button>
     </li>
   )
@@ -91,5 +91,4 @@ const mapDispatchToProps = {
 }
 
 export default 
-  fetchable(retrieveTopics)
-    (connect(mapStateToProps, mapDispatchToProps)(Topics))
+  fetchable(retrieveTopics, null, connect(mapStateToProps, mapDispatchToProps)(Topics))

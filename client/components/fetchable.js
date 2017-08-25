@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { merge } from 'ramda'
 
 class Fetcher extends React.Component {
 
   componentDidMount() {
-    debugger
     this.props.dispatch(this.props.action(this.props.arg))
   }
 
@@ -14,11 +14,17 @@ class Fetcher extends React.Component {
   }
 
   render() {
-    const { action, args, dispatch, component: Component, ...props } = this.props
-    debugger
+    const {action, args, dispatch, component: Component, ...props} = this.props
     return <Component {...props} /> 
   }
 }
 
-export default (action, arg) => (component) => connect(null, dispatch => ({ dispatch }))
-  (props => <Fetcher action={action} arg={arg} component={component} {...(props)} />)
+const DispatchingFetcher = connect(null, dispatch => ({ dispatch }) )(Fetcher)
+
+DispatchingFetcher.displayName = 'DispatchingFetcher'
+
+const fetchable = (action, arg, component) => 
+  (props => <DispatchingFetcher 
+    { ...merge(props, {action, arg, component}) }/>)
+
+export default fetchable
