@@ -50,22 +50,33 @@ class TopicItem extends React.Component {
   }
 }
 
-const Topics = ({ topics, retrieveTopics, createTopic, updateTopic, destroyTopic }) => (
-    <section>
-      <ul>
+const submitTopicItemForm = createTopic => e => {
+  e.preventDefault()
+  createTopic({ title: e.target.firstElementChild.value })
+}
 
-        { topics.map(topic => <TopicItem { ...{ topic, updateTopic, destroyTopic } } />) }
+const TopicItemForm = ({createTopic}) => (
+  <li key={0}>
+    <form 
+      onSubmit={submitTopicItemForm(createTopic)} >
+      <input 
+        placeholder='New Topic' />
+    </form>
+  </li>
+)
 
-        <li key={null}>
-          <form 
-            onSubmit={ e => { e.preventDefault(); createTopic({ title: e.target.firstElementChild.value })  }} >
-            <input 
-              placeholder='New Topic' />
-          </form>
-        </li>
+const Topics = ({topics, retrieveTopics, createTopic, updateTopic, destroyTopic}) => (
+  <section>
+    <ul>
 
-      </ul>
-    </section>
+      {topics.map(topic => (
+        <TopicItem key={topic.id} {...{topic, updateTopic, destroyTopic}} />
+      ))}
+
+      <TopicItemForm {...{createTopic}} />
+
+    </ul>
+  </section>
 )
 
 const mapStateToProps = (state, ownProps) => ({
