@@ -1,6 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { 
+  connect 
+} from 'react-redux'
 import { 
   clone,
   values,
@@ -13,6 +14,8 @@ import {
   updateTopic,
   destroyTopic,
 } from '../actions'
+
+import fetchable from './fetchable'
 
 class TopicItem extends React.Component {
   constructor(props) {
@@ -29,7 +32,7 @@ class TopicItem extends React.Component {
     const { topic, updateTopic, destroyTopic } = this.props
 
     return ( 
-    <li key={topic.id}>
+    <li>
       <form 
         onSubmit={ e => { e.preventDefault(); updateTopic(this.state)  }} >
         <input
@@ -43,29 +46,26 @@ class TopicItem extends React.Component {
         ⓧ 
       </button>
     </li>
-    )
+  )
   }
 }
 
 const Topics = ({ topics, retrieveTopics, createTopic, updateTopic, destroyTopic }) => (
-  <section>
-    <ul>
+    <section>
+      <ul>
 
-      { topics.map(topic => <TopicItem { ...{ topic, updateTopic, destroyTopic } } />) }
+        { topics.map(topic => <TopicItem { ...{ topic, updateTopic, destroyTopic } } />) }
 
-      <li key={null}>
-        <form 
-          onSubmit={ e => { e.preventDefault(); createTopic({ title: e.target.firstElementChild.value })  }} >
-          <input 
-            placeholder='New Topic' />
-        </form>
-      </li>
+        <li key={null}>
+          <form 
+            onSubmit={ e => { e.preventDefault(); createTopic({ title: e.target.firstElementChild.value })  }} >
+            <input 
+              placeholder='New Topic' />
+          </form>
+        </li>
 
-    </ul>
-    <button onClick={retrieveTopics} >
-      Fetch Topics
-    </button>
-  </section>
+      </ul>
+    </section>
 )
 
 const mapStateToProps = (state, ownProps) => ({
@@ -79,4 +79,6 @@ const mapDispatchToProps = {
   destroyTopic,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Topics)
+export default 
+  fetchable(retrieveTopics)
+    (connect(mapStateToProps, mapDispatchToProps)(Topics))
