@@ -28,3 +28,4 @@ const fetchable = (action, arg, component) =>
     { ...merge(props, {action, arg, component}) }/>)
 
 export default fetchable
+

@@ -27,7 +27,7 @@ topicRouter.get('/:topicId/bullets', (req, res) =>
   Topic
     .findById(req.params.topicId)
     .then(t => t.getBullets())
-    .then(singleResponse(res)))
+    .then(arrayResponse(res)))
 
 topicRouter.post('/', (req, res) =>
   Topic

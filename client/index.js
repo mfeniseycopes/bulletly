@@ -6,12 +6,18 @@ import store from './reducers'
 import App from './components/App'
 import Topics from './components/Topics'
 import TopicBullets from './components/TopicBullets'
+import { retrieveBullets, createTopicBullet, createSubBullet } from './actions'
+
+window.store = store
+window.createTopicBullet = createTopicBullet
+window.createSubBullet = createSubBullet
+//store.dispatch(retrieveBullets())
+
 
 const root = (
   <Provider store={ store }>
     <App>
-      <Topics />
-      <TopicBullets topic_id="1"/>
+      <TopicBullets topic_id="13"/>
     </App>
   </Provider>
 )

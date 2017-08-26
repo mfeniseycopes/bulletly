@@ -20,7 +20,6 @@ const topics = (state = {}, { type, payload }) => {
 
     case RECEIVE_TOPIC:
       topic = Object.assign({}, state[payload.topic.id], payload.topic)
-      debugger
       newState = Object.assign({}, state, normalizeArr([topic]))
       break
 
@@ -39,6 +38,8 @@ const topics = (state = {}, { type, payload }) => {
       if (state[bullet.topic_id] && !state[bullet.topic_id].bullet_ids.includes(bullet.id)) {
         newState = Object.assign({}, state)
         newState[bullet.topic_id].bullet_ids.push(bullet.id)
+      } else {
+        return state
       }
       break
 

@@ -8,13 +8,12 @@ import {
 
 const withChildIds = (bullet, state) => {
   const newBullet = Object.assign({}, bullet)
-
+  
   newBullet.child_ids = Object.keys(state)
     .filter(key => state[key].parent_id === bullet.id)
 
   return newBullet
 }
-
 
 const bullets = (state = {}, { type, payload }) => {
 
@@ -36,6 +35,7 @@ const bullets = (state = {}, { type, payload }) => {
       payload.bullets.forEach(
         bullet => {
           newState[bullet.id] = withChildIds(bullet, newState)
+
           if (!state[bullet.id] && bullet.parent_id) 
             newState[bullet.parent_id]
               .child_ids
@@ -59,6 +59,7 @@ const bullets = (state = {}, { type, payload }) => {
       newState = Object.keys(state)
         .filter(id => state[id].topic_id !== payload.topic.id)
         .map((obj, id) => state[id])
+      break
 
     default:
       return state
