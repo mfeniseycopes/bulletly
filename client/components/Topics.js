@@ -15,8 +15,6 @@ import {
   destroyTopic,
 } from '../actions'
 
-import fetchable from './fetchable'
-
 class TopicItem extends React.Component {
   constructor(props) {
     super(props)
@@ -43,7 +41,7 @@ class TopicItem extends React.Component {
       <button
         onClick={() => destroyTopic(topic.id) }
         title='delete'>
-       ╳ 
+        ╳ 
       </button>
     </li>
   )
@@ -65,19 +63,29 @@ const TopicItemForm = ({createTopic}) => (
   </li>
 )
 
-const Topics = ({topics, retrieveTopics, createTopic, updateTopic, destroyTopic}) => (
-  <section>
-    <ul>
+class Topics extends React.Component {
 
-      {topics.map(topic => (
-        <TopicItem key={topic.id} {...{topic, updateTopic, destroyTopic}} />
-      ))}
+  componentDidMount() {
+    this.props.retrieveTopics()
+  }
 
-      <TopicItemForm {...{createTopic}} />
+  render() {
+    const { topics, createTopic, updateTopic, destroyTopic } = this.props
 
-    </ul>
-  </section>
-)
+    return (
+      <section>
+        <ul>
+
+          { topics.map(topic => (
+            <TopicItem key={topic.id} { ...{ topic, updateTopic, destroyTopic } } />
+          ))}
+
+          <TopicItemForm {...{createTopic}} />
+
+        </ul>
+      </section>)
+  }
+}
 
 const mapStateToProps = (state, ownProps) => ({
   topics: values(state.entities.topics)
@@ -91,4 +99,4 @@ const mapDispatchToProps = {
 }
 
 export default 
-  fetchable(retrieveTopics, null, connect(mapStateToProps, mapDispatchToProps)(Topics))
+fetchable(retrieveTopics, null, connect(mapStateToProps, mapDispatchToProps)(Topics))
