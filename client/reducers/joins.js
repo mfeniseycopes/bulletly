@@ -2,8 +2,11 @@ import {
   combineReducers, 
 } from 'redux'
 import {
+  append,
   assoc,
+  assocPath,
   dissoc,
+  dissocPath,
   groupBy,
   map,
   merge,
@@ -11,6 +14,7 @@ import {
 
 import { 
   REMOVE_TOPIC, 
+  RECEIVE_NEW_BULLET,
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
   REMOVE_BULLET 
@@ -18,25 +22,27 @@ import {
 
 const topicBullets = (state={}, {type, payload}) => {
 
+  let bullet, bullets, bullet_ids, topic
+
   switch(type) {
 
-    case RECEIVE_BULLET:
-      return merge(
-        state, 
-        map(
-          b => b.id, 
-          groupBy(b => b.topic_id, [payload.bullet])))
+    case RECEIVE_NEW_BULLET:
+      bullet = payload.bullet
+      return assocPath([bullet.topic_id, bullet.id], bullet.id, state)
 
     case RECEIVE_BULLETS:
+      bullets = payload.bullets
       return map(
-        bs => map(b => b.id, bs),
-        groupBy(b => b.topic_id, payload.bullets))
+        bs => bs.reduce((obj, b) => assoc(b.id, b.id, obj), {}),
+        groupBy(b => b.topic_id, bullets))
 
     case REMOVE_BULLET:
-      return 
+      bullet = payload.bullet
+      return dissocPath([bullet.topic_ic, bullet.id], state)
 
     case REMOVE_TOPIC:
-      return dissoc(payload.topic.id, state)
+      topic = payload.topic
+      return dissoc(topic.id, state)
 
     default:
       return state

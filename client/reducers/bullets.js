@@ -1,6 +1,9 @@
+import { merge, reduce } from 'ramda'
+
 import { normalizeArr, identity } from './util.js'
 import { 
   REMOVE_TOPIC, 
+  RECEIVE_NEW_BULLET,
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
   REMOVE_BULLET 
@@ -21,27 +24,14 @@ const bullets = (state = {}, { type, payload }) => {
 
   switch(type) {
     case RECEIVE_BULLET:
-      bullet = withChildIds(payload.bullet, state)
-      newState = Object.assign({}, state, normalizeArr([bullet]))
-      if (!state[bullet.id] && bullet.parent_id) 
-        newState[bullet.parent_id]
-          .child_ids
-          .push(bullet.id)
-      break
+    case RECEIVE_NEW_BULLET:
+      return merge(state, { [payload.bullet.id]: payload.bullet })
 
     case RECEIVE_BULLETS:
-      newState = 
-        Object.assign({}, state)
-      payload.bullets.forEach(
-        bullet => {
-          newState[bullet.id] = withChildIds(bullet, newState)
-
-          if (!state[bullet.id] && bullet.parent_id) 
-            newState[bullet.parent_id]
-              .child_ids
-              .push(bullet.id)
-        }) 
-      break
+      return reduce(
+        (acc, b) => merge(acc, { [b.id]: b }), 
+        {}, 
+        payload.bullets) 
 
     case REMOVE_BULLET:
       bullet = payload.bullet
