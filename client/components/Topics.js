@@ -4,6 +4,10 @@ import {
   connect 
 } from 'react-redux'
 
+import {
+  Link,
+} from 'react-router-dom'
+
 import { 
   clone,
   values,
@@ -34,6 +38,7 @@ class TopicItem extends React.Component {
 
     return ( 
     <li>
+
       <form 
         onSubmit={ e => { e.preventDefault(); updateTopic(this.state)  }} >
         <input
@@ -41,11 +46,15 @@ class TopicItem extends React.Component {
           placeholder='Rename Topic' 
           onChange={this.handleChange('title')}/>
       </form>
+
+      <Link to={`/topic/${topic.id}`} >→</Link>
+
       <button
         onClick={() => destroyTopic(topic.id) }
         title='delete'>
         ╳ 
       </button>
+
     </li>
   )
   }

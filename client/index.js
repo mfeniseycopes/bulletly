@@ -1,19 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { HashRouter, Route } from 'react-router-dom'
 
 import store from './reducers'
 import App from './components/App'
 import Topics from './components/Topics'
 import TopicBullets from './components/TopicBullets'
-import { retrieveBullets, createTopicBullet, createSubBullet } from './actions'
 
 const root = (
   <Provider store={ store }>
-    <App>
-      <Topics />
-      <TopicBullets topic_id="13"/>
-    </App>
+    <HashRouter>
+      <App>
+        <Route path='/' component={Topics} />
+        <Route path='/topic/:topicId' component={TopicBullets} />
+      </App>
+    </HashRouter>
   </Provider>
 )
 
