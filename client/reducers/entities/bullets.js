@@ -2,7 +2,9 @@ import {
   assoc, 
   dissoc, 
   filter, 
-  groupBy
+  groupBy,
+  head,
+  map,
 } from 'ramda'
 
 import { 
@@ -11,7 +13,7 @@ import {
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
   REMOVE_BULLET 
-} from '../actions'
+} from '../../actions'
 
 const bullets = (state = {}, { type, payload }) => {
 
@@ -24,7 +26,9 @@ const bullets = (state = {}, { type, payload }) => {
       return assoc(bullet.id, bullet, state)
 
     case RECEIVE_BULLETS:
-      return groupBy(bullet => bullet.id, payload.bullets)
+      return map(
+        head,
+        groupBy(bullet => bullet.id, payload.bullets))
 
     case REMOVE_BULLET:
       bullet = payload.bullet

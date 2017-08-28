@@ -3,13 +3,15 @@ import {
   dissoc,
   filter,
   groupBy,
+  head,
+  map,
 } from 'ramda'
 
 import {
   RECEIVE_TOPIC,
   RECEIVE_TOPICS, 
   REMOVE_TOPIC,
-} from '../actions'
+} from '../../actions'
 
 const topics = (state = {}, { type, payload }) => {
 
@@ -22,7 +24,9 @@ const topics = (state = {}, { type, payload }) => {
       return assoc(topic.id, topic, state)
 
     case RECEIVE_TOPICS:
-      return groupBy(topic => topic.id, payload.topics)
+      return map(
+        head,
+        groupBy(topic => topic.id, payload.topics))
 
     case REMOVE_TOPIC:
       topic = payload.topic

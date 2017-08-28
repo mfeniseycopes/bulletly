@@ -6,12 +6,11 @@ import {
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import topics from './topics'
-import bullets from './bullets'
+import entities from './entities'
 import joins from './joins'
 
 const root = combineReducers({
-  entities: combineReducers({ topics, bullets }),
+  entities,
   joins,
 })
 

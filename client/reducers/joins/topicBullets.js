@@ -1,12 +1,14 @@
 import { 
   combineReducers, 
 } from 'redux'
+
 import {
   assoc,
   assocPath,
   dissoc,
   dissocPath,
   groupBy,
+  map,
 } from 'ramda'
 
 import { 
@@ -14,7 +16,7 @@ import {
   RECEIVE_BULLETS, 
   REMOVE_BULLET,
   REMOVE_TOPIC, 
-} from '../actions'
+} from '../../actions'
 
 const topicBullets = (state={}, {type, payload}) => {
 
@@ -43,7 +45,6 @@ const topicBullets = (state={}, {type, payload}) => {
     default:
       return state
   }
-
 }
 
-export default combineReducers({ topicBullets }) 
+export default topicBullets
