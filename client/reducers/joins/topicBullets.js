@@ -25,11 +25,12 @@ const topicBullets = (state={}, {type, payload}) => {
   switch(type) {
 
     case RECEIVE_BULLET:
+      if (bullet.parent_id) return state
       bullet = payload.bullet
       return assocPath([bullet.topic_id, bullet.id], bullet.id, state)
 
     case RECEIVE_BULLETS:
-      bullets = payload.bullets
+      bullets = payload.bullets.filter(b => !b.parent_id)
       return map(
         bs => bs.reduce((obj, b) => assoc(b.id, b.id, obj), {}),
         groupBy(b => b.topic_id, bullets))
