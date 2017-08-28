@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { 
   connect 
 } from 'react-redux'
+
 import { 
   clone,
   values,
@@ -16,6 +18,7 @@ import {
 } from '../actions'
 
 class TopicItem extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = clone(props.topic)
@@ -98,5 +101,4 @@ const mapDispatchToProps = {
   destroyTopic,
 }
 
-export default 
-fetchable(retrieveTopics, null, connect(mapStateToProps, mapDispatchToProps)(Topics))
+export default connect(mapStateToProps, mapDispatchToProps)(Topics)

@@ -25,6 +25,7 @@ const topicBullets = (state={}, {type, payload}) => {
   switch(type) {
 
     case RECEIVE_BULLET:
+      bullet = payload.bullet
       if (bullet.parent_id) return state
       bullet = payload.bullet
       return assocPath([bullet.topic_id, bullet.id], bullet.id, state)
