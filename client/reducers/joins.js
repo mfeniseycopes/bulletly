@@ -2,22 +2,18 @@ import {
   combineReducers, 
 } from 'redux'
 import {
-  append,
   assoc,
   assocPath,
   dissoc,
   dissocPath,
   groupBy,
-  map,
-  merge,
 } from 'ramda'
 
 import { 
-  REMOVE_TOPIC, 
-  RECEIVE_NEW_BULLET,
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
-  REMOVE_BULLET 
+  REMOVE_BULLET,
+  REMOVE_TOPIC, 
 } from '../actions'
 
 const topicBullets = (state={}, {type, payload}) => {
@@ -26,7 +22,7 @@ const topicBullets = (state={}, {type, payload}) => {
 
   switch(type) {
 
-    case RECEIVE_NEW_BULLET:
+    case RECEIVE_BULLET:
       bullet = payload.bullet
       return assocPath([bullet.topic_id, bullet.id], bullet.id, state)
 
