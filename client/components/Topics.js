@@ -1,79 +1,13 @@
-import React from 'react'
-
-import { 
-  connect 
-} from 'react-redux'
-
-import {
-  Link,
-} from 'react-router-dom'
-
-import { 
-  clone,
-  values,
-} from 'ramda'
 import changeHandler from 'memoized-change-handler'
+import React from 'react'
+import { connect, } from 'react-redux'
+import { values, } from 'ramda'
+import { Link } from 'react-router-dom'
 
-import {
-  retrieveTopics,
-  createTopic,
-  updateTopic,
-  destroyTopic,
-} from '../actions'
+import { retrieveTopics, createTopic, } from '../actions'
+import TopicItem from './TopicItem'
 
-class TopicItem extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = clone(props.topic)
-    this.handleChange = changeHandler(this)
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState(newProps.topic)
-  }
-
-  render() {
-    const { topic, updateTopic, destroyTopic } = this.props
-
-    return ( 
-    <li>
-
-      <form 
-        onSubmit={ e => { e.preventDefault(); updateTopic(this.state)  }} >
-        <input
-          value={this.state.title}
-          placeholder='Rename Topic' 
-          onChange={this.handleChange('title')}/>
-      </form>
-
-      <Link to={`/topic/${topic.id}`} >→</Link>
-
-      <button
-        onClick={() => destroyTopic(topic.id) }
-        title='delete'>
-        ╳ 
-      </button>
-
-    </li>
-  )
-  }
-}
-
-const submitTopicItemForm = createTopic => e => {
-  e.preventDefault()
-  createTopic({ title: e.target.firstElementChild.value })
-}
-
-const TopicItemForm = ({createTopic}) => (
-  <li key={0}>
-    <form 
-      onSubmit={submitTopicItemForm(createTopic)} >
-      <input 
-        placeholder='New Topic' />
-    </form>
-  </li>
-)
+import topics from '../styles/topics.scss'
 
 class Topics extends React.Component {
 
@@ -85,14 +19,14 @@ class Topics extends React.Component {
     const { topics, createTopic, updateTopic, destroyTopic } = this.props
 
     return (
-      <section>
+      <section className='topics'>
         <ul>
-
-          { topics.map(topic => (
-            <TopicItem key={topic.id} { ...{ topic, updateTopic, destroyTopic } } />
+          
+          <li><Link to='?newtopic=true'>+ new topic</Link></li>
+          
+          { topics.map(topic => ( 
+            <TopicItem key={topic.id} topic={topic} />
           ))}
-
-          <TopicItemForm {...{createTopic}} />
 
         </ul>
       </section>)
@@ -106,8 +40,6 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = {
   retrieveTopics,
   createTopic,
-  updateTopic,
-  destroyTopic,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Topics)

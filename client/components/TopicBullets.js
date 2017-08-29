@@ -37,7 +37,6 @@ class TopicBullets extends React.Component {
   }
 
   render(){
-    debugger
 
     if (this.state.fetching) return <div>'...loading'</div>
 

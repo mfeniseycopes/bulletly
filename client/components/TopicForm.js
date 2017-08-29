@@ -1,17 +1,16 @@
 import changeHandler from 'memoized-change-handler'
 import React from 'react'
 
-class BulletForm extends React.Component {
-
+class TopicForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = props.bullet ? props.bullet : { title: '', type: 'note' }
+    this.state = props.topic || { title: '', }
     this.handleChange = changeHandler(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.bullet ^ newProps.bullet)
+    if (this.props.topic ^ newProps.topic)
       this.setState(props.bullet)
   }
 
@@ -22,16 +21,16 @@ class BulletForm extends React.Component {
 
   render() {
     return (
-      <form 
+      <form
         onSubmit={this.onSubmit} >
 
         <input
           value={this.state.title}
-          placeholder={this.props.name}
+          placeHolder={this.props.name}
           onChange={this.handleChange('title')}/>
 
       </form>)
-  }
+  } 
 }
 
-export default BulletForm
+export default TopicForm

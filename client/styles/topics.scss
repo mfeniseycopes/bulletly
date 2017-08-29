@@ -1,0 +1,25 @@
+@import './inline-form.scss';
+@import './colors.scss';
+
+.topics {
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px white solid;
+
+    li {
+      border-bottom: 1px #55555A solid;
+
+      a {
+        padding: 20px;
+        width: 200px;
+        display: block;
+
+        &:hover {
+          background-color: $light-grey;
+        }
+      }
+    }
+  } 
+}

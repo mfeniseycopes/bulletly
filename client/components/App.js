@@ -1,11 +1,22 @@
 import React from 'react'
 
-import styles from '../styles/app.css'
+import styles from '../styles/app.scss'
 
 const App = ({ children }) => (
   <main className='app'>
-    <h1>xyxBullet Journal</h1>
-    { children }
+
+    <navbar>
+      
+      <h1>Bullet Journal</h1>
+
+    </navbar>
+
+    <main>
+
+      { children }
+
+    </main>
+
   </main>
 )
 
