@@ -4,8 +4,7 @@ module.exports = {
 	context: __dirname,
 	entry: './index.js',
 	output: {
-		path: path.resolve(__dirname),
-		filename: '../public/bundle.js',
+		filename: './bundle.js',
 	},
 	module: {
 		loaders: [
