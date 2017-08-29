@@ -1,25 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { HashRouter, Route } from 'react-router-dom'
+import { AppContainer } from 'react-hot-loader'
 
-import store from './reducers'
-import App from './components/App'
-import Topics from './components/Topics'
-import TopicBullets from './components/TopicBullets'
+import Root from './components/Root'
 
-const root = (
-  <Provider store={ store }>
-    <HashRouter>
-      <App>
-        <Route path='/' component={Topics} />
-        <Route path='/topic/:topicId' component={TopicBullets} />
-      </App>
-    </HashRouter>
-  </Provider>
-)
+const render = (Component, id) => {
+  debugger
+  ReactDOM.render(
+    <AppContainer>  
+      <Component />
+    </AppContainer>,
+    document.getElementById(id))
+}
 
-const renderReact = () =>
-  ReactDOM.render(root,  document.getElementById('react-root'))
+if (module.hot) 
+  module.hot.accept('./components/Root.js', () => { 
+    debugger
+    let NextRoot = require('./components/Root.js').default
+    render(Root, 'react-root') 
+  })
 
-document.addEventListener('DOMContentLoaded', renderReact)
+
+document.addEventListener('DOMContentLoaded', () => render(Root, 'react-root'))

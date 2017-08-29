@@ -2,7 +2,10 @@ var path = require('path');
 
 module.exports = {
 	context: __dirname,
-	entry: './index.js',
+  entry: [
+    'react-hot-loader/patch',
+    './index.js',
+  ],
 	output: {
 		filename: './bundle.js',
 	},

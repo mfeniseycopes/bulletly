@@ -4,7 +4,7 @@ import styles from '../styles/app.css'
 
 const App = ({ children }) => (
   <main className='app'>
-    <h1>Bullet Journal</h1>
+    <h1>xyxBullet Journal</h1>
     { children }
   </main>
 )
