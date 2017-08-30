@@ -1,7 +1,7 @@
 const bulletDefn = (db, DataTypes) => {
 
   const Bullet = db.define('bullet', {
-
+    ord: DataTypes.INTEGER,
     type: {
       type: DataTypes.ENUM('task', 'note', 'event'),
       allowNull: false,
@@ -25,41 +25,65 @@ const bulletDefn = (db, DataTypes) => {
       allowNull: false,
     },
     parent_id: DataTypes.INTEGER,
-    prev_id: DataTypes.INTEGER,
+  }, {
+    hooks: {
+      afterValidate: (bullet) => {
+
+        Bullet.findById(bullet.id)
+          .then(oldBullet => {
+            let where
+            let shift
+
+            if (oldBullet) {
+              where = { ord: { $between: [oldBullet.ord, bullet.ord].sort() } }
+              shift = ldBullet.ord < bullet.ord ? -1 : 1
+            } else {
+              where = { ord: { $gte: bullet.ord } }
+              shift = 1
+            }
+
+            Bullet.findAll({ where })
+              .then(bullets => {
+                bullets.forEach(bullet => bullet.ord += shift) 
+                bullets.forEach(bullet => bullet.save({ validate: false, hooks: false }))
+              })
+          })
+      }
+    }
   })
-  
 
-  Bullet.associate = db => {
 
-    Bullet.belongsTo(db.models.topic, {
-      foreignKey: 'topic_id',
-      as: 'topic',
-    })
+    Bullet.associate = db => {
 
-    Bullet.belongsTo(db.models.bullet, {
-      foreignKey: 'parent_id',
-      as: 'parent',
-    })
+      Bullet.belongsTo(db.models.topic, {
+        foreignKey: 'topic_id',
+        as: 'topic',
+      })
 
-    Bullet.hasMany(db.models.bullet, {
-      foreignKey: 'parent_id',
-      as: 'children',
-      hooks: true,
-      onDelete: 'CASCADE',
-    })
+      Bullet.belongsTo(db.models.bullet, {
+        foreignKey: 'parent_id',
+        as: 'parent',
+      })
 
-    Bullet.belongsTo(db.models.bullet, {
-      foreignKey: 'prev_id',
-      as: 'prev',
-    })
+      Bullet.hasMany(db.models.bullet, {
+        foreignKey: 'parent_id',
+        as: 'children',
+        hooks: true,
+        onDelete: 'CASCADE',
+      })
 
-    Bullet.hasMany(db.models.bullet, {
-      foreignKey: 'prev_id',
-      as: 'next',
-    })
+      Bullet.belongsTo(db.models.bullet, {
+        foreignKey: 'prev_id',
+        as: 'prev',
+      })
+
+      Bullet.hasMany(db.models.bullet, {
+        foreignKey: 'prev_id',
+        as: 'next',
+      })
+    }
+
+    return Bullet
   }
 
-  return Bullet
-}
-
-  module.exports = bulletDefn
+    module.exports = bulletDefn
