@@ -33,7 +33,7 @@ class TopicBullets extends React.Component {
   }
 
   createTopicBullet(bullet) {
-    this.props.createTopicBullet(this.props.match.params.topicId, bullet)
+    return this.props.createTopicBullet(this.props.match.params.topicId, bullet)
   }
 
   render(){
@@ -43,9 +43,11 @@ class TopicBullets extends React.Component {
     if (!this.state.fetching && !this.props.topic) return <Redirect to='/' />
 
     return (
-      <Bullets 
-        bullet_ids={this.props.bullet_ids} 
-        submit={this.createTopicBullet} />)
+      <article className='bullets'>
+        <Bullets 
+          bullet_ids={this.props.bullet_ids} 
+          createBullet={this.createTopicBullet} />
+      </article>)
   }
 }
 

@@ -1,4 +1,3 @@
-import changeHandler from 'memoized-change-handler'
 import { values } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -7,61 +6,79 @@ import {
   createSubBullet,
   updateBullet,
   destroyBullet,
+  receiveBullet,
+  removeBullet,
 } from '../actions'
 
 import BulletForm from './BulletForm'
 import Bullets from './Bullets'
 
+let _tempId = -1
+
 class BulletItem extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {...(this.props.bullet)} 
-    this.handleChange = changeHandler(this)
-    this.createSubBullet = this.createSubBullet.bind(this)
-    this.updateBullet = this.updateBullet.bind(this)
+    this.saveBullet = this.saveBullet.bind(this)
     this.destroyBullet = this.destroyBullet.bind(this)
+    this.createSubBullet = this.createSubBullet.bind(this)
+    this.receiveStubBullet = this.receiveStubBullet.bind(this)
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState(newProps.bullet)
+  createSubBullet(bullet) {
+    return this.props.createSubBullet(this.props.bullet.id, bullet)
   }
 
-  createSubBullet(newBullet) {
-    this.props.createSubBullet(this.props.bullet.id, newBullet)
+  receiveStubBullet() {
+    return this.props.receiveBullet({ 
+      id: _tempId,
+      title: '', 
+      type: 'note', 
+      parent_id: this.props.bullet.parent_id,
+      topic_id: this.props.bullet.topic_id,
+    })
   }
 
-  updateBullet(e) {
-    e.preventDefault()
-    this.props.updateBullet(this.state)
+  saveBullet(bullet) {
+    if (bullet.id > 0) {
+      this.props.updateBullet(bullet)
+        .then(this.receiveStubBullet)
+    } else {
+      const { id, ...submittableBullet } = bullet
+      this.props.createBullet(submittableBullet)
+        .then(() => this.props.removeBullet(bullet))
+        .then(this.receiveStubBullet)
+    }
   }
 
-  destroyBullet(e) {
-    e.preventDefault()
-    this.props.destroyBullet(this.props.bullet.id)
+  destroyBullet(bullet) {
+    (bullet.id > 0 ?
+      this.props.destroyBullet(bullet.id) :
+      this.props.removeBullet(bullet))
   }
 
   render() {
-
-    const { bullet, updateBullet, destroyBullet } = this.props
+    const { createSubBullet, saveBullet, destroyBullet } = this
+    const bullet = this.props.bullet
     
     return (
       <li>
 
-        <BulletForm 
-          bullet={bullet}
-          submit={updateBullet}
-          name='Rename Bullet' />
+        <div className='bullet'>
+          <i className="fa fa-circle" aria-hidden="true"></i>
 
-        <button
-          onClick={this.destroyBullet}
-          title='delete'>
-          ╳ 
-        </button>
+          <BulletForm 
+            bullet={bullet}
+            save={saveBullet}
+            delete={destroyBullet}
+            name={bullet.id > 0 ? 'Update Bullet' : 'New Bullet'}/>
 
-        <Bullets 
+        </div>
+
+        <Bullets
           bullet_ids={this.props.child_ids} 
-          submit={this.createSubBullet} />
+          createBullet={createSubBullet} />
+
       </li>
     )
   }
@@ -76,6 +93,8 @@ const mapDispatchToProps = {
   createSubBullet,
   updateBullet,
   destroyBullet,
+  receiveBullet,
+  removeBullet,
 }
 
 const ConnectedBulletItem = connect(mapStateToProps, mapDispatchToProps)(BulletItem)

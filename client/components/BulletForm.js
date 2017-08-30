@@ -17,20 +17,25 @@ class BulletForm extends React.Component {
 
   onSubmit(e) {
     e.preventDefault()
-    this.props.submit(this.state)
+    this.props.save(this.state)
   }
 
   render() {
     return (
-      <form 
-        onSubmit={this.onSubmit} >
+      <div>
+        <form 
+          onSubmit={this.onSubmit} >
 
-        <input
-          value={this.state.title}
-          placeholder={this.props.name}
-          onChange={this.handleChange('title')}/>
+          <input
+            value={this.state.title}
+            placeholder={this.props.name}
+            onChange={this.handleChange('title')}/>
+        </form>
 
-      </form>)
+        <button onClick={e => {e.preventDefault(); this.props.delete(this.state)}}>
+          x
+        </button>
+      </div>)
   }
 }
 

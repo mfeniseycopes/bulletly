@@ -48,7 +48,7 @@ const removeTopic = topic => ({
   payload: { topic },
 })
 
-const receiveBullet = bullet => ({
+export const receiveBullet = bullet => ({
   type: RECEIVE_BULLET,
   payload: { bullet },
 })
@@ -58,7 +58,7 @@ const receiveBullets = bullets => ({
   payload: { bullets },
 })
 
-const removeBullet = bullet => ({
+export const removeBullet = bullet => ({
   type: REMOVE_BULLET,
   payload: { bullet }
 })

@@ -9,6 +9,7 @@ import {
   dissocPath,
   groupBy,
   map,
+  toString,
 } from 'ramda'
 
 import { 
@@ -38,7 +39,8 @@ const topicBullets = (state={}, {type, payload}) => {
 
     case REMOVE_BULLET:
       bullet = payload.bullet
-      return dissocPath([bullet.topic_ic, bullet.id], state)
+      const path = [bullet.topic_id, bullet.id].map(toString)
+      return dissocPath(path, state)
 
     case REMOVE_TOPIC:
       topic = payload.topic

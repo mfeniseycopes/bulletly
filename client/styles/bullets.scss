@@ -1,0 +1,21 @@
+.bullet-sub-list {
+  padding-left: 20px ;
+
+  li {
+    display: flex;
+    flex-direction: column;
+
+    .bullet {
+      display: flex;
+      flex-direction: row;
+      padding: 10px;
+
+      input {
+        border: none;
+        background-color: inherit;
+        outline: none;
+        padding: none;
+      }
+    }
+  } 
+}

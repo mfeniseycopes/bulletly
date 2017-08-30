@@ -17,7 +17,7 @@ import {
   REMOVE_BULLET,
 } from '../../actions'
 
-const topicBullets = (state={}, {type, payload}) => {
+const subBullets = (state={}, {type, payload}) => {
 
   let bullet, bullets
 
@@ -35,11 +35,13 @@ const topicBullets = (state={}, {type, payload}) => {
 
     case REMOVE_BULLET:
       bullet = payload.bullet
-      return dissocPath([bullet.parent_id, bullet.id], state)
+      return bullet.parent_id ? 
+        dissocPath([bullet.parent_id, bullet.id], state) :
+        state
 
     default:
       return state
   }
 }
 
-export default topicBullets
+export default subBullets
