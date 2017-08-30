@@ -6,7 +6,10 @@ const bulletDefn = (db, DataTypes) => {
       type: DataTypes.ENUM('task', 'note', 'event'),
       allowNull: false,
     },
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     body: DataTypes.TEXT,
     body_type: {
       type: DataTypes.ENUM('markdown', 'latex'),
@@ -50,11 +53,10 @@ const bulletDefn = (db, DataTypes) => {
       as: 'prev',
     })
 
-    Bullet.hasOne(db.models.bullet, {
+    Bullet.hasMany(db.models.bullet, {
       foreignKey: 'prev_id',
       as: 'next',
     })
-
   }
 
   return Bullet

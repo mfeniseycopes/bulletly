@@ -1,4 +1,5 @@
-import { values } from 'ramda'
+import changeHandler from 'memoized-change-handler'
+import { sort, values } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -10,93 +11,122 @@ import {
   removeBullet,
 } from '../actions'
 
-import BulletForm from './BulletForm'
 import Bullets from './Bullets'
-
-let _tempId = -1
 
 class BulletItem extends React.Component {
 
   constructor(props) {
     super(props)
-    this.saveBullet = this.saveBullet.bind(this)
-    this.destroyBullet = this.destroyBullet.bind(this)
-    this.createSubBullet = this.createSubBullet.bind(this)
+
+    this.state = props.bullet
+
+    this.handleChange = changeHandler(this)
     this.createNextBullet = this.createNextBullet.bind(this)
-    this.receiveStubBullet = this.receiveStubBullet.bind(this)
+    this.destroyBullet = this.destroyBullet.bind(this)
+    this.indentBullet = this.indentBullet.bind(this)
+    this.updateBullet = this.updateBullet.bind(this)
+    this.createSubBullet = this.createSubBullet.bind(this)
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt)
+      this.setState(newProps.bullet)
+  }
+
+  newSiblingBullet() {
+    const bullet = this.props.bullet
+
+    return {
+      prev_id: bullet.id,
+      parent_id: bullet.parent_id,
+      topic_id: bullet.topic_id,
+      type: 'note',
+    }
+  }
+
+  createNextBullet() {
+    return this.props.createBullet(this.newSiblingBullet())
   }
 
   createSubBullet(bullet) {
     return this.props.createSubBullet(this.props.bullet.id, bullet)
   }
 
-  createNextBullet(prevId) {
-    return bullet => {
-      bullet.prev_id = prevId
-      return this.props.createSubBullet(this.props.bullet,id, bullet)
+  updateBullet(e) {
+    debugger
+    e.preventDefault()
+
+    this.props.updateBullet(this.state)
+      .then(this.createNextBullet)
+  }
+
+  destroyBullet(e) {
+    e.preventDefault()
+
+    return this.props.destroyBullet(this.props.bullet.id)
+  }
+
+  indentBullet(e) {
+    e.preventDefault()
+
+    const { bullet } = this.props
+    const shiftedBullet = {
+      ...bullet, 
+      parent_id: bullet.prev_id, 
+      prev_id: null,
     }
-  }
 
-  receiveStubBullet() {
-    return this.props.receiveBullet({ 
-      id: _tempId,
-      title: '', 
-      type: 'note', 
-      parent_id: this.props.bullet.parent_id,
-      topic_id: this.props.bullet.topic_id,
-    })
-  }
-
-  saveBullet(bullet) {
-    if (bullet.id > 0) {
-      this.props.updateBullet(bullet)
-        .then(this.receiveStubBullet)
-    } else {
-      const { id, ...submittableBullet } = bullet
-      this.props.createBullet(submittableBullet)
-        .then(() => this.props.removeBullet(bullet))
-        .then(this.receiveStubBullet)
-    }
-  }
-
-  destroyBullet(bullet) {
-    (bullet.id > 0 ?
-      this.props.destroyBullet(bullet.id) :
-      this.props.removeBullet(bullet))
+    return this.props.updateBullet(shiftedBullet)
   }
 
   render() {
-    const { createSubBullet, createNextBullet, saveBullet, destroyBullet } = this
+    const { 
+      createSubBullet, 
+      updateBullet, 
+      destroyBullet, 
+      indentBullet,
+    } = this
+
     const bullet = this.props.bullet
-    
+
     return (
       <li>
 
         <div className='bullet'>
           <i className="fa fa-circle" aria-hidden="true"></i>
 
-          <BulletForm 
-            bullet={bullet}
-            save={saveBullet}
-            delete={destroyBullet}
-            name={bullet.id > 0 ? 'Update Bullet' : 'New Bullet'}/>
 
+          <form 
+            onSubmit={this.updateBullet} >
+
+            <input
+              value={this.state.title || ''}
+              placeholder={this.props.name}
+              onChange={this.handleChange('title')}/>
+
+          </form>
+
+          <button onClick={destroyBullet}>❎</button>
+          <button onClick={indentBullet}>➡️</button>
         </div>
 
         <Bullets
           bullet_ids={this.props.child_ids} 
-          createFirstBullet={createSubBullet}
-          createNextBullet={createNextBullet} />
+          createBullet={createSubBullet} />
 
       </li>
     )
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  bullet: state.entities.bullets[ownProps.bullet_id],
-  child_ids: values(state.joins.subBullets[ownProps.bullet_id])
-})
+const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }}, ownProps) => {
+  const child_ids = values(subBullets[ownProps.bullet_id])
+
+  return {
+    bullet: bullets[ownProps.bullet_id],
+    child_ids,
+  }
+}
 
 const mapDispatchToProps = {
   createSubBullet,

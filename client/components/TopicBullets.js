@@ -1,4 +1,4 @@
-import { sort, values, } from 'ramda'
+import { find, sort, values, } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
@@ -14,8 +14,7 @@ class TopicBullets extends React.Component {
 
   constructor(props) {
     super(props)
-    this.createFirstBullet = this.createFirstBullet.bind(this)
-    this.createNextBullet = this.createNextBullet.bind(this)
+    this.createBullet = this.createBullet.bind(this)
     this.state = { fetching: true }
   }
 
@@ -33,15 +32,8 @@ class TopicBullets extends React.Component {
     }
   }
 
-  createFirstBullet(bullet) {
+  createBullet(bullet) {
     return this.props.createTopicBullet(this.props.match.params.topicId, bullet)
-  }
-
-  createNextBullet(prevId) {
-    return bullet => {
-      bullet.prev_id = prevId
-      return this.props.createTopicBullet(this.props.topic_id, bullet)
-    }
   }
 
   render(){
@@ -54,16 +46,14 @@ class TopicBullets extends React.Component {
       <article className='bullets'>
         <Bullets 
           bullet_ids={this.props.bullet_ids} 
-          createFirstBullet={this.createTopicBullet} 
-          createNextBullet={this.createNextBullet} />
+          createBullet={this.createBullet} />
       </article>)
   }
 }
 
 const mapStateToProps = ({ entities: { topics, bullets }, joins: { topicBullets } }, ownProps) => {
-  const bullet_ids = sort((a, b) => a.next_id - b.next_id, 
-    values(topicBullets[ownProps.match.params.topicId]))
-
+  let bullet_ids = values(topicBullets[ownProps.match.params.topicId])
+  
   return {
     topic: topics[ownProps.match.params.topicId],
     bullet_ids,
