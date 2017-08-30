@@ -8,7 +8,6 @@ import {
   fetchBullet,
   postTopicBullet,
   postSubBullet,
-  postNextBullet,
   putBullet,
   deleteBullet,
 } from '../api'
@@ -102,10 +101,6 @@ export const createTopicBullet = (topicId, bullet) => dispatch =>
 
 export const createSubBullet = (parentId, bullet) => dispatch =>
   postSubBullet(parentId, bullet)
-    .then(dispatchAction(dispatch, receiveBullet))
-
-export const createNextBullet = (prevId, bullet) => dispatch =>
-  postNextBullet(prevId, bullet)
     .then(dispatchAction(dispatch, receiveBullet))
 
 export const updateBullet = bullet => dispatch =>

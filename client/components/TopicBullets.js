@@ -39,8 +39,8 @@ class TopicBullets extends React.Component {
 
   createNextBullet(prevId) {
     return bullet => {
-      bullet.topic_id = this.props.topic.id
-      return this.props.createNextBullet(prevId, bullet)
+      bullet.prev_id = prevId
+      return this.props.createTopicBullet(this.props.topic_id, bullet)
     }
   }
 

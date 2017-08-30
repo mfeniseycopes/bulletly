@@ -55,10 +55,6 @@ export const postSubBullet = (parentId, bullet) =>
   betterFetch(`/bullets/${parentId}/bullets`, 
     { method: 'post', body: JSON.stringify(bullet) })
 
-export const postNextBullet = (prevId, bullet) =>
-  betterFetch(`/bullets/${prevId}/bullets`,
-    { method: 'post', body: JSON.stringify(bullet) })
-
 export const putBullet = bullet =>
   betterFetch(`/bullets/${bullet.id}`, 
     { method: 'put', body: JSON.stringify(bullet) })

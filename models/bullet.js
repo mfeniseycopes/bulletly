@@ -22,7 +22,7 @@ const bulletDefn = (db, DataTypes) => {
       allowNull: false,
     },
     parent_id: DataTypes.INTEGER,
-    next_id: DataTypes.INTEGER,
+    prev_id: DataTypes.INTEGER,
   })
   
 
@@ -46,13 +46,13 @@ const bulletDefn = (db, DataTypes) => {
     })
 
     Bullet.belongsTo(db.models.bullet, {
-      foreignKey: 'next_id',
-      as: 'next',
+      foreignKey: 'prev_id',
+      as: 'prev',
     })
 
     Bullet.hasOne(db.models.bullet, {
-      foreignKey: '_id',
-      as: 'prev',
+      foreignKey: 'prev_id',
+      as: 'next',
     })
 
   }

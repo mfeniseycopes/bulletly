@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 import {
   createSubBullet,
-  createNextBullet,
   updateBullet,
   destroyBullet,
   receiveBullet,
@@ -33,8 +32,8 @@ class BulletItem extends React.Component {
 
   createNextBullet(prevId) {
     return bullet => {
-      bullet.parent_id = this.props.bullet.id
-      return this.props.createNextBullet(prevId, bullet)
+      bullet.prev_id = prevId
+      return this.props.createSubBullet(this.props.bullet,id, bullet)
     }
   }
 
@@ -101,7 +100,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = {
   createSubBullet,
-  createNextBullet,
   updateBullet,
   destroyBullet,
   receiveBullet,
