@@ -1,6 +1,6 @@
 const bulletDefn = (db, DataTypes) => {
 
-  const Bullet = db.define('Bullet', {
+  const Bullet = db.define('bullet', {
 
     type: {
       type: DataTypes.ENUM('task', 'note', 'event'),
@@ -22,27 +22,39 @@ const bulletDefn = (db, DataTypes) => {
       allowNull: false,
     },
     parent_id: DataTypes.INTEGER,
+    next_id: DataTypes.INTEGER,
   })
   
 
   Bullet.associate = db => {
 
-    Bullet.belongsTo(db.models.Topic, {
+    Bullet.belongsTo(db.models.topic, {
       foreignKey: 'topic_id',
       as: 'topic',
     })
 
-    Bullet.belongsTo(db.models.Bullet, {
+    Bullet.belongsTo(db.models.bullet, {
       foreignKey: 'parent_id',
       as: 'parent',
     })
 
-    Bullet.hasMany(db.models.Bullet, {
+    Bullet.hasMany(db.models.bullet, {
       foreignKey: 'parent_id',
       as: 'children',
       hooks: true,
       onDelete: 'CASCADE',
     })
+
+    Bullet.belongsTo(db.models.bullet, {
+      foreignKey: 'next_id',
+      as: 'next',
+    })
+
+    Bullet.hasOne(db.models.bullet, {
+      foreignKey: '_id',
+      as: 'prev',
+    })
+
   }
 
   return Bullet
