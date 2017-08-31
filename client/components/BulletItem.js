@@ -69,7 +69,7 @@ class BulletItem extends React.Component {
     e.preventDefault()
 
     const { bullet, prevId } = this.props
-
+  
     const shiftedBullet = {
       ...bullet, 
       ord: 1,
@@ -106,8 +106,10 @@ class BulletItem extends React.Component {
 
           </form>
 
+          { bullet.ord !== 1 ? 
+            <button onClick={indentBullet}>➡️</button> : 
+            null }
           <button onClick={destroyBullet}>❎</button>
-          <button onClick={indentBullet}>➡️</button>
         </div>
 
         <Bullets

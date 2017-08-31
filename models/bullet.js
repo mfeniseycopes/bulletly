@@ -27,7 +27,7 @@ const bulletDefn = (db, DataTypes) => {
     parent_id: DataTypes.INTEGER,
   }, {
     hooks: {
-      afterCreate: (bullet) => {
+      beforeCreate: (bullet) => {
         return db.transaction()
           .then(transaction => {
             return Bullet.findAll({
@@ -37,7 +37,7 @@ const bulletDefn = (db, DataTypes) => {
                 topic_id: bullet.topic_id,
               },
             }, 
-            { transaction })
+              { transaction })
           })
           .then((others, transaction) => {
             return Promise.all(
@@ -46,37 +46,72 @@ const bulletDefn = (db, DataTypes) => {
             )       
           })
       },
-      afterUpdate: bullet => {
-        return db.transaction()
-          .then(transaction => Bullet.findById(bullet.id))
-          .then((oldBullet, transaction) => {
+      beforeUpdate: bullet => {
+        return db.transaction(t => {
+          return Bullet.findById(bullet.id, { transaction: t })
+            .then(oldBullet => {
 
-            if (bullet.ord === oldBullet.ord) return
+              if (bullet.ord === oldBullet.ord) return
 
-            const between = [oldBullet.ord, bullet.ord]
-            between.sort()
+              let where 
+              
+              // INDENTING
+              // below on previous decrement ord 
+              if (bullet.ord === 1) {
+                where = {
+                  ord: { $gt: oldBullet.ord },
+                  parent_id: oldBullet.parent_id,
+                  topic_id: oldBullet.topic_id,
+                } 
+              }
 
-            return Bullet.findAll({
-              where: {
-                ord: { $between: between },
-                parent_id: bullet.parent_id,
-                topic_id: bullet.topic_id,
-              },
-            }, 
-            { transaction })
-          })
-          .then((others, transaction) => {
-            
-            return Promise.all(
-              others.map(other =>
-                other.update({
-                  ord: other.ord + (bullet.ord < other.ord ? 1 : -1)
-                },
-                {
-                  validations: false, hooks: false, transaction
-                }))
-            )       
-          })
+              // OUTDENTING
+              // below on previous decrement ord
+              // same and below on next increment
+              if (bullet.parent_id !== oldBullet.parent_id && bullet.ord !== 1) {
+                where = {
+                  $or: [{
+                    ord: { $gte: bullet.ord },
+                    parent_id: bullet.parent_id,
+                    topic_id: bullet.topic_id,
+                  }, {
+                    ord: { $gte: oldBullet.ord },
+                    parent_id: oldBullet.parent_id,
+                    topic_id: oldBullet.topic_id,
+                  }] 
+                }
+              }
+
+              return Bullet.findAll({
+                where,
+              },{
+                transaction: t,
+              })
+            })
+            .then(others => {
+
+              return Promise.all(
+                others.map(other => {
+
+                  let ord = other.ord
+                  // new parent bumps down (inc)
+                  if (other.parent_id === bullet.parent_id) {
+                    ord++
+                  } 
+                  // old parent children bump up (dec)
+                  else {
+                    ord--
+                  }
+
+                  other.update({
+                    ord,
+                  }, { 
+                    validations: false, hooks: false, transaction: t 
+                  })
+                })
+              )       
+            })
+        })
       },
       afterDestroy: bullet =>{
         return db.transaction()
@@ -88,7 +123,7 @@ const bulletDefn = (db, DataTypes) => {
                 topic_id: bullet.topic_id,
               },
             }, 
-            { transaction })
+              { transaction })
           })
           .then((others, transaction) => {
             return Promise.all(
@@ -101,37 +136,37 @@ const bulletDefn = (db, DataTypes) => {
   })
 
 
-    Bullet.associate = db => {
+  Bullet.associate = db => {
 
-      Bullet.belongsTo(db.models.topic, {
-        foreignKey: 'topic_id',
-        as: 'topic',
-      })
+    Bullet.belongsTo(db.models.topic, {
+      foreignKey: 'topic_id',
+      as: 'topic',
+    })
 
-      Bullet.belongsTo(db.models.bullet, {
-        foreignKey: 'parent_id',
-        as: 'parent',
-      })
+    Bullet.belongsTo(db.models.bullet, {
+      foreignKey: 'parent_id',
+      as: 'parent',
+    })
 
-      Bullet.hasMany(db.models.bullet, {
-        foreignKey: 'parent_id',
-        as: 'children',
-        hooks: true,
-        onDelete: 'CASCADE',
-      })
+    Bullet.hasMany(db.models.bullet, {
+      foreignKey: 'parent_id',
+      as: 'children',
+      hooks: true,
+      onDelete: 'CASCADE',
+    })
 
-      Bullet.belongsTo(db.models.bullet, {
-        foreignKey: 'prev_id',
-        as: 'prev',
-      })
+    Bullet.belongsTo(db.models.bullet, {
+      foreignKey: 'prev_id',
+      as: 'prev',
+    })
 
-      Bullet.hasMany(db.models.bullet, {
-        foreignKey: 'prev_id',
-        as: 'next',
-      })
-    }
-
-    return Bullet
+    Bullet.hasMany(db.models.bullet, {
+      foreignKey: 'prev_id',
+      as: 'next',
+    })
   }
 
-    module.exports = bulletDefn
+  return Bullet
+}
+
+module.exports = bulletDefn
