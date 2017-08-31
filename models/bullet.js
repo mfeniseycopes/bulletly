@@ -27,26 +27,74 @@ const bulletDefn = (db, DataTypes) => {
     parent_id: DataTypes.INTEGER,
   }, {
     hooks: {
-      afterValidate: (bullet) => {
+      afterCreate: (bullet) => {
+        return db.transaction()
+          .then(transaction => {
+            return Bullet.findAll({
+              where: {
+                ord: { $gte: bullet.ord },
+                parent_id: bullet.parent_id,
+                topic_id: bullet.topic_id,
+              },
+            }, 
+            { transaction })
+          })
+          .then((others, transaction) => {
+            return Promise.all(
+              others.map(other =>
+                other.update({ord: other.ord + 1},{validations: false, hooks: false, transaction}))
+            )       
+          })
+      },
+      afterUpdate: bullet => {
+        return db.transaction()
+          .then(transaction => Bullet.findById(bullet.id))
+          .then((oldBullet, transaction) => {
 
-        Bullet.findById(bullet.id)
-          .then(oldBullet => {
-            let where
-            let shift
+            if (bullet.ord === oldBullet.ord) return
 
-            if (oldBullet) {
-              where = { ord: { $between: [oldBullet.ord, bullet.ord].sort() } }
-              shift = ldBullet.ord < bullet.ord ? -1 : 1
-            } else {
-              where = { ord: { $gte: bullet.ord } }
-              shift = 1
-            }
+            const between = [oldBullet.ord, bullet.ord]
+            between.sort()
 
-            Bullet.findAll({ where })
-              .then(bullets => {
-                bullets.forEach(bullet => bullet.ord += shift) 
-                bullets.forEach(bullet => bullet.save({ validate: false, hooks: false }))
-              })
+            return Bullet.findAll({
+              where: {
+                ord: { $between: between },
+                parent_id: bullet.parent_id,
+                topic_id: bullet.topic_id,
+              },
+            }, 
+            { transaction })
+          })
+          .then((others, transaction) => {
+            
+            return Promise.all(
+              others.map(other =>
+                other.update({
+                  ord: other.ord + (bullet.ord < other.ord ? 1 : -1)
+                },
+                {
+                  validations: false, hooks: false, transaction
+                }))
+            )       
+          })
+      },
+      afterDestroy: bullet =>{
+        return db.transaction()
+          .then(transaction => {
+            return Bullet.findAll({
+              where: {
+                ord: { $gt: bullet.ord },
+                parent_id: bullet.parent_id,
+                topic_id: bullet.topic_id,
+              },
+            }, 
+            { transaction })
+          })
+          .then((others, transaction) => {
+            return Promise.all(
+              others.map(other =>
+                other.update({ord: other.ord - 1},{validations: false, hooks: false, transaction}))
+            )
           })
       }
     }
