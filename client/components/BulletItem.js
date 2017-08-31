@@ -37,7 +37,7 @@ class BulletItem extends React.Component {
     const bullet = this.props.bullet
 
     return {
-      prev_id: bullet.id,
+      ord: bullet.ord + 1,
       parent_id: bullet.parent_id,
       topic_id: bullet.topic_id,
       type: 'note',
@@ -53,7 +53,6 @@ class BulletItem extends React.Component {
   }
 
   updateBullet(e) {
-    debugger
     e.preventDefault()
 
     this.props.updateBullet(this.state)
@@ -69,11 +68,12 @@ class BulletItem extends React.Component {
   indentBullet(e) {
     e.preventDefault()
 
-    const { bullet } = this.props
+    const { bullet, prevId } = this.props
+
     const shiftedBullet = {
       ...bullet, 
-      parent_id: bullet.prev_id, 
-      prev_id: null,
+      ord: 1,
+      parent_id: prevId, 
     }
 
     return this.props.updateBullet(shiftedBullet)
@@ -121,6 +121,7 @@ class BulletItem extends React.Component {
 
 const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }}, ownProps) => {
   const child_ids = values(subBullets[ownProps.bullet_id])
+  child_ids.sort((a, b) => bullets[a].ord - bullets[b].ord)
 
   return {
     bullet: bullets[ownProps.bullet_id],

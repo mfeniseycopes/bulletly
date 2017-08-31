@@ -1,4 +1,4 @@
-import { find, sort, values, } from 'ramda'
+import { find, prop, sortBy, values, } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
@@ -53,6 +53,7 @@ class TopicBullets extends React.Component {
 
 const mapStateToProps = ({ entities: { topics, bullets }, joins: { topicBullets } }, ownProps) => {
   let bullet_ids = values(topicBullets[ownProps.match.params.topicId])
+  bullet_ids.sort((a, b) => !a ? 1 : !b ? 1 : bullets[a].ord - bullets[b].ord)
   
   return {
     topic: topics[ownProps.match.params.topicId],

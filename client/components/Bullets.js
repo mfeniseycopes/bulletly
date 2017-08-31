@@ -10,7 +10,8 @@ const Bullets = props => (
 
     { props.bullet_ids.map((id, arr, idx) => 
       <BulletItem key={id} bullet_id={id} 
-        createBullet={props.createBullet}/>) 
+        createBullet={props.createBullet}
+        prevId={arr[idx-1] - 1}/>) 
     }
     
   </ul>
