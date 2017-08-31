@@ -12,7 +12,8 @@ import {
   RECEIVE_NEW_BULLET,
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
-  REMOVE_BULLET 
+  REMOVE_BULLET,
+  SHIFT_BULLET_ORDS,
 } from '../../actions'
 
 const bullets = (state = {}, { type, payload }) => {
@@ -36,6 +37,15 @@ const bullets = (state = {}, { type, payload }) => {
 
     case REMOVE_TOPIC:
       return filter(bullet => bullet.topic_id !== payload.topic.id, state)
+
+    case SHIFT_BULLET_ORDS:
+      const { topic_id, parent_id, start, shift } = payload.options
+      return map(bullet =>
+        (bullet.topic_id == topic_id && 
+          bullet.parent_id === parent_id &&
+          bullet.ord > start) ?
+        assoc('ord', bullet.ord + shift, bullet) :
+        bullet)
 
     default:
       return state

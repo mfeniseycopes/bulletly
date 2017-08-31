@@ -9,6 +9,9 @@ import {
   dissocPath,
   groupBy,
   map,
+  prop,
+  remove,
+  sortBy,
   toString,
 } from 'ramda'
 
@@ -17,6 +20,7 @@ import {
   RECEIVE_BULLETS, 
   REMOVE_BULLET,
   REMOVE_TOPIC, 
+  SHIFT_BULLET_ORDS,
 } from '../../actions'
 
 const topicBullets = (state={}, {type, payload}) => {
@@ -28,23 +32,30 @@ const topicBullets = (state={}, {type, payload}) => {
     case RECEIVE_BULLET:
       bullet = payload.bullet
       if (bullet.parent_id) return state
-      bullet = payload.bullet
-      return assocPath([bullet.topic_id, bullet.id], bullet.id, state)
+      return assoc(bullet.topic_id,
+        insert(bullet.ord - 1, bullet.id, state[bullet.topic_id]))
 
     case RECEIVE_BULLETS:
       bullets = payload.bullets.filter(b => !b.parent_id)
       return map(
-        bs => bs.reduce((obj, b) => assoc(b.id, b.id, obj), {}),
+        bs => map(prop('id'), sortBy(prop('ord'), bs)),
         groupBy(b => b.topic_id, bullets))
 
     case REMOVE_BULLET:
       bullet = payload.bullet
-      const path = [bullet.topic_id, bullet.id].map(toString)
-      return dissocPath(path, state)
+      if (bullet.parent_id) return state
+      return assoc(bullet.topic_id,
+        remove(bullet.ord - 1, 1, state[bullet.topic_id]))
 
     case REMOVE_TOPIC:
       topic = payload.topic
       return dissoc(topic.id, state)
+
+    case SHIFT_BULLET_ORDS:
+      const { topic_id, parent_id, start, shift } = payload.options
+      if (parent_id) return state
+      const ids = state[topic_id]
+      return assoc(topic_id, remove(start - 2, 1, ids), state)
 
     default:
       return state

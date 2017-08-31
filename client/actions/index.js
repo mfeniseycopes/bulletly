@@ -22,6 +22,7 @@ export const [
   RECEIVE_TOPIC,
   RECEIVE_TOPICS,
   REMOVE_TOPIC,
+  SHIFT_BULLET_ORDS,
 ] = [
   'RECEIVE_BULLET',
   'RECEIVE_BULLETS',
@@ -29,6 +30,7 @@ export const [
   'RECEIVE_TOPIC',
   'RECEIVE_TOPICS',
   'REMOVE_TOPIC',
+  'SHIFT_BULLET_ORDS',
 ]
 
 // ACTION CREATORS
@@ -61,6 +63,11 @@ const receiveBullets = bullets => ({
 export const removeBullet = bullet => ({
   type: REMOVE_BULLET,
   payload: { bullet }
+})
+
+export const shiftBulletOrds = options => ({
+  type: SHIFT_BULLET_ORDS,
+  payload: { options },
 })
 
 // TOPIC THUNKS
