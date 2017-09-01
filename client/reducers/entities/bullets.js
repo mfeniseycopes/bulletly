@@ -43,9 +43,9 @@ const bullets = (state = {}, { type, payload }) => {
       return map(bullet =>
         (bullet.topic_id == topic_id && 
           bullet.parent_id === parent_id &&
-          bullet.ord > start) ?
+          bullet.ord >= start) ?
         assoc('ord', bullet.ord + shift, bullet) :
-        bullet)
+        bullet, state)
 
     default:
       return state

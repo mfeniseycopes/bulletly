@@ -27,31 +27,35 @@ const bulletDefn = (db, DataTypes) => {
     parent_id: DataTypes.INTEGER,
   }, {
     hooks: {
-      beforeCreate: (bullet) => {
-        return db.transaction()
-          .then(transaction => {
-            return Bullet.findAll({
-              where: {
-                ord: { $gte: bullet.ord },
-                parent_id: bullet.parent_id,
-                topic_id: bullet.topic_id,
-              },
-            }, 
-              { transaction })
-          })
-          .then((others, transaction) => {
+      beforeCreate: bullet => {
+        return db.transaction(t => {
+          return Bullet.findAll({
+            where: {
+              ord: { $gte: bullet.ord },
+              parent_id: bullet.parent_id,
+              topic_id: bullet.topic_id,
+            },
+          }, { transaction: t })
+            .then(others => {
+              console.log('OTHERS', others)
             return Promise.all(
               others.map(other =>
-                other.update({ord: other.ord + 1},{validations: false, hooks: false, transaction}))
-            )       
+                other.update({
+                  ord: other.ord + 1
+                }, {
+                  validations: false, 
+                  hooks: false, 
+                  transaction: t 
+                })))       
           })
+        })
       },
       beforeUpdate: bullet => {
         return db.transaction(t => {
           return Bullet.findById(bullet.id, { transaction: t })
             .then(oldBullet => {
 
-              if (bullet.ord === oldBullet.ord) return
+              if (bullet.ord === oldBullet.ord) return []
 
               let where 
               

@@ -8,6 +8,7 @@ import {
   dissoc,
   dissocPath,
   groupBy,
+  insert,
   map,
   prop,
   remove,
@@ -30,9 +31,11 @@ const subBullets = (state={}, {type, payload}) => {
 
     case RECEIVE_BULLET:
       bullet = payload.bullet
-      if (!bullet.parent_id) return state
+      if (!bullet.parent_id) 
+        return state
       return assoc(bullet.parent_id,
-        insert(bullet.ord - 1, bullet.id, state[bullet.parent_id]))
+        insert(bullet.ord - 1, bullet.id, state[bullet.parent_id] || []), 
+        state)
 
     case RECEIVE_BULLETS:
       bullets = payload.bullets.filter(b => b.parent_id)
@@ -43,8 +46,9 @@ const subBullets = (state={}, {type, payload}) => {
     case REMOVE_BULLET:
       bullet = payload.bullet
       if (!bullet.parent_id) return state
-      return assoc(bullet.topic_id,
-        remove(bullet.ord - 1, 1, state[bullet.parent_id]))
+      return assoc(bullet.parent_id,
+        remove(bullet.ord - 1, 1, state[bullet.parent_id]),
+        state)
 
     case SHIFT_BULLET_ORDS:
       const { parent_id, start, shift } = payload.options

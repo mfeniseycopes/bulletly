@@ -1,4 +1,4 @@
-import { find, prop, sortBy, values, } from 'ramda'
+import { assoc, find, prop, sortBy, values, } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
@@ -41,23 +41,20 @@ class TopicBullets extends React.Component {
     if (this.state.fetching) return <div>'...loading'</div>
 
     if (!this.state.fetching && !this.props.topic) return <Redirect to='/' />
-
+    
     return (
       <article className='bullets'>
         <Bullets 
-          bullet_ids={this.props.bullet_ids} 
+          bullet_ids={this.props.topic.bullet_ids} 
           createBullet={this.createBullet} />
       </article>)
   }
 }
 
 const mapStateToProps = ({ entities: { topics, bullets }, joins: { topicBullets } }, ownProps) => {
-  let bullet_ids = values(topicBullets[ownProps.match.params.topicId])
-  bullet_ids.sort((a, b) => !a ? 1 : !b ? 1 : bullets[a].ord - bullets[b].ord)
-  
+  const topic = topics[ownProps.match.params.topicId]
   return {
-    topic: topics[ownProps.match.params.topicId],
-    bullet_ids,
+    topic: assoc('bullet_ids', topicBullets[ownProps.match.params.topicId], topic),
   }
 }
 

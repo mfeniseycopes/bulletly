@@ -35,27 +35,27 @@ export const [
 
 // ACTION CREATORS
 
-const receiveTopic = topic => ({
+export const receiveTopic = topic => ({
   type: RECEIVE_TOPIC,
   payload: { topic },
 })
 
-const receiveTopics = topics => ({
+export const receiveTopics = topics => ({
   type: RECEIVE_TOPICS,
   payload: { topics },
 })
 
-const removeTopic = topic => ({
+export const removeTopic = topic => ({
   type: REMOVE_TOPIC,
   payload: { topic },
 })
 
-export const receiveBullet = bullet => ({
+export const receiveBullet = (bullet, oldBullet=null) => ({
   type: RECEIVE_BULLET,
-  payload: { bullet },
+  payload: { bullet, oldBullet },
 })
 
-const receiveBullets = bullets => ({
+export const receiveBullets = bullets => ({
   type: RECEIVE_BULLETS,
   payload: { bullets },
 })
@@ -110,9 +110,9 @@ export const createSubBullet = (parentId, bullet) => dispatch =>
   postSubBullet(parentId, bullet)
     .then(dispatchAction(dispatch, receiveBullet))
 
-export const updateBullet = bullet => dispatch =>
+export const updateBullet = (bullet, oldBullet) => dispatch =>
   putBullet(bullet)
-    .then(dispatchAction(dispatch, receiveBullet))
+    .then(b => dispatch(receiveBullet(b, oldBullet)))
 
 export const destroyBullet = id => dispatch =>
   deleteBullet(id)
