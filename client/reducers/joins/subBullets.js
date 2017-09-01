@@ -5,6 +5,7 @@ import {
 import {
   assoc,
   assocPath,
+  clone,
   dissoc,
   dissocPath,
   groupBy,
@@ -20,22 +21,44 @@ import {
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
   REMOVE_BULLET,
-  SHIFT_BULLET_ORDS,
 } from '../../actions'
 
 const subBullets = (state={}, {type, payload}) => {
 
-  let bullet, bullets
+  let bullet, oldBullet, bullets
 
   switch(type) {
 
     case RECEIVE_BULLET:
       bullet = payload.bullet
-      if (!bullet.parent_id) 
+      oldBullet = payload.oldBullet
+
+      // new
+      if (!oldBullet)
+        return assoc(
+          bullet.parent_id, 
+          insert(
+            bullet.ord - 1,
+            bullet.id,
+            state[bullet.parent_id] || []),
+          state)
+
+      // neither
+      if (bullet.parent_id === oldBullet.parent_id && 
+          bullet.ord === oldBullet.ord) 
         return state
-      return assoc(bullet.parent_id,
-        insert(bullet.ord - 1, bullet.id, state[bullet.parent_id] || []), 
-        state)
+
+      // indent/outdent
+      let newState = state
+      newState = oldBullet.parent_id ? assoc(
+        oldBullet.parent_id, 
+        remove(oldBullet.ord - 1, 1, state[oldBullet.parent_id]),
+        newState) : newState
+      newState = bullet.parent_id ? assoc(
+        bullet.parent_id,
+        insert(bullet.ord - 1, bullet.id, state[bullet.parent_id] || []),
+        newState) : newState
+      return newState
 
     case RECEIVE_BULLETS:
       bullets = payload.bullets.filter(b => b.parent_id)
@@ -49,12 +72,6 @@ const subBullets = (state={}, {type, payload}) => {
       return assoc(bullet.parent_id,
         remove(bullet.ord - 1, 1, state[bullet.parent_id]),
         state)
-
-    case SHIFT_BULLET_ORDS:
-      const { parent_id, start, shift } = payload.options
-      if (!parent_id) return state
-      const ids = state[parent_id]
-      return assoc(parent_id, remove(start - 2, 1, ids), state)
 
     default:
       return state

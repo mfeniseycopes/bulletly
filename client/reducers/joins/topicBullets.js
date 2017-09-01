@@ -21,27 +21,44 @@ import {
   RECEIVE_BULLETS, 
   REMOVE_BULLET,
   REMOVE_TOPIC, 
-  SHIFT_BULLET_ORDS,
 } from '../../actions'
 
 const topicBullets = (state={}, {type, payload}) => {
 
-  let bullet, bullets, bullet_ids, topic
+  let bullet, oldBullet, bullets, bullet_ids, topic
 
   switch(type) {
 
     case RECEIVE_BULLET:
       bullet = payload.bullet
-      const idx = state[bullet.topic_id].indexOf(bullet.id)
-      if (bullet.parent_id && idx !== -1)
-        return assoc(bullet.topic_id,
-          remove(idx, 1, state[bullet.topic_id]), state)
-      if (bullet.parent_id || 
-        state[bullet.topic_id][bullet.ord - 1] === bullet.id) 
+      oldBullet = payload.oldBullet
+
+      // new
+      if (!oldBullet)
+        return assoc(
+          bullet.topic_id, 
+          insert(
+            bullet.ord - 1,
+            bullet.id,
+            state[bullet.topic_id]),
+          state)
+
+      // neither
+      if (bullet.topic_id === oldBullet.topic_id && 
+          bullet.ord === oldBullet.ord) 
         return state
-      return assoc(bullet.topic_id,
+
+      // indent/outdent
+      let newState = state
+      newState = !oldBullet.parent_id ? assoc(
+        oldBullet.topic_id, 
+        remove(oldBullet.ord - 1, 1, state[oldBullet.topic_id]),
+        newState) : newState
+      newState = !bullet.parent_id ? assoc(
+        bullet.topic_id,
         insert(bullet.ord - 1, bullet.id, state[bullet.topic_id] || []),
-        state)
+        newState) : newState
+      return newState
 
     case RECEIVE_BULLETS:
       bullets = payload.bullets.filter(b => !b.parent_id)
@@ -59,12 +76,6 @@ const topicBullets = (state={}, {type, payload}) => {
     case REMOVE_TOPIC:
       topic = payload.topic
       return dissoc(topic.id, state)
-
-    case SHIFT_BULLET_ORDS:
-      const { topic_id, parent_id, start, shift } = payload.options
-      if (parent_id) return state
-      const ids = state[topic_id]
-      return assoc(topic_id, remove(start - 2, 1, ids), state)
 
     default:
       return state

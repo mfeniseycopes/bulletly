@@ -54,8 +54,8 @@ class BulletItem extends React.Component {
 
   updateBullet(e) {
     e.preventDefault()
-
-    this.props.updateBullet(this.state)
+    
+    this.props.updateBullet(this.state, this.props.bullet)
       .then(this.createNextBullet)
   }
 
@@ -111,7 +111,7 @@ class BulletItem extends React.Component {
 
 
           <form 
-            onSubmit={this.updateBullet} >
+            onSubmit={updateBullet} >
 
             <input
               value={this.state.title || ''}

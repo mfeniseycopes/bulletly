@@ -9,7 +9,6 @@ import {
 
 import { 
   REMOVE_TOPIC, 
-  RECEIVE_NEW_BULLET,
   RECEIVE_BULLET, 
   RECEIVE_BULLETS, 
   REMOVE_BULLET,
@@ -22,7 +21,6 @@ const bullets = (state = {}, { type, payload }) => {
 
   switch(type) {
     case RECEIVE_BULLET:
-    case RECEIVE_NEW_BULLET:
       bullet = payload.bullet
       return assoc(bullet.id, bullet, state)
 
