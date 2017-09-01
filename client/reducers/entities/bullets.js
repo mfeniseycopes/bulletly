@@ -17,12 +17,29 @@ import {
 
 const bullets = (state = {}, { type, payload }) => {
 
-  let bullet
+  let bullet, oldBullet
 
   switch(type) {
     case RECEIVE_BULLET:
       bullet = payload.bullet
-      return assoc(bullet.id, bullet, state)
+      oldBullet = payload.oldBullet
+
+      return assoc(
+        bullet.id,
+        bullet,
+        map(
+          b => {
+            if (oldBullet && b.parent_id === oldBullet.parent_id &&
+              b.ord > oldBullet.ord) {
+              return assoc('ord', b.ord - 1, b)
+            } else if (b.parent_id === bullet.parent_id &&
+              b.ord >= bullet.ord) {
+              return assoc('ord', b.ord + 1, b)
+            } else {
+              return b
+            }
+          },
+          state))
 
     case RECEIVE_BULLETS:
       return map(
