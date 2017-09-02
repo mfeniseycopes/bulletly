@@ -22,10 +22,12 @@ class BulletItem extends React.Component {
 
     this.handleChange = changeHandler(this)
     this.createNextBullet = this.createNextBullet.bind(this)
+    this.updateBullet = this.updateBullet.bind(this)
     this.destroyBullet = this.destroyBullet.bind(this)
     this.indentBullet = this.indentBullet.bind(this)
-    this.updateBullet = this.updateBullet.bind(this)
+    this.outdentBullet = this.outdentBullet.bind(this)
     this.createSubBullet = this.createSubBullet.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   componentWillReceiveProps(newProps) {
@@ -68,21 +70,22 @@ class BulletItem extends React.Component {
   indentBullet(e) {
     e.preventDefault()
 
-    const { bullet, prevId, prevBullet } = this.props
+    const { prevId, prevBullet } = this.props
+    const bullet = this.state
   
     const shiftedBullet = {
       ...bullet, 
       ord: prevBullet.child_ids.length + 1,
       parent_id: prevBullet.id, 
     }
-
     return this.props.updateBullet(shiftedBullet, bullet)
   }
 
   outdentBullet(e) {
     e.preventDefault()
 
-    const { bullet, parentBullet } = this.props
+    const { parentBullet } = this.props
+    const bullet = this.state
 
     const shiftedBullet = {
       ...bullet,
@@ -93,12 +96,17 @@ class BulletItem extends React.Component {
     return this.props.updateBullet(shiftedBullet, bullet)
   }
 
+  handleKeyPress(e) {
+    debugger 
+  }
+
   render() {
     const { 
       createSubBullet, 
       updateBullet, 
       destroyBullet, 
       indentBullet,
+      outdentBullet,
     } = this
 
     const bullet = this.props.bullet
@@ -111,7 +119,9 @@ class BulletItem extends React.Component {
 
 
           <form 
-            onSubmit={updateBullet} >
+            onSubmit={updateBullet}
+            onBlur={updateBullet}
+            onKeyPress={this.handleKeyPress}>
 
             <input
               value={this.state.title || ''}
@@ -123,6 +133,7 @@ class BulletItem extends React.Component {
           { bullet.ord !== 1 ? 
             <button onClick={indentBullet}>➡️</button> : 
             null }
+          <button onClick={outdentBullet}>⬅️</button>
           <button onClick={destroyBullet}>❎</button>
         </div>
 

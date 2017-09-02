@@ -37,7 +37,6 @@ const bulletDefn = (db, DataTypes) => {
             },
           }, { transaction: t })
             .then(others => {
-              console.log('OTHERS', others)
             return Promise.all(
               others.map(other =>
                 other.update({
@@ -52,89 +51,78 @@ const bulletDefn = (db, DataTypes) => {
       },
       beforeUpdate: bullet => {
         return db.transaction(t => {
+          let oldBullet
+          const options = { 
+            transaction: t,
+            validations: false, 
+            hooks: false,
+          }
+
           return Bullet.findById(bullet.id, { transaction: t })
-            .then(oldBullet => {
+            .then(_oldBullet => {
+              oldBullet = _oldBullet // closure
 
-              if (bullet.ord === oldBullet.ord) return []
+              if (bullet.parent_id === oldBullet.parent_id &&
+                bullet.ord === oldBullet.ord) 
+                return []
 
-              let where 
-              
-              // INDENTING
+              // indent/outdent 
               // below on previous decrement ord 
-              if (bullet.ord === 1) {
-                where = {
-                  ord: { $gt: oldBullet.ord },
-                  parent_id: oldBullet.parent_id,
-                  topic_id: oldBullet.topic_id,
-                } 
-              }
-
-              // OUTDENTING
-              // below on previous decrement ord
-              // same and below on next increment
-              if (bullet.parent_id !== oldBullet.parent_id && bullet.ord !== 1) {
-                where = {
+              // below (inclusive) on current increment ord
+              const query = {
+                where: {
                   $or: [{
                     ord: { $gte: bullet.ord },
                     parent_id: bullet.parent_id,
                     topic_id: bullet.topic_id,
                   }, {
-                    ord: { $gte: oldBullet.ord },
+                    ord: { $gt: oldBullet.ord },
                     parent_id: oldBullet.parent_id,
                     topic_id: oldBullet.topic_id,
                   }] 
                 }
               }
 
-              return Bullet.findAll({
-                where,
-              },{
-                transaction: t,
-              })
+              return Bullet.findAll(query, options)
             })
             .then(others => {
 
               return Promise.all(
                 others.map(other => {
-
-                  let ord = other.ord
-                  // new parent bumps down (inc)
-                  if (other.parent_id === bullet.parent_id) {
-                    ord++
-                  } 
-                  // old parent children bump up (dec)
-                  else {
-                    ord--
+                  const change = {
+                    ord: other.ord + 
+                    (other.parent_id === bullet.parent_id ? 1 : -1)
                   }
 
-                  other.update({
-                    ord,
-                  }, { 
-                    validations: false, hooks: false, transaction: t 
-                  })
+                  return other.update(change, options)
                 })
               )       
             })
         })
       },
-      afterDestroy: bullet =>{
-        return db.transaction()
-          .then(transaction => {
-            return Bullet.findAll({
-              where: {
-                ord: { $gt: bullet.ord },
-                parent_id: bullet.parent_id,
-                topic_id: bullet.topic_id,
-              },
-            }, 
-              { transaction })
-          })
-          .then((others, transaction) => {
-            return Promise.all(
-              others.map(other =>
-                other.update({ord: other.ord - 1},{validations: false, hooks: false, transaction}))
-            )
-          })
+      afterDestroy: bullet => {
+        return db.transaction(t => {
+          const query = {
+            where: {
+              ord: { $gt: bullet.ord },
+              parent_id: bullet.parent_id,
+              topic_id: bullet.topic_id,
+            },
+          }
+
+          const options = {
+            validations: false,
+            hooks: false,
+            transaction: t,
+          }
+
+          return Bullet.findAll(query, options)
+            .then((others, transaction) => {
+              return Promise.all(
+                others.map(other =>
+                  other.update({ord: other.ord - 1}, options)))
+            })
+        })
       }
     }
   })

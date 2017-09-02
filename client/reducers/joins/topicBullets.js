@@ -33,8 +33,9 @@ const topicBullets = (state={}, {type, payload}) => {
       bullet = payload.bullet
       oldBullet = payload.oldBullet
 
+
       // new
-      if (!oldBullet)
+      if (!oldBullet && !bullet.parent_id)
         return assoc(
           bullet.topic_id, 
           insert(
@@ -42,11 +43,14 @@ const topicBullets = (state={}, {type, payload}) => {
             bullet.id,
             state[bullet.topic_id]),
           state)
-
+      
       // neither
-      if (bullet.topic_id === oldBullet.topic_id && 
-          bullet.ord === oldBullet.ord) 
+      if (!oldBullet && bullet.parent_id || 
+        (bullet.topic_id === oldBullet.topic_id && 
+        bullet.ord === oldBullet.ord))  {
+        debugger
         return state
+      }
 
       // indent/outdent
       let newState = state
