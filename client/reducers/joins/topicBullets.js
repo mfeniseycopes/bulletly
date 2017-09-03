@@ -47,10 +47,8 @@ const topicBullets = (state={}, {type, payload}) => {
       // neither
       if (!oldBullet && bullet.parent_id || 
         (bullet.topic_id === oldBullet.topic_id && 
-        bullet.ord === oldBullet.ord))  {
-        debugger
+        bullet.ord === oldBullet.ord))
         return state
-      }
 
       // indent/outdent
       let newState = state

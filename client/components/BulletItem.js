@@ -9,7 +9,6 @@ import {
   destroyBullet,
   receiveBullet,
   removeBullet,
-  shiftBulletOrds,
 } from '../actions'
 
 import Bullets from './Bullets'
@@ -54,11 +53,8 @@ class BulletItem extends React.Component {
     return this.props.createSubBullet(this.props.bullet.id, bullet)
   }
 
-  updateBullet(e) {
-    e.preventDefault()
-    
+  updateBullet() {
     this.props.updateBullet(this.state, this.props.bullet)
-      .then(this.createNextBullet)
   }
 
   destroyBullet(e) {
@@ -67,9 +63,7 @@ class BulletItem extends React.Component {
     return this.props.destroyBullet(this.props.bullet.id)
   }
 
-  indentBullet(e) {
-    e.preventDefault()
-
+  indentBullet() {
     const { prevId, prevBullet } = this.props
     const bullet = this.state
   
@@ -81,9 +75,7 @@ class BulletItem extends React.Component {
     return this.props.updateBullet(shiftedBullet, bullet)
   }
 
-  outdentBullet(e) {
-    e.preventDefault()
-
+  outdentBullet() {
     const { parentBullet } = this.props
     const bullet = this.state
 
@@ -97,7 +89,38 @@ class BulletItem extends React.Component {
   }
 
   handleKeyPress(e) {
-    debugger 
+    const shift = e.shiftKey ? 'Shift+' : ''
+    const keyCombo = shift + e.key
+
+    switch(keyCombo) {
+      case 'Tab':
+        if (this.props.bullet.ord !== 1) {
+          e.preventDefault()
+          e.stopPropagation()
+          this.indentBullet(e)
+          break
+        }
+
+      case 'Enter':
+        e.preventDefault()
+        e.stopPropagation()
+        this.createNextBullet()
+        break
+
+      case 'Backspace':
+        if (this.state.title === '') {
+          e.preventDefault()
+          e.stopPropagation()
+          this.destroyBullet(e)
+          break
+        }
+
+      case 'Shift+Tab':
+        e.preventDefault()
+        e.stopPropagation()
+        this.outdentBullet(e)
+        break
+    }
   }
 
   render() {
@@ -119,9 +142,8 @@ class BulletItem extends React.Component {
 
 
           <form 
-            onSubmit={updateBullet}
             onBlur={updateBullet}
-            onKeyPress={this.handleKeyPress}>
+            onKeyDown={this.handleKeyPress}>
 
             <input
               value={this.state.title || ''}
@@ -129,12 +151,6 @@ class BulletItem extends React.Component {
               onChange={this.handleChange('title')}/>
 
           </form>
-
-          { bullet.ord !== 1 ? 
-            <button onClick={indentBullet}>➡️</button> : 
-            null }
-          <button onClick={outdentBullet}>⬅️</button>
-          <button onClick={destroyBullet}>❎</button>
         </div>
 
         <Bullets
