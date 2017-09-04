@@ -22,15 +22,14 @@ export const [
   RECEIVE_TOPIC,
   RECEIVE_TOPICS,
   REMOVE_TOPIC,
-  SHIFT_BULLET_ORDS,
+  SET_FOCUS,
 ] = [
   'RECEIVE_BULLET',
   'RECEIVE_BULLETS',
   'REMOVE_BULLET',
   'RECEIVE_TOPIC',
   'RECEIVE_TOPICS',
-  'REMOVE_TOPIC',
-  'SHIFT_BULLET_ORDS',
+  'SET_FOCUS',
 ]
 
 // ACTION CREATORS
@@ -65,11 +64,14 @@ export const removeBullet = bullet => ({
   payload: { bullet }
 })
 
-export const shiftBulletOrds = options => ({
-  type: SHIFT_BULLET_ORDS,
-  payload: { options },
+export const setFocus = (id, startSelection, endSelection) => ({
+  type: SET_FOCUS,
+  payload: {
+    id,
+    startSelection,
+    endSelection,
+  }
 })
-
 // TOPIC THUNKS
 
 export const retrieveTopics = () => dispatch =>
