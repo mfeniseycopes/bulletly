@@ -29,6 +29,7 @@ export const [
   'REMOVE_BULLET',
   'RECEIVE_TOPIC',
   'RECEIVE_TOPICS',
+  'REMOVE_TOPIC',
   'SET_FOCUS',
 ]
 
@@ -64,12 +65,12 @@ export const removeBullet = bullet => ({
   payload: { bullet }
 })
 
-export const setFocus = (id, startSelection, endSelection) => ({
+export const setFocus = (id, selectionStart, selectionEnd) => ({
   type: SET_FOCUS,
   payload: {
     id,
-    startSelection,
-    endSelection,
+    selectionStart,
+    selectionEnd,
   }
 })
 // TOPIC THUNKS
@@ -110,7 +111,10 @@ export const createTopicBullet = (topicId, bullet) => dispatch =>
 
 export const createSubBullet = (parentId, bullet) => dispatch =>
   postSubBullet(parentId, bullet)
-    .then(dispatchAction(dispatch, receiveBullet))
+    .then(bullet => {
+      dispatch(receiveBullet(bullet))
+      return bullet
+    })
 
 export const updateBullet = (bullet, oldBullet) => dispatch =>
   putBullet(bullet)

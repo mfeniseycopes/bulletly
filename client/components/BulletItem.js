@@ -1,4 +1,3 @@
-import changeHandler from 'memoized-change-handler'
 import { assoc, sort, values } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux' 
@@ -7,8 +6,8 @@ import {
   createSubBullet,
   updateBullet,
   destroyBullet,
-  receiveBullet,
-  removeBullet,
+  receiveBullet, removeBullet,
+  setFocus,
 } from '../actions'
 
 import Bullets from './Bullets'
@@ -19,19 +18,68 @@ class BulletItem extends React.Component {
     super(props)
     this.state = props.bullet
 
-    this.handleChange = changeHandler(this)
-    this.createNextBullet = this.createNextBullet.bind(this)
-    this.updateBullet = this.updateBullet.bind(this)
-    this.destroyBullet = this.destroyBullet.bind(this)
-    this.indentBullet = this.indentBullet.bind(this)
-    this.outdentBullet = this.outdentBullet.bind(this)
+    this.handleClick = this.handleClick.bind(this)
     this.createSubBullet = this.createSubBullet.bind(this)
+    this.updateBullet = this.updateBullet.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
+  componentDidMount() {
+    if (this.props.focused) {
+      this.input.focus()
+      this.input.setSelectionRange(
+        this.props.focus.selectionStart, 
+        this.props.focus.selectionEnd)
+      this.saveIntervalId = setInterval(this.updateBullet, 5000)
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.focused && this.props.focused) {
+      this.input.focus()
+      this.input.setSelectionRange(
+        this.props.focus.selectionStart, 
+        this.props.focus.selectionEnd)
+      this.saveIntervalId = setInterval(this.updateBullet, 5000)
+    } else if (prevProps.focused && !this.props.focused) {
+      clearInterval(this.saveIntervalId)
+    }
+  }
+
   componentWillReceiveProps(newProps) {
+    if (!this.props.focused && newProps.focused) {
+      this.input.focus()
+      this.input.setSelectionRange(
+        this.props.focus.selectionStart, 
+        this.props.focus.selectionEnd)
+      this.saveIntervalId = setInterval(this.updateBullet, 5000)
+    } else if (this.props.focused && !newProps.focused) {
+      clearInterval(this.saveIntervalId) 
+    }
     if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt)
       this.setState(newProps.bullet)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.saveIntervalId)
+  }
+
+  handleChange(field) {
+    return e => {
+      e.preventDefault()
+
+      this.setState(
+        { [field]: e.target.value, },
+        () => {
+          this.props.setFocus(
+            this.props.bullet.id, 
+            this.input.selectionStart, this.input.selectionEnd)
+        })
+    } 
+  }
+
+  handleClick(e) {
+    this.props.setFocus(this.props.bullet.id, this.input.selectionStart, this.input.selectionEnd)
   }
 
   newSiblingBullet() {
@@ -42,11 +90,13 @@ class BulletItem extends React.Component {
       parent_id: bullet.parent_id,
       topic_id: bullet.topic_id,
       type: 'note',
+      title: '',
     }
   }
 
   createNextBullet() {
     return this.props.createBullet(this.newSiblingBullet())
+      .then(bullet => this.props.setFocus(bullet.id, 0, 0))
   }
 
   createSubBullet(bullet) {
@@ -54,13 +104,23 @@ class BulletItem extends React.Component {
   }
 
   updateBullet() {
-    this.props.updateBullet(this.state, this.props.bullet)
+    return this.props.updateBullet(this.state, this.props.bullet)
   }
 
-  destroyBullet(e) {
-    e.preventDefault()
-
+  destroyBullet() {
+    let focus = [null, null, null]
+    const { parentBullet, prevBullet, nextBullet } = this.props
+    
+    if (prevBullet) {
+      focus = [prevBullet.id, prevBullet.title.length - 1, prevBullet.title.length - 1]
+    } else if (parentBullet) {
+      focus = [parentBullet.id, parentBullet.title.length - 1, parentBullet.title.length - 1]
+    } else if (nextBullet) {
+      focus = [nextBullet.id, nextBullet.title.length - 1, nextBullet.title.length - 1]
+    }
+     
     return this.props.destroyBullet(this.props.bullet.id)
+      .then(() => focus ? this.props.setFocus(...focus) : null)
   }
 
   indentBullet() {
@@ -72,6 +132,7 @@ class BulletItem extends React.Component {
       ord: prevBullet.child_ids.length + 1,
       parent_id: prevBullet.id, 
     }
+
     return this.props.updateBullet(shiftedBullet, bullet)
   }
 
@@ -91,15 +152,14 @@ class BulletItem extends React.Component {
   handleKeyPress(e) {
     const shift = e.shiftKey ? 'Shift+' : ''
     const keyCombo = shift + e.key
-
+    
     switch(keyCombo) {
       case 'Tab':
-        if (this.props.bullet.ord !== 1) {
-          e.preventDefault()
-          e.stopPropagation()
-          this.indentBullet(e)
-          break
-        }
+        e.preventDefault()
+        e.stopPropagation()
+        if (this.props.bullet.ord !== 1)
+          this.indentBullet()
+        break
 
       case 'Enter':
         e.preventDefault()
@@ -108,30 +168,24 @@ class BulletItem extends React.Component {
         break
 
       case 'Backspace':
-        if (this.state.title === '') {
-          e.preventDefault()
-          e.stopPropagation()
-          this.destroyBullet(e)
-          break
-        }
+        if (this.state.title === '')
+          this.destroyBullet()
+        break
 
       case 'Shift+Tab':
         e.preventDefault()
         e.stopPropagation()
-        this.outdentBullet(e)
+        this.outdentBullet()
+        break
+      
+      case 'ArrowRight':
+      case 'ArrowLeft':
+        this.props.setFocus(this.props.bullet.id, e.target.selectionStart, e.target.selectionEnd)
         break
     }
   }
 
   render() {
-    const { 
-      createSubBullet, 
-      updateBullet, 
-      destroyBullet, 
-      indentBullet,
-      outdentBullet,
-    } = this
-
     const bullet = this.props.bullet
 
     return (
@@ -140,34 +194,38 @@ class BulletItem extends React.Component {
         <div className='bullet'>
           <i className="fa fa-circle" aria-hidden="true"></i>
 
-
           <form 
-            onBlur={updateBullet}
             onKeyDown={this.handleKeyPress}>
 
             <input
               value={this.state.title || ''}
               placeholder={this.props.name}
-              onChange={this.handleChange('title')}/>
+              ref={input => this.input = input}
+              onChange={this.handleChange('title')}
+              onClick={this.handleClick}/>
 
           </form>
         </div>
 
         <Bullets
           bullet_ids={bullet.child_ids} 
-          createBullet={createSubBullet} />
+          createBullet={this.createSubBullet} />
 
       </li>
     )
   }
 }
 
-const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }}, ownProps) => {
+const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }, ui }, ownProps) => {
   const bullet = bullets[ownProps.bullet_id]
+
   return {
     bullet: assoc('child_ids', subBullets[bullet.id] || [], bullet),
-    parentBullet: assoc('child_ids', subBullets[bullet.parent_id] || [], bullets[bullet.parent_id]),
-    prevBullet: assoc('child_ids', subBullets[ownProps.prevId] || [], bullets[ownProps.prevId]),
+    parentBullet: bullet.parent_id ? assoc('child_ids', subBullets[bullet.parent_id] || [], bullets[bullet.parent_id]) : null,
+    prevBullet: ownProps.prevId ? assoc('child_ids', subBullets[ownProps.prevId] || [], bullets[ownProps.prevId]) : null,
+    nextBullet: ownProps.nextId ? assoc('child_ids', subBullets[ownProps.nextId] || [], bullets[ownProps.nextId]) : null,
+    focused: ui.focus.id === ownProps.bullet_id,
+    focus: ui.focus,
   }
 }
 
@@ -177,6 +235,7 @@ const mapDispatchToProps = {
   destroyBullet,
   receiveBullet,
   removeBullet,
+  setFocus,
 }
 
 const ConnectedBulletItem = connect(mapStateToProps, mapDispatchToProps)(BulletItem)
