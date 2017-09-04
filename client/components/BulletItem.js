@@ -1,8 +1,7 @@
 import { assoc, sort, values } from 'ramda'
-import React from 'react'
+import React from 'react' 
 import { connect } from 'react-redux' 
-
-import {
+import { 
   createSubBullet,
   updateBullet,
   destroyBullet,
@@ -16,7 +15,7 @@ class BulletItem extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = props.bullet
+    this.state = {...props.bullet}
 
     this.setInterval = this.setInterval.bind(this)
     this.clearInterval = this.clearInterval.bind(this)
@@ -48,11 +47,12 @@ class BulletItem extends React.Component {
     if (!this.props.focused && newProps.focused) {
       this.input.focus()
       this.input.setSelectionRange(
-        this.props.focus.selectionStart, 
-        this.props.focus.selectionEnd)
+        newProps.focus.selectionStart, 
+        newProps.focus.selectionEnd)
     }
-    if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt)
+    if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt) {
       this.setState(newProps.bullet)
+    }
   }
 
   handleChange(field) {
@@ -78,8 +78,8 @@ class BulletItem extends React.Component {
   }
 
   clearInterval() {
-    clearInterval(this.intervalId)
     this.updateBullet()
+    clearInterval(this.intervalId)
   }
 
   newSiblingBullet() {
@@ -182,6 +182,18 @@ class BulletItem extends React.Component {
       case 'ArrowLeft':
         this.props.setFocus(this.props.bullet.id, e.target.selectionStart, e.target.selectionEnd)
         break
+
+      case 'ArrowUp':
+        e.preventDefault()
+        const prev = this.props.prevBullet || this.props.parentBullet
+        if (prev) this.props.setFocus(prev.id, prev.title.length, prev.title.length)
+        break
+
+      case 'ArrowDown':
+        e.preventDefault()
+        const next = this.props.nextBullet
+        if (next) this.props.setFocus(next.id, 0, 0)
+        break
     }
   }
 
@@ -204,7 +216,7 @@ class BulletItem extends React.Component {
               onChange={this.handleChange('title')}
               onClick={this.handleClick}
               onFocus={this.setInterval}
-              onBlur={this.removeInterval}/>
+              onBlur={this.clearInterval}/>
 
           </form>
         </div>

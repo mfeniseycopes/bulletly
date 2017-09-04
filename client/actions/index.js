@@ -107,7 +107,10 @@ export const retrieveBullet = id => dispatch =>
 
 export const createTopicBullet = (topicId, bullet) => dispatch =>
   postTopicBullet(topicId, bullet)
-    .then(dispatchAction(dispatch, receiveBullet))
+    .then(bullet => {
+      dispatch(receiveBullet(bullet))
+      return bullet
+    })
 
 export const createSubBullet = (parentId, bullet) => dispatch =>
   postSubBullet(parentId, bullet)

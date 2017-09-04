@@ -23,6 +23,17 @@ const bullets = (state = {}, { type, payload }) => {
       bullet = payload.bullet
       oldBullet = payload.oldBullet
 
+      // in-place
+      if (oldBullet && 
+        (bullet.parent_id === oldBullet.parent_id &&
+         bullet.ord === oldBullet.ord)) {
+        return assoc(
+          bullet.id,
+          bullet,
+          state)
+      }
+      
+      // new bullet or positional shift
       return assoc(
         bullet.id,
         bullet,
