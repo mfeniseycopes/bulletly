@@ -18,6 +18,8 @@ class BulletItem extends React.Component {
     super(props)
     this.state = props.bullet
 
+    this.setInterval = this.setInterval.bind(this)
+    this.clearInterval = this.clearInterval.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.createSubBullet = this.createSubBullet.bind(this)
     this.updateBullet = this.updateBullet.bind(this)
@@ -30,7 +32,6 @@ class BulletItem extends React.Component {
       this.input.setSelectionRange(
         this.props.focus.selectionStart, 
         this.props.focus.selectionEnd)
-      this.saveIntervalId = setInterval(this.updateBullet, 5000)
     }
   }
 
@@ -40,9 +41,6 @@ class BulletItem extends React.Component {
       this.input.setSelectionRange(
         this.props.focus.selectionStart, 
         this.props.focus.selectionEnd)
-      this.saveIntervalId = setInterval(this.updateBullet, 5000)
-    } else if (prevProps.focused && !this.props.focused) {
-      clearInterval(this.saveIntervalId)
     }
   }
 
@@ -52,16 +50,9 @@ class BulletItem extends React.Component {
       this.input.setSelectionRange(
         this.props.focus.selectionStart, 
         this.props.focus.selectionEnd)
-      this.saveIntervalId = setInterval(this.updateBullet, 5000)
-    } else if (this.props.focused && !newProps.focused) {
-      clearInterval(this.saveIntervalId) 
     }
     if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt)
       this.setState(newProps.bullet)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.saveIntervalId)
   }
 
   handleChange(field) {
@@ -80,6 +71,15 @@ class BulletItem extends React.Component {
 
   handleClick(e) {
     this.props.setFocus(this.props.bullet.id, this.input.selectionStart, this.input.selectionEnd)
+  }
+
+  setInterval() {
+    this.intervalId = setInterval(this.updateBullet, 5000)
+  }
+
+  clearInterval() {
+    clearInterval(this.intervalId)
+    this.updateBullet()
   }
 
   newSiblingBullet() {
@@ -202,7 +202,9 @@ class BulletItem extends React.Component {
               placeholder={this.props.name}
               ref={input => this.input = input}
               onChange={this.handleChange('title')}
-              onClick={this.handleClick}/>
+              onClick={this.handleClick}
+              onFocus={this.setInterval}
+              onBlur={this.removeInterval}/>
 
           </form>
         </div>
