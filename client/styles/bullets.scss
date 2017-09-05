@@ -1,20 +1,43 @@
+.bullets {
+  flex-grow: 7.5;
+}
+
 .bullet-sub-list {
-  padding-left: 20px ;
+  padding-left: 20px;
 
   li {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     .bullet {
       display: flex;
       flex-direction: row;
-      padding: 10px;
+      align-items: center;
+      padding-left: 10px;
 
-      input {
-        border: none;
-        background-color: inherit;
-        outline: none;
-        padding: none;
+      i {
+        font-size: 10px;
+      }
+      
+      form {
+        width: 100%;
+        display: flex;
+
+        span {
+          display: inline-block;
+          width: 100%;
+
+          input {
+            border: none;
+            background-color: inherit;
+            outline: none;
+            padding: none;
+            margin-left: 10px;
+            line-height: 25px;
+            width: calc(100% - 10px);
+          }
+        }
       }
     }
   } 

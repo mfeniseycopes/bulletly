@@ -5,7 +5,8 @@ import {
   createSubBullet,
   updateBullet,
   destroyBullet,
-  receiveBullet, removeBullet,
+  receiveBullet, 
+  removeBullet,
   setFocus,
 } from '../actions'
 
@@ -19,7 +20,7 @@ class BulletItem extends React.Component {
 
     this.setInterval = this.setInterval.bind(this)
     this.clearInterval = this.clearInterval.bind(this)
-    this.handleClick = this.handleClick.bind(this)
+    this.handleClick = this.handleClick.bind(this) 
     this.createSubBullet = this.createSubBullet.bind(this)
     this.updateBullet = this.updateBullet.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
@@ -74,11 +75,10 @@ class BulletItem extends React.Component {
   }
 
   setInterval() {
-    this.intervalId = setInterval(this.updateBullet, 5000)
+    this.intervalId = setInterval(this.updateBullet, 1000)
   }
 
   clearInterval() {
-    this.updateBullet()
     clearInterval(this.intervalId)
   }
 
@@ -104,7 +104,9 @@ class BulletItem extends React.Component {
   }
 
   updateBullet() {
-    return this.props.updateBullet(this.state, this.props.bullet)
+    if (this.props.bullet.title !== this.state.title)
+      return this.props.updateBullet(this.state, this.props.bullet)
+    return Promise.resolve()
   }
 
   destroyBullet() {
@@ -137,9 +139,9 @@ class BulletItem extends React.Component {
   }
 
   outdentBullet() {
-    const { parentBullet } = this.props
+    const { parentBullet, prevBullet } = this.props
     const bullet = this.state
-
+    
     const shiftedBullet = {
       ...bullet,
       ord: parentBullet.ord + 1,
@@ -164,7 +166,8 @@ class BulletItem extends React.Component {
       case 'Enter':
         e.preventDefault()
         e.stopPropagation()
-        this.createNextBullet()
+        this.updateBullet()
+          .then(this.createNextBullet.bind(this))
         break
 
       case 'Backspace':
@@ -208,15 +211,16 @@ class BulletItem extends React.Component {
 
           <form 
             onKeyDown={this.handleKeyPress}>
-
-            <input
-              value={this.state.title || ''}
-              placeholder={this.props.name}
-              ref={input => this.input = input}
-              onChange={this.handleChange('title')}
-              onClick={this.handleClick}
-              onFocus={this.setInterval}
-              onBlur={this.clearInterval}/>
+            <span>
+              <input
+                value={this.state.title || ''}
+                placeholder={this.props.name}
+                ref={input => this.input = input}
+                onChange={this.handleChange('title')}
+                onClick={this.handleClick}
+                onFocus={this.setInterval}
+                onBlur={this.clearInterval}/>
+            </span>
 
           </form>
         </div>

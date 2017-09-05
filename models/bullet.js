@@ -90,8 +90,7 @@ const bulletDefn = (db, DataTypes) => {
               return Promise.all(
                 others.map(other => {
                   const change = {
-                    ord: other.ord + 
-                    (other.parent_id === bullet.parent_id ? 1 : -1)
+                    ord: other.ord + (other.parent_id === bullet.parent_id ? 1 : -1)
                   }
 
                   return other.update(change, options)
