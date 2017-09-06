@@ -23,11 +23,11 @@ class TopicBullets extends React.Component {
       .then(() => this.setState({ fetching: false }))
   }
 
-  componentWillReceiveProps(ownProps) {
-    if (this.props.match.params.topicId !== ownProps.match.params.topicId) {
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.topicId !== newProps.match.params.topicId) {
       this.setState({ fetching: true })
 
-      this.props.retrieveTopicBullets(ownProps.match.params.topicId)
+      this.props.retrieveTopicBullets(newProps.match.params.topicId)
         .then(() => this.setState({ fetching: false }))
     }
   }
@@ -54,7 +54,10 @@ class TopicBullets extends React.Component {
 const mapStateToProps = ({ entities: { topics, bullets }, joins: { topicBullets } }, ownProps) => {
   const topic = topics[ownProps.match.params.topicId]
   return {
-    topic: assoc('bullet_ids', topicBullets[ownProps.match.params.topicId], topic),
+    topic: assoc(
+      'bullet_ids', 
+      topicBullets[ownProps.match.params.topicId] || [], 
+      topic),
   }
 }
 
