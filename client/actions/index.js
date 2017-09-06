@@ -85,7 +85,10 @@ export const retrieveTopicBullets = id => dispatch =>
 
 export const createTopic = topic => dispatch =>
   postTopic(topic)
-    .then(dispatchAction(dispatch, receiveTopic))
+    .then(newTopic => {
+      dispatch(receiveTopic(newTopic))
+      return newTopic
+    })
 
 export const updateTopic = topic => dispatch =>
   putTopic(topic)

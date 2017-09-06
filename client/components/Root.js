@@ -12,7 +12,7 @@ const Root = () => (
   <Provider store={ store }>
     <HashRouter>
       <App>
-        <Route path='/' component={Topics} />
+        <Route component={Topics} />
         <Route path='/topic/:topicId' component={TopicBullets} />
       </App>
     </HashRouter>

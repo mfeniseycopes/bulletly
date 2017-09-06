@@ -1,36 +1,38 @@
-import changeHandler from 'memoized-change-handler'
 import React from 'react'
+import changeHandler from 'memoized-change-handler'
+import { connect } from 'react-redux'
+
+import { createTopic } from '../actions'
 
 class TopicForm extends React.Component {
+
   constructor(props) {
     super(props)
-    this.state = props.topic || { title: '', }
+    this.state = props.topic || { title: '' }
     this.handleChange = changeHandler(this)
-    this.onSubmit = this.onSubmit.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.topic ^ newProps.topic)
-      this.setState(props.bullet)
-  }
-
-  onSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault()
-    this.props.submit(this.state)
+    let p = this.props.createTopic(this.state)
+    debugger
+    p.then(topic => this.props.history.push(`/topic/${topic.id}`))
   }
 
   render() {
     return (
-      <form
-        onSubmit={this.onSubmit} >
-
-        <input
-          value={this.state.title}
-          placeHolder={this.props.name}
+      <form>
+        <input type='text' 
+          value={this.state.title} 
           onChange={this.handleChange('title')}/>
-
+        <button type='submit' onClick={this.handleSubmit}>Submit</button>
       </form>)
-  } 
+  }
 }
 
-export default TopicForm
+const mapDispatchToProps = {
+  createTopic,
+}
+
+export default connect(null, mapDispatchToProps)(TopicForm)

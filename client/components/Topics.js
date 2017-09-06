@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 
 import { retrieveTopics, createTopic, } from '../actions'
 import TopicItem from './TopicItem'
+import TopicForm from './TopicForm'
+import ModalRoute from './ModalRoute'
 
 import topics from '../styles/topics.scss'
 
@@ -20,11 +22,12 @@ class Topics extends React.Component {
 
     return (
       <section className='topics'>
+        <ModalRoute path='*/new-topic' component={TopicForm}/>
         <ul>
           
-          <li><Link to='?newtopic=true'>+ new topic</Link></li>
+          <li><Link to={`${this.props.location.pathname}/new-topic`}>+ new topic</Link></li>
           
-          { topics.map(topic => ( 
+          { topics.map(topic => (
             <TopicItem key={topic.id} topic={topic} />
           ))}
 

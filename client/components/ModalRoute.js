@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter, Route } from 'react-router-dom'
+import { withRouter, Link, Route } from 'react-router-dom'
 
 import modal from '../styles/modal.scss'
 
@@ -14,13 +14,13 @@ const modalize = component => props => {
   const Component = component 
   
   return (
-    <div className='modal-background'
-      onClick={e => e.preventDefault()}>
+    <Link className='modal-background'
+      to={`${props.match.params[0]}`}>
       <div className='modal-container'
         onClick={e => e.preventDefault()}>
         <Component {...props} />
       </div>
-    </div>)
+    </Link>)
 }
 
 export default withRouter(ModalRoute)

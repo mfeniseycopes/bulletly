@@ -6,15 +6,11 @@ const App = ({ children }) => (
   <main className='app'>
 
     <navbar>
-      
-      <h1>Bullet Journal</h1>
-
+      <h1>bullet journal</h1>
     </navbar>
 
     <main>
-
       { children }
-
     </main>
 
   </main>
