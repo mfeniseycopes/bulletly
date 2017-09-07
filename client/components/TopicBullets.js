@@ -1,9 +1,11 @@
 import { assoc, find, prop, sortBy, values, } from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import Bullets from './Bullets'
+import { ModalLink, ModalRoute, }from './ModalRouter'
+import TopicForm from './TopicForm'
 
 import {
   retrieveTopicBullets,
@@ -40,14 +42,24 @@ class TopicBullets extends React.Component {
 
     if (this.state.fetching) return <div>'...loading'</div>
 
-    if (!this.state.fetching && !this.props.topic) return <Redirect to='/' />
-    
     return (
       <article className='bullets'>
+
+        <ModalRoute
+          path={`${this.props.match.path}/edit`} 
+          component={TopicForm}/>
+
+        <ModalLink 
+          to={`${this.props.location.pathname}/edit`}>
+          ✏️
+        </ModalLink>
+
         <Bullets 
           bullet_ids={this.props.topic.bullet_ids} 
           createBullet={this.createBullet} />
-      </article>)
+
+      </article>
+    )
   }
 }
 

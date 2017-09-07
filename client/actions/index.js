@@ -12,8 +12,12 @@ import {
   deleteBullet,
 } from '../api'
 
-const dispatchAction = (dispatch, action) => payload =>
+const identity = x => x
+
+const dispatchAction = (dispatch, action) => payload => {
   dispatch(action(payload))
+  return payload
+}
 
 export const [
   RECEIVE_BULLET,
@@ -85,10 +89,7 @@ export const retrieveTopicBullets = id => dispatch =>
 
 export const createTopic = topic => dispatch =>
   postTopic(topic)
-    .then(newTopic => {
-      dispatch(receiveTopic(newTopic))
-      return newTopic
-    })
+    .then(dispatchAction(dispatch, receiveTopic))
 
 export const updateTopic = topic => dispatch =>
   putTopic(topic)
@@ -110,17 +111,11 @@ export const retrieveBullet = id => dispatch =>
 
 export const createTopicBullet = (topicId, bullet) => dispatch =>
   postTopicBullet(topicId, bullet)
-    .then(bullet => {
-      dispatch(receiveBullet(bullet))
-      return bullet
-    })
+    .then(dispatchAction(dispatch, receiveBullet))
 
 export const createSubBullet = (parentId, bullet) => dispatch =>
   postSubBullet(parentId, bullet)
-    .then(bullet => {
-      dispatch(receiveBullet(bullet))
-      return bullet
-    })
+    .then(dispatchAction(dispatch, receiveBullet))
 
 export const updateBullet = (bullet, oldBullet) => dispatch =>
   putBullet(bullet)
