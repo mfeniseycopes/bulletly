@@ -82,20 +82,20 @@ class BulletItem extends React.Component {
     clearInterval(this.intervalId)
   }
 
-  newSiblingBullet() {
+  newSiblingBullet(type=this.props.bullet.type) {
     const bullet = this.props.bullet
 
     return {
       ord: bullet.ord + 1,
       parent_id: bullet.parent_id,
       topic_id: bullet.topic_id,
-      type: 'note',
+      type,
       title: '',
     }
   }
 
-  createNextBullet() {
-    return this.props.createBullet(this.newSiblingBullet())
+  createNextBullet(type) {
+    return this.props.createBullet(this.newSiblingBullet(type))
       .then(bullet => this.props.setFocus(bullet.id, 0, 0))
   }
 
@@ -153,7 +153,8 @@ class BulletItem extends React.Component {
 
   handleKeyPress(e) {
     const shift = e.shiftKey ? 'Shift+' : ''
-    const keyCombo = shift + e.key
+    const meta = e.metaKey ? 'Meta+' : ''
+    const keyCombo = shift + meta + e.key
     
     switch(keyCombo) {
       case 'Tab':
@@ -165,9 +166,20 @@ class BulletItem extends React.Component {
 
       case 'Enter':
         e.preventDefault()
-        e.stopPropagation()
         this.updateBullet()
           .then(this.createNextBullet.bind(this))
+        break
+
+      case 'Meta+e':
+        this.setState({type: 'event'})
+        break
+
+      case 'Meta+n':
+        this.setState({type: 'note'})
+        break
+
+      case 'Meta+c':
+        this.setState({type: 'task'})
         break
 
       case 'Backspace':
@@ -200,6 +212,21 @@ class BulletItem extends React.Component {
     }
   }
 
+  symbol() {
+    switch(this.state.type) {
+      case 'note': 
+        return (<i className="fa fa-minus" aria-hidden="true"></i>)
+
+      case 'event': 
+        return (<i className="fa fa-circle-o" aria-hidden="true"></i>)
+
+      case 'task':
+        const className = this.state.completed_on ? 
+          'fa fa-check-square-o' : 'fa fa-square-o'
+        return (<i className={className} aria-hidden="true"></i>)
+    }
+  }
+
   render() {
     const bullet = this.props.bullet
 
@@ -207,7 +234,7 @@ class BulletItem extends React.Component {
       <li>
 
         <div className='bullet'>
-          <i className="fa fa-circle" aria-hidden="true"></i>
+          {this.symbol()}
 
           <form 
             onKeyDown={this.handleKeyPress}>
