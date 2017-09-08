@@ -8,35 +8,34 @@ class TopicForm extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {...(props.topic)} || { title: '' }
+    this.state = props.topic ? {...props.topic} : { title: '' }
     this.handleChange = changeHandler(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentWillReceiveProps(newProps) {
-    if (!this.props.topic && newProps.topic){
-      this.setState({...(newProps.topic)})
+    if (!this.props.topic && newProps.topic) {
+      this.setState({...newProps.topic})
     }
   }
 
   handleSubmit(e) {
     e.preventDefault()
-    const topic = this.state;
 
+    const topic = this.state;
     const crud = topic.id ? this.props.updateTopic : this.props.createTopic
-    
+
     crud(topic)
       .then(t => this.props.history.replace(`/topic/${t.id}`))
   }
 
   render() {
     return (
-      <form >
-        <input type='text' 
-          value={this.state.title} 
-          onChange={this.handleChange('title')}/>
-        <button type='button'
-         onClick={this.handleSubmit}>Submit</button>
+      <form onSubmit={this.handleSubmit}>
+        <input type='text'
+          value={this.state.title || ''}
+          onChange={this.handleChange('title')} />
+        <button>Submit</button>
       </form>)
   }
 }

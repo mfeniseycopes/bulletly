@@ -10,19 +10,17 @@ export const ModalLink = ({to, children}) => (
 )
 
 const modalize = component => props => {
-  const Component = component 
+  const Component = component
   const { history, location } = props
-  
+
   const onOuterClick = e => {
-    e.preventDefault()
     history.goBack()
   }
 
   const onInnerClick = e => {
-    e.preventDefault()
     e.stopPropagation()
   }
-  
+
   if (history.action === 'POP' || !location.state || !location.state.modal)
     return <Redirect to='/'/>
 
@@ -34,5 +32,5 @@ const modalize = component => props => {
     </div>)
 }
 
-export const ModalRoute = withRouter(props => 
+export const ModalRoute = withRouter(props =>
   <Route {...props} component={modalize(props.component)}/>)
