@@ -1,3 +1,5 @@
+@import './colors';
+
 .bullets {
   flex-grow: 7.5;
 }
@@ -15,22 +17,30 @@
       flex-direction: row;
       align-items: center;
       padding-left: 10px;
-      line-height: 25px;
+      height: 35px;
 
       i {
         font-size: 10px;
         width: 20px;
+
+        &.fa-circle {
+          font-size: 5px;
+        }
       }
-      
-      p.due-date {
-        display: inline;
-        padding: 0 5px;
+
+      button.bullet-date {
+        border: 1px outset $light-grey;
+        font-family: 'Raleway';
+        input: pointer;
+        margin: 4.5px 0;
         white-space: nowrap;
-        line-height: 25px;
-        border: 1px solid black;
+        font-size: 16px;
+        background-color: inherit;
+        color: $light-grey;
+        cursor: pointer;
       }
-      
-      .bullet-form {
+
+      form.bullet-form {
         width: 100%;
         display: flex;
 

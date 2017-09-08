@@ -2,6 +2,7 @@ import { assoc, sort, values } from 'ramda'
 import React from 'react' 
 import { connect } from 'react-redux' 
 import moment from 'moment'
+import Datetime from 'react-datetime'
 
 import { 
   createSubBullet,
@@ -13,8 +14,8 @@ import {
 } from '../actions'
 
 import Bullets from './Bullets'
-import DateTime from './DateTime'
-import Floater from './Floater'
+
+import datetime from '../styles/datetime.scss'
 
 class BulletItem extends React.Component {
 
@@ -242,11 +243,10 @@ class BulletItem extends React.Component {
 
     switch(bullet.type) {
       case 'note': 
-        return (<i className="fa fa-minus" aria-hidden="true"></i>)
+        return (<i className="fa fa-circle" aria-hidden="true"></i>)
 
       case 'event': 
-        className = bullet.due_date ? 
-          'fa fa-calendar-check-o' : 'fa fa-calendar-plus-o'
+        className = 'fa fa-circle-o' 
         return (<i className={className} aria-hidden="true"></i>)
 
       case 'task':
@@ -257,40 +257,41 @@ class BulletItem extends React.Component {
   }
 
   render() {
-    const {child_ids, dateFloater, due_date, title} = this.state
-
-    let date = null
-    // show the date
-    if (!dateFloater && due_date) {
-      date = (
-        <p className='due-date'>
-          { moment(due_date)
-              .format('h:mma on M/DD/YY') }
-        </p>
-      )
-    // show the dateform
-    } else {
-      date = (
-        <Floater 
-          visible={dateFloater}
-          blurCallback={e => this.setState({dateFloater: false})}>
-
-          <DateTime 
-            date={due_date}
-            onChange={this.handleChange('due_date')}
-            onSubmit={this.updateBullet}/>
-
-        </Floater>
-      )
-    }
+    const {child_ids, dateFloater, due_date, title, type} = this.state
     
+    let date = null
+    if (dateFloater) {
+
+      const dateOnBlur = () =>
+        this.updateBullet()
+          .then(() => this.setState({dateFloater: false}))
+      const dateOnChange = e => this.setState({due_date: e.toISOString()})
+        
+      date = (
+        <Datetime
+          inputProps={{placeholder: 'cal', autoFocus: true}}
+          value={moment(due_date)}
+          format='MM/DD/YY hh:mm'
+          onChange={dateOnChange}
+          onBlur={dateOnBlur}/>
+      )
+    } else {
+
+      const dateOnChange = e => this.setState({dateFloater: true})
+
+      date = <button className='bullet-date' onClick={dateOnChange}> 
+        {due_date ? moment(due_date).format('HH/DD/YY h:mm') : 'cal'}
+      </button>
+    }
+
+
     return (
       <li>
 
         <div className='bullet'>
           {this.symbol()}
 
-          {date}
+          {type !== 'note' ? date : null}
 
           <form
             className='bullet-form'
