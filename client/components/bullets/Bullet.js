@@ -22,12 +22,13 @@ const componentTypeMap = {
 }
 
 const Bullet = props => {
-  const Component = componentTypeMap[bullet.type]
+  const Component = componentTypeMap[props.bullet.type]
   return <Component {...props}/>
 }
 
 const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }, ui }, ownProps) => {
   const bullet = bullets[ownProps.bullet_id]
+  if (!bullet) debugger
 
   return {
     bullet: assoc('child_ids', subBullets[bullet.id] || [], bullet),

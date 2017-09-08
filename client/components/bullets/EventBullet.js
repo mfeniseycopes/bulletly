@@ -15,7 +15,7 @@ class EventBullet extends BaseBullet {
   }
 
   render() {
-    return protoRender()
+    return this.protoRender()
   }
 }
 

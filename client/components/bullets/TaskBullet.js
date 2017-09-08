@@ -16,7 +16,7 @@ class TaskBullet extends BaseBullet {
   }
 
   render() {
-    return protoRender()
+    return this.protoRender()
   }
 }
 

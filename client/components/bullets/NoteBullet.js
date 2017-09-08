@@ -14,7 +14,7 @@ class NoteBullet extends BaseBullet {
   }
 
   render() {
-    return protoRender()
+    return this.protoRender()
   }
 }
 

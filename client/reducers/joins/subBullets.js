@@ -1,5 +1,5 @@
-import { 
-  combineReducers, 
+import {
+  combineReducers,
 } from 'redux'
 
 import {
@@ -17,9 +17,9 @@ import {
   toString,
 } from 'ramda'
 
-import { 
-  RECEIVE_BULLET, 
-  RECEIVE_BULLETS, 
+import {
+  RECEIVE_BULLET,
+  RECEIVE_BULLETS,
   REMOVE_BULLET,
 } from '../../actions'
 
@@ -36,7 +36,7 @@ const subBullets = (state={}, {type, payload}) => {
       // new
       if (!oldBullet)
         return assoc(
-          bullet.parent_id, 
+          bullet.parent_id,
           insert(
             bullet.ord - 1,
             bullet.id,
@@ -44,14 +44,14 @@ const subBullets = (state={}, {type, payload}) => {
           state)
 
       // neither
-      if (bullet.parent_id === oldBullet.parent_id && 
-          bullet.ord === oldBullet.ord) 
+      if (bullet.parent_id === oldBullet.parent_id &&
+          bullet.ord === oldBullet.ord)
         return state
 
       // indent/outdent
       let newState = state
       newState = oldBullet.parent_id ? assoc(
-        oldBullet.parent_id, 
+        oldBullet.parent_id,
         remove(oldBullet.ord - 1, 1, state[oldBullet.parent_id]),
         newState) : newState
       newState = bullet.parent_id ? assoc(

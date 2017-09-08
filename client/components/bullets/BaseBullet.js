@@ -110,11 +110,11 @@ class BaseBullet extends React.Component {
     const { parentBullet, prevBullet, nextBullet } = this.props
 
     if (prevBullet) {
-      focus = [prevBullet.id, prevBullet.title.length - 1, prevBullet.title.length - 1]
+      focus = [prevBullet.id, prevBullet.title.length, prevBullet.title.length]
     } else if (parentBullet) {
-      focus = [parentBullet.id, parentBullet.title.length - 1, parentBullet.title.length - 1]
+      focus = [parentBullet.id, parentBullet.title.length, parentBullet.title.length]
     } else if (nextBullet) {
-      focus = [nextBullet.id, nextBullet.title.length - 1, nextBullet.title.length - 1]
+      focus = [nextBullet.id, 0, 0]
     }
 
     return this.props.destroyBullet(this.props.bullet.id)
