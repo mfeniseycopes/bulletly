@@ -1,23 +1,8 @@
-import { assoc, sort, values } from 'ramda'
-import React from 'react' 
-import { connect } from 'react-redux' 
-import moment from 'moment'
-import Datetime from 'react-datetime'
+import React from 'react'
 
-import { 
-  createSubBullet,
-  updateBullet,
-  destroyBullet,
-  receiveBullet, 
-  removeBullet,
-  setFocus,
-} from '../actions'
+import Bullets from '../Bullets'
 
-import Bullets from './Bullets'
-
-import datetime from '../styles/datetime.scss'
-
-class BulletItem extends React.Component {
+class BaseBullet extends React.Component {
 
   constructor(props) {
     super(props)
@@ -25,7 +10,7 @@ class BulletItem extends React.Component {
 
     this.setInterval = this.setInterval.bind(this)
     this.clearInterval = this.clearInterval.bind(this)
-    this.handleClick = this.handleClick.bind(this) 
+    this.handleClick = this.handleClick.bind(this)
     this.createSubBullet = this.createSubBullet.bind(this)
     this.updateBullet = this.updateBullet.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
@@ -35,7 +20,7 @@ class BulletItem extends React.Component {
     if (this.props.focused) {
       this.input.focus()
       this.input.setSelectionRange(
-        this.props.focus.selectionStart, 
+        this.props.focus.selectionStart,
         this.props.focus.selectionEnd)
     }
   }
@@ -44,7 +29,7 @@ class BulletItem extends React.Component {
     if (!prevProps.focused && this.props.focused) {
       this.input.focus()
       this.input.setSelectionRange(
-        this.props.focus.selectionStart, 
+        this.props.focus.selectionStart,
         this.props.focus.selectionEnd)
     }
   }
@@ -53,7 +38,7 @@ class BulletItem extends React.Component {
     if (!this.props.focused && newProps.focused) {
       this.input.focus()
       this.input.setSelectionRange(
-        newProps.focus.selectionStart, 
+        newProps.focus.selectionStart,
         newProps.focus.selectionEnd)
     }
     if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt) {
@@ -69,14 +54,17 @@ class BulletItem extends React.Component {
         { [field]: e.target.value, },
         () => {
           this.props.setFocus(
-            this.props.bullet.id, 
+            this.props.bullet.id,
             this.input.selectionStart, this.input.selectionEnd)
         })
-    } 
+    }
   }
 
   handleClick(e) {
-    this.props.setFocus(this.props.bullet.id, this.input.selectionStart, this.input.selectionEnd)
+    this.props.setFocus(
+      this.props.bullet.id,
+      this.input.selectionStart,
+      this.input.selectionEnd)
   }
 
   setInterval() {
@@ -120,7 +108,7 @@ class BulletItem extends React.Component {
   destroyBullet() {
     let focus = [null, null, null]
     const { parentBullet, prevBullet, nextBullet } = this.props
-    
+
     if (prevBullet) {
       focus = [prevBullet.id, prevBullet.title.length - 1, prevBullet.title.length - 1]
     } else if (parentBullet) {
@@ -128,7 +116,7 @@ class BulletItem extends React.Component {
     } else if (nextBullet) {
       focus = [nextBullet.id, nextBullet.title.length - 1, nextBullet.title.length - 1]
     }
-     
+
     return this.props.destroyBullet(this.props.bullet.id)
       .then(() => focus ? this.props.setFocus(...focus) : null)
   }
@@ -136,11 +124,11 @@ class BulletItem extends React.Component {
   indentBullet() {
     const { prevId, prevBullet } = this.props
     const bullet = this.state
-  
+
     const shiftedBullet = {
-      ...bullet, 
+      ...bullet,
       ord: prevBullet.child_ids.length + 1,
-      parent_id: prevBullet.id, 
+      parent_id: prevBullet.id,
     }
 
     return this.props.updateBullet(shiftedBullet, bullet)
@@ -149,13 +137,13 @@ class BulletItem extends React.Component {
   outdentBullet() {
     const { parentBullet, prevBullet } = this.props
     const bullet = this.state
-    
+
     const shiftedBullet = {
       ...bullet,
       ord: parentBullet.ord + 1,
       parent_id: parentBullet.parent_id,
     }
-    
+
     return this.props.updateBullet(shiftedBullet, bullet)
   }
 
@@ -164,7 +152,7 @@ class BulletItem extends React.Component {
     const shift = e.shiftKey ? 'Shift+' : ''
     const meta = e.metaKey ? 'Meta+' : ''
     const keyCombo = ctrl + shift + meta + e.key
-    
+
     switch(keyCombo) {
       // indent
       case 'Tab':
@@ -176,8 +164,7 @@ class BulletItem extends React.Component {
 
       // create and go to sibling bullet
       case 'Enter':
-        e.preventDefault()
-        this.updateBullet()
+        this.updateBullet(e)
           .then(this.createNextBullet.bind(this))
         break
 
@@ -185,7 +172,7 @@ class BulletItem extends React.Component {
       case 'Meta+e':
         this.setState({type: 'event'})
         break
-      
+
       // make note
       case 'Meta+n':
         this.setState({type: 'note'})
@@ -209,18 +196,12 @@ class BulletItem extends React.Component {
         this.outdentBullet()
         break
 
-      // add/edit due date
-      case 'Control+d':
-        this.setState({dateFloater: true})
-        debugger
-        break
-
       // move cursor
       case 'ArrowRight':
       case 'ArrowLeft':
         this.props.setFocus(this.props.bullet.id, e.target.selectionStart, e.target.selectionEnd)
         break
-      
+
       // move cursor to previous bullet
       case 'ArrowUp':
         e.preventDefault()
@@ -238,52 +219,11 @@ class BulletItem extends React.Component {
   }
 
   symbol() {
-    const bullet = this.state
-    let className
-
-    switch(bullet.type) {
-      case 'note': 
-        return (<i className="fa fa-circle" aria-hidden="true"></i>)
-
-      case 'event': 
-        className = 'fa fa-circle-o' 
-        return (<i className={className} aria-hidden="true"></i>)
-
-      case 'task':
-        className = this.state.completed_on ? 
-          'fa fa-check-square-o' : 'fa fa-square-o'
-        return (<i className={className} aria-hidden="true"></i>)
-    }
+    throw 'Sub-classes of BulletItem must provide a symbol method'
   }
 
-  render() {
+  protoRender(preForm, postForm) {
     const {child_ids, dateFloater, due_date, title, type} = this.state
-    
-    let date = null
-    if (dateFloater) {
-
-      const dateOnBlur = () =>
-        this.updateBullet()
-          .then(() => this.setState({dateFloater: false}))
-      const dateOnChange = e => this.setState({due_date: e.toISOString()})
-        
-      date = (
-        <Datetime
-          inputProps={{placeholder: 'cal', autoFocus: true}}
-          value={moment(due_date)}
-          format='MM/DD/YY hh:mm'
-          onChange={dateOnChange}
-          onBlur={dateOnBlur}/>
-      )
-    } else {
-
-      const dateOnChange = e => this.setState({dateFloater: true})
-
-      date = <button className='bullet-date' onClick={dateOnChange}> 
-        {due_date ? moment(due_date).format('HH/DD/YY h:mm') : 'cal'}
-      </button>
-    }
-
 
     return (
       <li>
@@ -291,7 +231,7 @@ class BulletItem extends React.Component {
         <div className='bullet'>
           {this.symbol()}
 
-          {type !== 'note' ? date : null}
+          {preForm}
 
           <form
             className='bullet-form'
@@ -310,40 +250,21 @@ class BulletItem extends React.Component {
 
           </form>
 
+          {postForm}
+
         </div>
 
         <Bullets
-          bullet_ids={child_ids} 
+          bullet_ids={child_ids}
           createBullet={this.createSubBullet} />
 
       </li>
     )
   }
-}
 
-const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }, ui }, ownProps) => {
-  const bullet = bullets[ownProps.bullet_id]
-
-  return {
-    bullet: assoc('child_ids', subBullets[bullet.id] || [], bullet),
-    parentBullet: bullet.parent_id ? assoc('child_ids', subBullets[bullet.parent_id] || [], bullets[bullet.parent_id]) : null,
-    prevBullet: ownProps.prevId ? assoc('child_ids', subBullets[ownProps.prevId] || [], bullets[ownProps.prevId]) : null,
-    nextBullet: ownProps.nextId ? assoc('child_ids', subBullets[ownProps.nextId] || [], bullets[ownProps.nextId]) : null,
-    focused: ui.focus.id === ownProps.bullet_id,
-    focus: ui.focus,
+  render() {
+    throw 'Sub-classes of BulletItem must provide a render method'
   }
 }
 
-const mapDispatchToProps = {
-  createSubBullet,
-  updateBullet,
-  destroyBullet,
-  receiveBullet,
-  removeBullet,
-  setFocus,
-}
-
-const ConnectedBulletItem = connect(mapStateToProps, mapDispatchToProps)(BulletItem)
-ConnectedBulletItem.displayName = ConnectedBulletItem
-
-export default ConnectedBulletItem
+export default BaseBullet
