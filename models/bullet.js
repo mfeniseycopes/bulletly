@@ -16,7 +16,10 @@ const bulletDefn = (db, DataTypes) => {
       allowNull: false,
       defaultValue: 'markdown',
     },
-    due_date: DataTypes.DATE,
+    due_date: {
+      type: DataTypes.DATE,
+      defaultValue: db.NOW,
+    },
     completed_on: DataTypes.DATE,
     recurrence: DataTypes.STRING,
 
