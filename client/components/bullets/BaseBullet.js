@@ -148,10 +148,10 @@ class BaseBullet extends React.Component {
   }
 
   handleKeyPress(e) {
+
     const ctrl = e.ctrlKey ? 'Control+' : ''
     const shift = e.shiftKey ? 'Shift+' : ''
-    const meta = e.metaKey ? 'Meta+' : ''
-    const keyCombo = ctrl + shift + meta + e.key
+    const keyCombo = ctrl + shift + e.key
 
     switch(keyCombo) {
       // indent
@@ -169,18 +169,21 @@ class BaseBullet extends React.Component {
         break
 
       // make event
-      case 'Meta+e':
-        this.setState({type: 'event'})
+      case 'Control+e':
+        this.updateBullet(e)
+          .then(() => this.createNextBullet('event'))
         break
 
       // make note
-      case 'Meta+n':
-        this.setState({type: 'note'})
+      case 'Control+n':
+        this.updateBullet(e)
+          .then(() => this.createNextBullet('note'))
         break
 
       // make task
-      case 'Meta+c':
-        this.setState({type: 'task'})
+      case 'Control+t':
+        this.updateBullet(e)
+          .then(() => this.createNextBullet('task'))
         break
 
       // delete
