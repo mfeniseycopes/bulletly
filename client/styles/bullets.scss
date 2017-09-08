@@ -15,29 +15,33 @@
       flex-direction: row;
       align-items: center;
       padding-left: 10px;
+      line-height: 25px;
 
       i {
         font-size: 10px;
+        width: 20px;
       }
       
-      form {
+      p.due-date {
+        display: inline;
+        padding: 0 5px;
+        white-space: nowrap;
+        line-height: 25px;
+        border: 1px solid black;
+      }
+      
+      .bullet-form {
         width: 100%;
         display: flex;
 
-        span {
-          display: inline-block;
-          width: 100%;
-
-          input {
+          input[type='text'] {
+            flex-grow: 1;
             border: none;
             background-color: inherit;
             outline: none;
-            padding: none;
-            margin-left: 10px;
+            padding: 0 0 0 3px;;
             line-height: 25px;
-            width: calc(100% - 10px);
           }
-        }
       }
     }
   } 

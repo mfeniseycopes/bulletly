@@ -1,6 +1,8 @@
 import { assoc, sort, values } from 'ramda'
 import React from 'react' 
 import { connect } from 'react-redux' 
+import moment from 'moment'
+
 import { 
   createSubBullet,
   updateBullet,
@@ -11,6 +13,8 @@ import {
 } from '../actions'
 
 import Bullets from './Bullets'
+import DateTime from './DateTime'
+import Floater from './Floater'
 
 class BulletItem extends React.Component {
 
@@ -52,7 +56,7 @@ class BulletItem extends React.Component {
         newProps.focus.selectionEnd)
     }
     if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt) {
-      this.setState(newProps.bullet)
+      this.setState({...newProps.bullet})
     }
   }
 
@@ -103,8 +107,11 @@ class BulletItem extends React.Component {
     return this.props.createSubBullet(this.props.bullet.id, bullet)
   }
 
-  updateBullet() {
-    if (this.props.bullet.title !== this.state.title)
+  updateBullet(e) {
+    if (e) e.preventDefault()
+
+    if (this.props.bullet.title !== this.state.title ||
+        this.props.bullet.due_date !== this.state.due_date)
       return this.props.updateBullet(this.state, this.props.bullet)
     return Promise.resolve()
   }
@@ -152,11 +159,13 @@ class BulletItem extends React.Component {
   }
 
   handleKeyPress(e) {
+    const ctrl = e.ctrlKey ? 'Control+' : ''
     const shift = e.shiftKey ? 'Shift+' : ''
     const meta = e.metaKey ? 'Meta+' : ''
-    const keyCombo = shift + meta + e.key
+    const keyCombo = ctrl + shift + meta + e.key
     
     switch(keyCombo) {
+      // indent
       case 'Tab':
         e.preventDefault()
         e.stopPropagation()
@@ -164,46 +173,61 @@ class BulletItem extends React.Component {
           this.indentBullet()
         break
 
+      // create and go to sibling bullet
       case 'Enter':
         e.preventDefault()
         this.updateBullet()
           .then(this.createNextBullet.bind(this))
         break
 
+      // make event
       case 'Meta+e':
         this.setState({type: 'event'})
         break
-
+      
+      // make note
       case 'Meta+n':
         this.setState({type: 'note'})
         break
 
+      // make task
       case 'Meta+c':
         this.setState({type: 'task'})
         break
 
+      // delete
       case 'Backspace':
         if (this.state.title === '')
           this.destroyBullet()
         break
 
+      // outdent
       case 'Shift+Tab':
         e.preventDefault()
         e.stopPropagation()
         this.outdentBullet()
         break
-      
+
+      // add/edit due date
+      case 'Control+d':
+        this.setState({dateFloater: true})
+        debugger
+        break
+
+      // move cursor
       case 'ArrowRight':
       case 'ArrowLeft':
         this.props.setFocus(this.props.bullet.id, e.target.selectionStart, e.target.selectionEnd)
         break
-
+      
+      // move cursor to previous bullet
       case 'ArrowUp':
         e.preventDefault()
         const prev = this.props.prevBullet || this.props.parentBullet
         if (prev) this.props.setFocus(prev.id, prev.title.length, prev.title.length)
         break
 
+      // move cursor to next bullet
       case 'ArrowDown':
         e.preventDefault()
         const next = this.props.nextBullet
@@ -213,47 +237,82 @@ class BulletItem extends React.Component {
   }
 
   symbol() {
-    switch(this.state.type) {
+    const bullet = this.state
+    let className
+
+    switch(bullet.type) {
       case 'note': 
         return (<i className="fa fa-minus" aria-hidden="true"></i>)
 
       case 'event': 
-        return (<i className="fa fa-circle-o" aria-hidden="true"></i>)
+        className = bullet.due_date ? 
+          'fa fa-calendar-check-o' : 'fa fa-calendar-plus-o'
+        return (<i className={className} aria-hidden="true"></i>)
 
       case 'task':
-        const className = this.state.completed_on ? 
+        className = this.state.completed_on ? 
           'fa fa-check-square-o' : 'fa fa-square-o'
         return (<i className={className} aria-hidden="true"></i>)
     }
   }
 
   render() {
-    const bullet = this.props.bullet
+    const {child_ids, dateFloater, due_date, title} = this.state
 
+    let date = null
+    // show the date
+    if (!dateFloater && due_date) {
+      date = (
+        <p className='due-date'>
+          { moment(due_date)
+              .format('h:mma on M/DD/YY') }
+        </p>
+      )
+    // show the dateform
+    } else {
+      date = (
+        <Floater 
+          visible={dateFloater}
+          blurCallback={e => this.setState({dateFloater: false})}>
+
+          <DateTime 
+            date={due_date}
+            onChange={this.handleChange('due_date')}
+            onSubmit={this.updateBullet}/>
+
+        </Floater>
+      )
+    }
+    
     return (
       <li>
 
         <div className='bullet'>
           {this.symbol()}
 
-          <form 
+          {date}
+
+          <form
+            className='bullet-form'
+            onSubmit={this.updateBullet}
             onKeyDown={this.handleKeyPress}>
-            <span>
+
               <input
-                value={this.state.title || ''}
+                type='text'
+                value={title || ''}
                 placeholder={this.props.name}
                 ref={input => this.input = input}
                 onChange={this.handleChange('title')}
                 onClick={this.handleClick}
                 onFocus={this.setInterval}
                 onBlur={this.clearInterval}/>
-            </span>
 
           </form>
+
         </div>
 
         <Bullets
-          bullet_ids={bullet.child_ids} 
+          bullet_ids={child_ids} 
           createBullet={this.createSubBullet} />
 
       </li>
