@@ -19,7 +19,7 @@
       padding-left: 10px;
       height: 35px;
 
-      i {
+      i.symbol {
         font-size: 10px;
         width: 20px;
 
@@ -29,15 +29,28 @@
       }
 
       button.bullet-date {
-        border: 1px outset $light-grey;
         font-family: 'Raleway';
-        input: pointer;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
         margin: 4.5px 0;
         white-space: nowrap;
         font-size: 16px;
-        background-color: inherit;
-        color: $light-grey;
-        cursor: pointer;
+        background-color: lightblue;
+        color: $med-grey;
+        position: relative;
+        outline: none;
+
+        i {
+          font-size: 16px;
+        }
+
+        .datetime {
+          position: absolute;
+          z-index: 10;
+          top: 30px;
+          left: 0;
+        }
       }
 
       form.bullet-form {
@@ -54,5 +67,5 @@
           }
       }
     }
-  } 
+  }
 }

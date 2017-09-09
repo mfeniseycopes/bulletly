@@ -10,7 +10,7 @@ class TaskBullet extends BaseBullet {
 
   symbol() {
     const className = this.state.completed_on ?
-      'fa fa-check-square-o' : 'fa fa-square-o'
+      'fa fa-check-square-o symbol' : 'fa fa-square-o symbol'
 
     return <i className={className} aria-hidden="true"></i>
   }

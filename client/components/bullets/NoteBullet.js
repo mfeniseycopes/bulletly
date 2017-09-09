@@ -10,7 +10,7 @@ class NoteBullet extends BaseBullet {
   }
 
   symbol() {
-    return <i className="fa fa-circle" aria-hidden="true"></i>
+    return <i className="fa fa-circle symbol" aria-hidden="true"></i>
   }
 
   render() {
