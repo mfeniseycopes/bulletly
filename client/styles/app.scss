@@ -1,5 +1,5 @@
 // EXTERNAL
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i');
 @import url('https://use.fontawesome.com/97d5852fc7.js');
 
 // INTERNAL
@@ -8,12 +8,12 @@
 @import './base.scss';
 
 .app {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   background-color: $white;
   color: $black;
 
   input {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Open Sans', sans-serif;
   }
 
   a {
@@ -34,7 +34,7 @@
   main {
     display: flex;
     justify-content: flex-start;
-    
+
     .topics, .bullets {
       height: calc(100vh - 70px);
       overflow: scroll;

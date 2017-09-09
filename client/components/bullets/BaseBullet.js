@@ -207,7 +207,7 @@ class BaseBullet extends React.Component {
 
       // delete
       case 'Backspace':
-        if (this.state.title === '')
+        if (this.state.title === '' && this.props.bullet.child_ids.length === 0)
           this.destroyBullet()
         break
 
