@@ -87,13 +87,26 @@ class BaseBullet extends React.Component {
     }
   }
 
+  newSubBullet(type=this.props.bullet.type) {
+    const bullet = this.props.bullet
+
+    return {
+      ord: 1,
+      parent_id: bullet.id,
+      topic_id: bullet.topic_id,
+      type,
+      title: '',
+    }
+  }
+
   createNextBullet(type) {
     return this.props.createBullet(this.newSiblingBullet(type))
       .then(bullet => this.props.setFocus(bullet.id, 0, 0))
   }
 
-  createSubBullet(bullet) {
+  createSubBullet(bullet = this.newSubBullet()) {
     return this.props.createSubBullet(this.props.bullet.id, bullet)
+      .then(subBullet => this.props.setFocus(subBullet.id, 0, 0))
   }
 
   updateBullet(e) {
@@ -165,8 +178,13 @@ class BaseBullet extends React.Component {
 
       // create and go to sibling bullet
       case 'Enter':
-        this.updateBullet(e)
-          .then(this.createNextBullet.bind(this))
+        if (this.props.bullet.child_ids.length > 0) {
+          this.updateBullet(e)
+            .then(this.createSubBullet.bind(this))
+        } else {
+          this.updateBullet(e)
+            .then(this.createNextBullet.bind(this))
+        }
         break
 
       // make event
