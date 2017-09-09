@@ -31,6 +31,7 @@ const bulletDefn = (db, DataTypes) => {
   }, {
     hooks: {
       beforeCreate: bullet => {
+        bullet.due_date = bullet.due_date || new Date() 
         return db.transaction(t => {
           return Bullet.findAll({
             where: {
