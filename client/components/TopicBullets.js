@@ -8,8 +8,9 @@ import { ModalLink, ModalRoute, }from './ModalRouter'
 import TopicForm from './TopicForm'
 
 import {
-  retrieveTopicBullets,
   createTopicBullet,
+  retrieveTopicBullets,
+  setFocus,
 } from '../actions'
 
 class TopicBullets extends React.Component {
@@ -30,6 +31,7 @@ class TopicBullets extends React.Component {
       this.setState({ fetching: true })
 
       this.props.retrieveTopicBullets(newProps.match.params.topicId)
+        .then(() => this.props.setFocus(this.props.topic.bullet_ids[0]))
         .then(() => this.setState({ fetching: false }))
     }
   }
@@ -74,8 +76,9 @@ const mapStateToProps = ({ entities: { topics, bullets }, joins: { topicBullets 
 }
 
 const mapDispatchToProps = {
-  retrieveTopicBullets,
   createTopicBullet,
+  retrieveTopicBullets,
+  setFocus,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopicBullets)

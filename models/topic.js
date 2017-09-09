@@ -6,6 +6,14 @@ const topicDefn = (db, DataTypes) => {
       allowNull: false,
       defaultValue: 'Untitled Topic',
     }
+  }, {
+    hooks: {
+      afterCreate: topic =>
+        topic.createBullet({
+          ord: 1,
+          type: 'note',
+        }),
+    }
   })
 
   Topic.associate = db => {
