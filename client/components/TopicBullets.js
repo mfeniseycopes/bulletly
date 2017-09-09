@@ -46,16 +46,16 @@ class TopicBullets extends React.Component {
       <article className='bullets'>
 
         <ModalRoute
-          path={`${this.props.match.path}/edit`} 
+          path={`${this.props.match.path}/edit`}
           component={TopicForm}/>
 
-        <ModalLink 
+        <ModalLink
           to={`${this.props.location.pathname}/edit`}>
           ✏️
         </ModalLink>
 
-        <Bullets 
-          bullet_ids={this.props.topic.bullet_ids} 
+        <Bullets
+          bullet_ids={this.props.topic.bullet_ids}
           createBullet={this.createBullet} />
 
       </article>
@@ -67,8 +67,8 @@ const mapStateToProps = ({ entities: { topics, bullets }, joins: { topicBullets 
   const topic = topics[ownProps.match.params.topicId]
   return {
     topic: assoc(
-      'bullet_ids', 
-      topicBullets[ownProps.match.params.topicId] || [], 
+      'bullet_ids',
+      topicBullets[ownProps.match.params.topicId] || [],
       topic),
   }
 }
@@ -78,4 +78,4 @@ const mapDispatchToProps = {
   createTopicBullet,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TopicBullets) 
+export default connect(mapStateToProps, mapDispatchToProps)(TopicBullets)

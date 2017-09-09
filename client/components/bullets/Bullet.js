@@ -28,7 +28,6 @@ const Bullet = props => {
 
 const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }, ui }, ownProps) => {
   const bullet = bullets[ownProps.bullet_id]
-  if (!bullet) debugger
 
   return {
     bullet: assoc('child_ids', subBullets[bullet.id] || [], bullet),

@@ -16,44 +16,52 @@ class EventBullet extends BaseBullet {
     return <i className='fa fa-circle-o symbol' aria-hidden="true"></i>
   }
 
-  toggleDateFloater() {
-    this.setState(({dateFloater}) => ({dateFloater: !dateFloater}))
+  toggleDateFloater(forcedVal) {
+    console.info('setting dateFloater', forcedVal)
+    this.setState(({dateFloater}) => (
+      {dateFloater: forcedVal !== undefined ? forcedVal : !dateFloater}))
   }
 
   dateRender() {
     const {dateFloater, due_date} = this.state
-    let floater = null
 
-    if (dateFloater) {
-      const dateOnBlur = () =>
-        this.updateBullet()
-          .then(this.toggleDateFloater.bind(this))
-      const dateOnChange = e =>
-        this.setState({due_date: e.toISOString()})
+    const datetimeOnChange = e =>
+      this.setState(
+        () => ({due_date: e.toISOString()}),
+        () => this.updateBullet()
+          .then(() => {
+            this.toggleDateFloater(false)
+          }))
 
-       floater = (
-        <Datetime
-          className='datetime'
-          inputProps={{autoFocus: true, placeholder: 'Enter a '}}
-          defaultValue={moment()}
-          value={moment(due_date)}
-          dateFormat='MM/DD/YY'
-          input={false}
-          timeFormat=''
-          onChange={dateOnChange}
-          closeOnSelect={true}
-          onBlur={dateOnBlur}/>)
+    const floater = (
+      <Datetime
+        className='datetime'
+        inputProps={{autoFocus: true}}
+        defaultValue={moment()}
+        value={moment(due_date)}
+        dateFormat='MM/DD/YY'
+        timeFormat=''
+        onChange={datetimeOnChange}
+        onBlur={() => this.setState({dateFloater: false, blurring: true}) }/>)
+
+
+    const dateOnClick = () => {
+      this.state.blurring ?
+        this.setState({blurring: false}) :
+        this.toggleDateFloater()
     }
-    const dateOnClick = e => this.setState({dateFloater: true})
-
+    
     return (
-      <button className='bullet-date' onClick={() => this.toggleDateFloater()}>
+      <div>
+      <button className='bullet-date' onClick={dateOnClick}>
         {due_date ? moment(due_date).format('MM/DD/YY') : <i className="fa fa-calendar-plus-o" aria-hidden="true"></i>}
-        {floater}
-      </button>)
+        { dateFloater ? floater : null }
+      </button>
+    </div>)
 }
 
   render() {
+    if (this.props.bullet.id === 39) console.log('rerendering', this.state)
     return this.protoRender(this.dateRender())
   }
 }

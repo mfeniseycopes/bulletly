@@ -100,8 +100,9 @@ class BaseBullet extends React.Component {
     if (e) e.preventDefault()
 
     if (this.props.bullet.title !== this.state.title ||
-        this.props.bullet.due_date !== this.state.due_date)
+        this.props.bullet.due_date !== this.state.due_date) {
       return this.props.updateBullet(this.state, this.props.bullet)
+    }
     return Promise.resolve()
   }
 
@@ -226,7 +227,8 @@ class BaseBullet extends React.Component {
   }
 
   protoRender(preForm, postForm) {
-    const {child_ids, dateFloater, due_date, title, type} = this.state
+    const {dateFloater, due_date, title, type} = this.state
+    const { child_ids } = this.props.bullet
 
     return (
       <li>
