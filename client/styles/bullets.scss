@@ -62,14 +62,21 @@
         width: 100%;
         display: flex;
 
-          input[type='text'] {
-            flex-grow: 1;
-            border: none;
-            background-color: inherit;
-            outline: none;
-            padding: 0 0 0 3px;;
-            line-height: 25px;
-          }
+        input[type='text'] {
+          flex-grow: 1;
+          border: none;
+          background-color: inherit;
+          outline: none;
+          padding: 0 0 0 3px;;
+          line-height: 25px;
+        }
+
+        div {
+          flex-grow: 1;
+          padding: 0 0 0 3px;;
+          min-height: 25px;
+          line-height: 25px;
+        }
       }
     }
   }

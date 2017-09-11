@@ -1,12 +1,15 @@
 import React from 'react'
+import Markdown from 'react-markdown'
 
 import Bullets from '../Bullets'
+import markdown from '../../styles/markdown.scss'
 
 class BaseBullet extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {...props.bullet}
+    this.state.title = this.state.title || ''
 
     this.setInterval = this.setInterval.bind(this)
     this.clearInterval = this.clearInterval.bind(this)
@@ -35,12 +38,6 @@ class BaseBullet extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (!this.props.focused && newProps.focused) {
-      this.input.focus()
-      this.input.setSelectionRange(
-        newProps.focus.selectionStart,
-        newProps.focus.selectionEnd)
-    }
     if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt) {
       this.setState({...newProps.bullet})
     }
@@ -234,20 +231,27 @@ class BaseBullet extends React.Component {
       // move cursor to next bullet
       case 'ArrowDown':
         e.preventDefault()
-        const next = this.props.nextBullet
-        if (next) this.props.setFocus(next.id, 0, 0)
+        let next
+        if (this.props.bullet.child_ids.length > 0)
+          next = this.props.bullet.child_ids[0]
+        else if (this.props.nextBullet)
+          next = this.props.nextBullet.id
+        if (next) this.props.setFocus(next, 0, 0)
         break
     }
   }
 
   symbol() {
-    throw 'Sub-classes of BulletItem must provide a symbol method'
+    throw 'Sub-classes of BaseBullet must provide a symbol method'
   }
 
   protoRender(preForm, postForm) {
-    const {dateFloater, due_date, title, type} = this.state
+    const {dateFloater, due_date, id, title, type,} = this.state
     const { child_ids } = this.props.bullet
+    const focused = this.props.focused
 
+    const text = focused ? <Markdown source={title}/> : title || ''
+    
     return (
       <li>
 
@@ -261,16 +265,26 @@ class BaseBullet extends React.Component {
             onSubmit={this.updateBullet}
             onKeyDown={this.handleKeyPress}>
 
-              <input
-                type='text'
-                value={title || ''}
-                placeholder={this.props.name}
-                ref={input => this.input = input}
-                onChange={this.handleChange('title')}
-                onClick={this.handleClick}
-                onFocus={this.setInterval}
-                onBlur={this.clearInterval}/>
-
+            {focused ? 
+                <input
+                  type='text'
+                  value={title}
+                  placeholder={this.props.name}
+                  ref={input => this.input = input}
+                  onChange={this.handleChange('title')}
+                  onClick={this.handleClick}
+                  onFocus={this.setInterval}
+                  onBlur={this.clearInterval}/> :
+                <Markdown source={title}
+                  containerProps={{
+										className: 'markdown-body',
+                    onMouseOver: e => {
+                      debugger
+                      this.props.setFocus(id)
+                    }
+                  }}
+                />}
+          
           </form>
 
           {postForm}
