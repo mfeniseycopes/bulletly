@@ -1,5 +1,6 @@
 import React from 'react'
 import Markdown from 'react-markdown'
+import ContentEditable from 'react-contenteditable'
 
 import Bullets from '../Bullets'
 import markdown from '../../styles/markdown.scss'
@@ -21,19 +22,11 @@ class BaseBullet extends React.Component {
 
   componentDidMount() {
     if (this.props.focused) {
-      this.input.focus()
-      this.input.setSelectionRange(
-        this.props.focus.selectionStart,
-        this.props.focus.selectionEnd)
     }
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.focused && this.props.focused) {
-      this.input.focus()
-      this.input.setSelectionRange(
-        this.props.focus.selectionStart,
-        this.props.focus.selectionEnd)
     }
   }
 
@@ -266,9 +259,8 @@ class BaseBullet extends React.Component {
             onKeyDown={this.handleKeyPress}>
 
             {focused ? 
-                <input
-                  type='text'
-                  value={title}
+                <ContentEditable
+                  html={title}
                   placeholder={this.props.name}
                   ref={input => this.input = input}
                   onChange={this.handleChange('title')}

@@ -3721,6 +3721,10 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-contenteditable@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-contenteditable/-/react-contenteditable-2.0.4.tgz#d745affcdeb6d79f28f75cf362bdcd178d20a446"
+
 react-datetime@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/react-datetime/-/react-datetime-2.10.1.tgz#25ba863551ae6e5ae80d8a7f99d359ea063c4a38"
