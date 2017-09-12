@@ -12,60 +12,69 @@ class BaseBullet extends React.Component {
     this.state = {...props.bullet}
     this.state.title = this.state.title || ''
 
-    this.setInterval = this.setInterval.bind(this)
-    this.clearInterval = this.clearInterval.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.createSubBullet = this.createSubBullet.bind(this)
     this.updateBullet = this.updateBullet.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
+  componentDidMount() {
+    if (this.props.focused) {
+      if (!this.codemirror.hasFocus()) {
+        const {line, ch} = this.props.focus
+        this.codemirror.focus()
+        this.codemirror.setCursor(line, ch)
+      }
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.focused && this.props.focused) {
-      const {selectionStart, selectionEnd} = this.props.focus
-      this.codemirror.focus()
-      this.codemirror.setCursor(selectionStart)
+      if (!this.codemirror.hasFocus()) {
+        const {line, ch} = this.props.focus
+        this.codemirror.focus()
+        this.codemirror.setCursor(line, ch)
+      }
     }
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt) {
+    if (this.props.bullet.id !== newProps.bullet.id) {
       this.setState({...newProps.bullet})
+    }
+    if (!this.codemirror.hasFocus()) {
+      const {line, ch} = this.props.focus
+      this.codemirror.focus()
+      this.codemirror.setCursor(line, ch)
     }
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.updateTimeoutId)
+  }
+
   handleMarkdownChange(val) {
-    this.setState({title: val})
+    this.setState(
+      {title: val},
+      () => {
+        const {ch, line} = this.codemirror.getCursor()
+        this.props.setFocus( this.props.bullet.id, line, ch)
+      })
+
+    if (!this.updateTimeoutId)
+     this.updateTimeoutId = setTimeout(this.updateBullet, 10)
   }
 
   handleChange(field) {
     return e => {
       e.preventDefault()
-
-      this.setState(
-        { [field]: e.target.value, },
-        () => {
-          this.props.setFocus(
-            this.props.bullet.id,
-            this.input.selectionStart, this.input.selectionEnd)
-        })
+      this.setState({ [field]: e.target.value, })
     }
   }
 
   handleClick(e) {
-    this.props.setFocus(
-      this.props.bullet.id,
-      this.codemirror.getCursor().ch)
-  }
-
-  setInterval() {
-    console.warn('setting interval for', this.props.bullet.id)
-    this.intervalId = setInterval(this.updateBullet, 1000)
-  }
-
-  clearInterval() {
-    console.warn('clearing interval for', this.props.bullet.id)
-    clearInterval(this.intervalId)
+    const {line, ch} = this.codemirror.getCursor()
+    this.props.setFocus(this.props.bullet.id, line, ch)
   }
 
   newSiblingBullet(type=this.props.bullet.type) {
@@ -108,6 +117,7 @@ class BaseBullet extends React.Component {
     if (this.props.bullet.title !== this.state.title ||
         this.props.bullet.due_date !== this.state.due_date) {
       return this.props.updateBullet(this.state, this.props.bullet)
+        .then(() => this.updateTimoutId = null)
     }
     return Promise.resolve()
   }
@@ -153,6 +163,7 @@ class BaseBullet extends React.Component {
     }
 
     return this.props.updateBullet(shiftedBullet, bullet)
+      .then(shiftedBullet => this.props.setFocus(shiftedBullet.id, 0, 0))
   }
 
   handleKeyPress(e) {
@@ -165,9 +176,14 @@ class BaseBullet extends React.Component {
       // indent
       case 'Tab':
         e.preventDefault()
-        e.stopPropagation()
         if (this.props.bullet.ord !== 1)
           this.indentBullet()
+        break
+
+      // outdent
+      case 'Shift+Tab':
+        e.preventDefault()
+        this.outdentBullet()
         break
 
       // create and go to sibling bullet
@@ -184,13 +200,13 @@ class BaseBullet extends React.Component {
         break
 
       // make event
-			case 'Control+e':
-				let callback
-				if (this.props.bullet.child_ids.length > 0) {
-					callback = () => this.createSubBullet(this.newSubBullet('event'))
-				} else {
-					callback = () => this.createNextBullet('event')
-				}
+      case 'Control+e':
+        let callback
+        if (this.props.bullet.child_ids.length > 0) {
+          callback = () => this.createSubBullet(this.newSubBullet('event'))
+        } else {
+          callback = () => this.createNextBullet('event')
+        }
 
         this.updateBullet(e)
           .then(callback)
@@ -211,17 +227,10 @@ class BaseBullet extends React.Component {
       // delete
       case 'Backspace':
         // only destroy if empty, no children && not the leading bullet
-        if (this.state.title === '' && 
+        if (this.state.title === '' &&
             this.props.bullet.child_ids.length === 0 &&
             (this.props.bullet.parent_id || this.props.bullet.ord !== 1))
           this.destroyBullet()
-        break
-
-      // outdent
-      case 'Shift+Tab':
-        e.preventDefault()
-        e.stopPropagation()
-        this.outdentBullet()
         break
 
       // move cursor
@@ -270,8 +279,6 @@ class BaseBullet extends React.Component {
           <form
             className='bullet-form'
             onKeyDown={this.handleKeyPress}
-            onFocus={this.setInterval}
-            onBlur={this.clearInterval}
             onClick={this.handleClick}>
 
             <SimpleMDE

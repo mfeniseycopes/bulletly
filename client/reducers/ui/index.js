@@ -5,8 +5,8 @@ import { SET_FOCUS } from '../../actions'
 const defaultUI = () => ({
   focus: {
     id: null,
-    selectionStart: null,
-    selectionEnd: null,
+    line: 0,
+    ch: 0,
   }
 })
 

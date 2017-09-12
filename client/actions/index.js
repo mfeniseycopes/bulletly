@@ -1,5 +1,5 @@
-import { 
-  fetchTopics, 
+import {
+  fetchTopics,
   fetchTopicBullets,
   postTopic,
   putTopic,
@@ -69,15 +69,15 @@ export const removeBullet = bullet => ({
   payload: { bullet }
 })
 
-export const setFocus = (id, selectionStart, selectionEnd, screenX, screenY, clientX, clientY) => ({
+export const setFocus = (id, line, ch) => ({
   type: SET_FOCUS,
   payload: {
     id,
-    selectionStart,
-    selectionEnd,
-    screenX, screenY, clientX, clientY
+    line,
+    ch,
   }
 })
+
 // TOPIC THUNKS
 
 export const retrieveTopics = () => dispatch =>
@@ -120,7 +120,10 @@ export const createSubBullet = (parentId, bullet) => dispatch =>
 
 export const updateBullet = (bullet, oldBullet) => dispatch =>
   putBullet(bullet)
-    .then(b => dispatch(receiveBullet(b, oldBullet)))
+    .then(b => {
+      dispatch(receiveBullet(b, oldBullet))
+      return b
+    })
 
 export const destroyBullet = id => dispatch =>
   deleteBullet(id)
