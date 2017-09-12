@@ -17,6 +17,7 @@
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
     "pug": "^2.0.0-rc.3",
+    "react-simplemde-editor": "^3.6.11",
     "sequelize": "^4.7.2"
   },
   "devDependencies": {

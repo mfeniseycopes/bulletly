@@ -69,12 +69,13 @@ export const removeBullet = bullet => ({
   payload: { bullet }
 })
 
-export const setFocus = (id, selectionStart, selectionEnd) => ({
+export const setFocus = (id, selectionStart, selectionEnd, screenX, screenY, clientX, clientY) => ({
   type: SET_FOCUS,
   payload: {
     id,
     selectionStart,
     selectionEnd,
+    screenX, screenY, clientX, clientY
   }
 })
 // TOPIC THUNKS

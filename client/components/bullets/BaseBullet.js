@@ -1,9 +1,11 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import Markdown from 'react-markdown'
 import ContentEditable from 'react-contenteditable'
+import SimpleMDE from 'react-simplemde-editor'
 
 import Bullets from '../Bullets'
-import markdown from '../../styles/markdown.scss'
+import simplemde from '../../styles/simplemde.scss'
 
 class BaseBullet extends React.Component {
 
@@ -20,13 +22,12 @@ class BaseBullet extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
-  componentDidMount() {
-    if (this.props.focused) {
-    }
-  }
-
   componentDidUpdate(prevProps) {
     if (!prevProps.focused && this.props.focused) {
+      console.warn('update')
+      const {selectionStart, selectionEnd} = this.props.focus
+      this.codemirror.focus()
+      this.codemirror.setCursor(selectionStart)
     }
   }
 
@@ -34,6 +35,10 @@ class BaseBullet extends React.Component {
     if (this.props.bullet.updatedAt !== newProps.bullet.updatedAt) {
       this.setState({...newProps.bullet})
     }
+  }
+
+  handleMarkdownChange(val) {
+    this.setState({title: val})
   }
 
   handleChange(field) {
@@ -53,8 +58,7 @@ class BaseBullet extends React.Component {
   handleClick(e) {
     this.props.setFocus(
       this.props.bullet.id,
-      this.input.selectionStart,
-      this.input.selectionEnd)
+      this.codemirror.getCursor().ch)
   }
 
   setInterval() {
@@ -136,6 +140,7 @@ class BaseBullet extends React.Component {
     }
 
     return this.props.updateBullet(shiftedBullet, bullet)
+      .then(shiftedBullet => this.props.setFocus(shiftedBullet.id, 0, 0))
   }
 
   outdentBullet() {
@@ -168,6 +173,8 @@ class BaseBullet extends React.Component {
 
       // create and go to sibling bullet
       case 'Enter':
+        e.preventDefault()
+        e.stopPropagation()
         if (this.props.bullet.child_ids.length > 0) {
           this.updateBullet(e)
             .then(this.createSubBullet.bind(this))
@@ -178,9 +185,16 @@ class BaseBullet extends React.Component {
         break
 
       // make event
-      case 'Control+e':
+			case 'Control+e':
+				let callback
+				if (this.props.bullet.child_ids.length > 0) {
+					callback = () => this.createSubBullet(this.newSubBullet('event'))
+				} else {
+					callback = () => this.createNextBullet('event')
+				}
+
         this.updateBullet(e)
-          .then(() => this.createNextBullet('event'))
+          .then(callback)
         break
 
       // make note
@@ -244,7 +258,7 @@ class BaseBullet extends React.Component {
     const focused = this.props.focused
 
     const text = focused ? <Markdown source={title}/> : title || ''
-    
+
     return (
       <li>
 
@@ -255,28 +269,28 @@ class BaseBullet extends React.Component {
 
           <form
             className='bullet-form'
-            onSubmit={this.updateBullet}
-            onKeyDown={this.handleKeyPress}>
+            onKeyDown={this.handleKeyPress}
+            onFocus={this.setInterval}
+            onBlur={this.clearInterval}
+            onClick={this.handleClick}>
 
-            {focused ? 
-                <ContentEditable
-                  html={title}
-                  placeholder={this.props.name}
-                  ref={input => this.input = input}
-                  onChange={this.handleChange('title')}
-                  onClick={this.handleClick}
-                  onFocus={this.setInterval}
-                  onBlur={this.clearInterval}/> :
-                <Markdown source={title}
-                  containerProps={{
-										className: 'markdown-body',
-                    onMouseOver: e => {
-                      debugger
-                      this.props.setFocus(id)
-                    }
-                  }}
-                />}
-          
+            <SimpleMDE
+              value={title}
+              placeholder={this.props.name}
+              ref={comp => {
+                if (comp) {
+                  this.comp = comp
+                  this.codemirror = comp.simplemde.codemirror
+                }
+              }}
+              options={{
+                lineWrapping: false,
+                toolbar: false,
+                autofocus: false,
+                status: false,
+              }}
+              onChange={this.handleMarkdownChange.bind(this)}/>
+
           </form>
 
           {postForm}

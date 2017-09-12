@@ -63,15 +63,17 @@
         width: 100%;
         display: flex;
 
-        div {
-          flex-grow: 1;
-          padding: 0 0 0 3px;;
-          min-height: 25px;
-          line-height: 25px;
-					margin: 4.5px 0;
-					border: none;
-					outline: none;
-        }
+        // div, textarea {
+        //   font-size: 16px;
+        //   background: inherit;
+        //   flex-grow: 1;
+        //   padding: 0 0 0 3px;;
+        //   min-height: 25px;
+        //   line-height: 25px;
+				// 	margin: 4.5px 0;
+				// 	border: none;
+				// 	outline: none;
+        // }
       }
     }
   }
