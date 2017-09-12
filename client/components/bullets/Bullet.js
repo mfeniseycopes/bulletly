@@ -30,7 +30,7 @@ const mapStateToProps = ({ entities: { bullets }, joins: { subBullets }, ui }, o
   const bullet = bullets[ownProps.bullet_id]
 
   return {
-    bullet: assoc('child_ids', subBullets[bullet.id] || [], bullet),
+    bullet: assoc('child_ids', subBullets[ownProps.bullet_id] || [], bullet),
     parentBullet: bullet.parent_id ? assoc('child_ids', subBullets[bullet.parent_id] || [], bullets[bullet.parent_id]) : null,
     prevBullet: ownProps.prevId ? assoc('child_ids', subBullets[ownProps.prevId] || [], bullets[ownProps.prevId]) : null,
     nextBullet: ownProps.nextId ? assoc('child_ids', subBullets[ownProps.nextId] || [], bullets[ownProps.nextId]) : null,

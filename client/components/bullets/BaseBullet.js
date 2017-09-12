@@ -1,7 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Markdown from 'react-markdown'
-import ContentEditable from 'react-contenteditable'
 import SimpleMDE from 'react-simplemde-editor'
 
 import Bullets from '../Bullets'
@@ -24,7 +22,6 @@ class BaseBullet extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.focused && this.props.focused) {
-      console.warn('update')
       const {selectionStart, selectionEnd} = this.props.focus
       this.codemirror.focus()
       this.codemirror.setCursor(selectionStart)
@@ -62,10 +59,12 @@ class BaseBullet extends React.Component {
   }
 
   setInterval() {
+    console.warn('setting interval for', this.props.bullet.id)
     this.intervalId = setInterval(this.updateBullet, 1000)
   }
 
   clearInterval() {
+    console.warn('clearing interval for', this.props.bullet.id)
     clearInterval(this.intervalId)
   }
 
@@ -211,7 +210,10 @@ class BaseBullet extends React.Component {
 
       // delete
       case 'Backspace':
-        if (this.state.title === '' && this.props.bullet.child_ids.length === 0)
+        // only destroy if empty, no children && not the leading bullet
+        if (this.state.title === '' && 
+            this.props.bullet.child_ids.length === 0 &&
+            (this.props.bullet.parent_id || this.props.bullet.ord !== 1))
           this.destroyBullet()
         break
 
@@ -256,8 +258,6 @@ class BaseBullet extends React.Component {
     const {dateFloater, due_date, id, title, type,} = this.state
     const { child_ids } = this.props.bullet
     const focused = this.props.focused
-
-    const text = focused ? <Markdown source={title}/> : title || ''
 
     return (
       <li>
