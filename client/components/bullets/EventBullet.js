@@ -47,7 +47,7 @@ class EventBullet extends BaseBullet {
     const {dateFloater, due_date} = this.state
 
     const dateButton = due_date ?
-      moment(due_date).format('MM/DD/YY') :
+      moment(due_date).format('MM/DD') :
       <i className="fa fa-calendar-plus-o" aria-hidden="true"></i>
 
     const floater = dateFloater ? (

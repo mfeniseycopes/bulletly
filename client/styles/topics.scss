@@ -2,15 +2,16 @@
 @import './colors.scss';
 
 .topics {
-
+  border-right: 1px $lt-grey solid;
+  background-color: $lt-grey;
   ul {
     display: flex;
     width: 240px;
     flex-direction: column;
-    border-right: 1px white solid;
 
     li {
-      border-bottom: 1px #55555A solid;
+      background-color: $white;
+      border-bottom: 1px $lt-grey solid;
 
       a {
         padding: 20px;
@@ -18,9 +19,9 @@
         display: block;
 
         &:hover {
-          background-color: $light-grey;
+          background-color: $lt-grey;
         }
       }
     }
-  } 
+  }
 }

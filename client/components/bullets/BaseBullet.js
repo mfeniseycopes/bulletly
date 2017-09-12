@@ -42,11 +42,6 @@ class BaseBullet extends React.Component {
     if (this.props.bullet.id !== newProps.bullet.id) {
       this.setState({...newProps.bullet})
     }
-    if (!this.codemirror.hasFocus()) {
-      const {line, ch} = this.props.focus
-      this.codemirror.focus()
-      this.codemirror.setCursor(line, ch)
-    }
   }
 
   componentWillUnmount() {
