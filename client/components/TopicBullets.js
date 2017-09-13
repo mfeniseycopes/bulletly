@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom'
 import Bullets from './Bullets'
 import { ModalLink, ModalRoute, }from './ModalRouter'
 import TopicForm from './TopicForm'
+import TopicDeleteForm from './topics/TopicDeleteForm'
 
 import {
   createTopicBullet,
@@ -54,6 +55,15 @@ class TopicBullets extends React.Component {
         <ModalLink
           to={`${this.props.location.pathname}/edit`}>
           ✏️
+        </ModalLink>
+
+        <ModalRoute
+          path={`${this.props.match.path}/confirm-delete`}
+          component={TopicDeleteForm}/>
+
+        <ModalLink
+          to={`${this.props.location.pathname}/confirm-delete`}>
+          Ⓧ 
         </ModalLink>
 
         <Bullets

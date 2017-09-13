@@ -1,0 +1,22 @@
+.topic-form {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+
+  #topic-title-label, .topic-title-input {
+    margin-bottom: 20px;
+  }
+
+  .topic-title-input {
+    font-size: 20px;
+    padding: 5px;
+  }
+
+  .topic-form-button-container {
+
+    button {
+      float: right;
+    }
+  }
+
+}

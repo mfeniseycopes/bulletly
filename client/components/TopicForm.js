@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import { createTopic, updateTopic } from '../actions'
 
+import topicForm from '../styles/topic-form.scss'
+
 class TopicForm extends React.Component {
 
   constructor(props) {
@@ -11,6 +13,12 @@ class TopicForm extends React.Component {
     this.state = props.topic ? {...props.topic} : { title: '' }
     this.handleChange = changeHandler(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount() {
+    const titleLength = this.state.title.length
+    this.input.focus()
+    this.input.setSelectionRange(titleLength, titleLength)
   }
 
   componentWillReceiveProps(newProps) {
@@ -29,13 +37,32 @@ class TopicForm extends React.Component {
       .then(t => this.props.history.replace(`/topic/${t.id}`))
   }
 
+  label() {
+    return this.props.topic ? 'Edit topic' : 'Create a topic'
+  }
+
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input type='text'
+      <form 
+        className='topic-form'
+        onSubmit={this.handleSubmit}>
+
+        <label id='topic-title-label'>
+          {this.label()}
+        </label>
+
+        <input 
+          className='topic-title-input'
+          ref={input => this.input = input}
+          label='topic-title-label'
+          type='text'
           value={this.state.title || ''}
           onChange={this.handleChange('title')} />
-        <button>Submit</button>
+
+        <div className='topic-form-button-container'>
+          <button className='button'>Submit</button>
+        </div>
+
       </form>)
   }
 }
