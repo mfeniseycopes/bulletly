@@ -1,9 +1,13 @@
 import React from 'react'
-import { Link, } from 'react-router-dom'
+import { NavLink, } from 'react-router-dom'
 
 const TopicItem = ({ topic }) => (
   <li>
-    <Link to={`/topic/${topic.id}`} >{ topic.title }</Link>
+    <NavLink
+      to={`/topic/${topic.id}`}
+      activeClassName='active-topic-link'>
+      {topic.title}
+    </NavLink>
   </li>)
 
 export default TopicItem

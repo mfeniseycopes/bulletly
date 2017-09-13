@@ -10,16 +10,27 @@
     flex-direction: column;
 
     li {
-      background-color: $white;
-      border-bottom: 1px $lt-grey solid;
 
       a {
         padding: 20px;
         width: 200px;
         display: block;
+        background-color: $white;
+        border-bottom: 1px $lt-grey solid;
+        transition: .5s;
 
-        &:hover {
+        &.active-topic-link, &:hover {
           background-color: $lt-grey;
+          color: white;
+          font-weight: 400;
+        }
+
+        &.active-topic-link {
+          background-color: $lt-blue;
+
+          &:hover {
+            color: $lt-grey;
+          }
         }
       }
     }
