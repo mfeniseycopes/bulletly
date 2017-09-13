@@ -27,7 +27,7 @@ const modalize = component => props => {
   return (
     <div className='modal-background' onClick={onOuterClick}>
       <div className='modal-container' onClick={onInnerClick}>
-        <Component {...props} />
+        <Component {...props}/>
       </div>
     </div>)
 }

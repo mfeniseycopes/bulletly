@@ -13,10 +13,7 @@
   }
 
   .topic-form-button-container {
-
-    button {
-      float: right;
-    }
+    display: flex;
+    justify-content: space-around;
   }
-
 }

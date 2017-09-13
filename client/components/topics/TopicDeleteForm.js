@@ -10,7 +10,13 @@ class TopicDeleteForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = props.topic ? {...props.topic} : { title: '' }
+    this.handleCancel = this.handleCancel.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleCancel(e) {
+    e.preventDefault()
+    this.props.history.goBack()
   }
 
   handleSubmit(e) {
@@ -29,7 +35,7 @@ class TopicDeleteForm extends React.Component {
   render() {
     return (
       <form 
-        className='topic-form'
+        className='topic-form topic-delete-form'
         onSubmit={this.handleSubmit}>
 
         <label id='topic-title-label'>
@@ -37,8 +43,15 @@ class TopicDeleteForm extends React.Component {
         </label>
 
         <div className='topic-form-button-container'>
-          <button className='button'>Cancel</button>
-          <button className='button'>Delete</button>
+          <button 
+            className='button'
+            onClick={this.handleCancel} >
+            Cancel
+          </button>
+          <button 
+            className='button delete-button'>
+            Delete
+          </button>
         </div>
 
       </form>)

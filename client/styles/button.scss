@@ -17,3 +17,9 @@
     font-weight: 700;
   }
 }
+
+.delete-button {
+  &:hover {
+    background-color: indianred; 
+  }
+}
