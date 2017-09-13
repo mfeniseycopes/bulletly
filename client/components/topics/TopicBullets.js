@@ -3,16 +3,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
 
-import Bullets from './Bullets'
-import { ModalLink, ModalRoute, }from './ModalRouter'
+import Bullets from '../bullets/Bullets'
+import { ModalLink, ModalRoute, }from '../ModalRouter'
 import TopicForm from './TopicForm'
-import TopicDeleteForm from './topics/TopicDeleteForm'
+import TopicDeleteForm from './TopicDeleteForm'
 
 import {
   createTopicBullet,
   retrieveTopicBullets,
   setFocus,
-} from '../actions'
+} from '../../actions'
 
 class TopicBullets extends React.Component {
 
@@ -63,7 +63,7 @@ class TopicBullets extends React.Component {
 
         <ModalLink
           to={`${this.props.location.pathname}/confirm-delete`}>
-          Ⓧ 
+          Ⓧ
         </ModalLink>
 
         <Bullets

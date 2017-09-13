@@ -5,8 +5,8 @@ import { HashRouter, Route } from 'react-router-dom'
 
 import store from '../reducers'
 import App from './App'
-import Topics from './Topics'
-import TopicBullets from './TopicBullets'
+import Topics from './topics/Topics'
+import TopicBullets from './topics/TopicBullets'
 
 const Root = () => (
   <Provider store={ store }>

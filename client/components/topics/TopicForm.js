@@ -2,9 +2,9 @@ import React from 'react'
 import changeHandler from 'memoized-change-handler'
 import { connect } from 'react-redux'
 
-import { createTopic, updateTopic } from '../actions'
+import { createTopic, updateTopic } from '../../actions'
 
-import topicForm from '../styles/topic-form.scss'
+import topicForm from '../../styles/topic-form.scss'
 
 class TopicForm extends React.Component {
 
@@ -43,7 +43,7 @@ class TopicForm extends React.Component {
 
   render() {
     return (
-      <form 
+      <form
         className='topic-form'
         onSubmit={this.handleSubmit}>
 
@@ -51,7 +51,7 @@ class TopicForm extends React.Component {
           {this.label()}
         </label>
 
-        <input 
+        <input
           className='topic-title-input'
           ref={input => this.input = input}
           label='topic-title-label'
