@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import SimpleMDE from 'react-simplemde-editor'
 
-import Bullets from './Bullets'
-import simplemde from '../../styles/simplemde.scss'
+import Bullets from 'Components/bullets/Bullets'
+import simplemde from 'Styles/simplemde.scss'
 
 class BaseBullet extends React.Component {
 

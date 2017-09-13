@@ -3,16 +3,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
 
-import Bullets from '../bullets/Bullets'
-import { ModalLink, ModalRoute, }from '../ModalRouter'
-import TopicForm from './TopicForm'
-import TopicDeleteForm from './TopicDeleteForm'
+import Bullets from 'Components/bullets/Bullets'
+import { ModalLink, ModalRoute, }from 'Components/ModalRouter'
+import TopicForm from 'Components/topics/TopicForm'
+import TopicDeleteForm from 'Components/topics/TopicDeleteForm'
 
 import {
   createTopicBullet,
   retrieveTopicBullets,
   setFocus,
-} from '../../actions'
+} from 'Actions'
 
 class TopicBullets extends React.Component {
 

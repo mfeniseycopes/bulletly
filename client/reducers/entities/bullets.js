@@ -1,18 +1,18 @@
-import { 
-  assoc, 
-  dissoc, 
-  filter, 
+import {
+  assoc,
+  dissoc,
+  filter,
   groupBy,
   head,
   map,
 } from 'ramda'
 
-import { 
-  REMOVE_TOPIC, 
-  RECEIVE_BULLET, 
-  RECEIVE_BULLETS, 
+import {
+  REMOVE_TOPIC,
+  RECEIVE_BULLET,
+  RECEIVE_BULLETS,
   REMOVE_BULLET,
-} from '../../actions'
+} from 'Actions'
 
 const bullets = (state = {}, { type, payload }) => {
 
@@ -24,7 +24,7 @@ const bullets = (state = {}, { type, payload }) => {
       oldBullet = payload.oldBullet
 
       // in-place
-      if (oldBullet && 
+      if (oldBullet &&
         (bullet.parent_id === oldBullet.parent_id &&
          bullet.ord === oldBullet.ord)) {
         return assoc(
@@ -32,7 +32,7 @@ const bullets = (state = {}, { type, payload }) => {
           bullet,
           state)
       }
-      
+
       // new bullet or positional shift
       return assoc(
         bullet.id,

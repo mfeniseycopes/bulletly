@@ -1,9 +1,9 @@
-import { 
-  combineReducers, 
+import {
+  combineReducers,
 } from 'redux'
 
-import subBullets from './subBullets'
-import topicBullets from './topicBullets'
+import subBullets from 'Reducers/joins/subBullets'
+import topicBullets from 'Reducers/joins/topicBullets'
 
 const joins = combineReducers({
   subBullets,

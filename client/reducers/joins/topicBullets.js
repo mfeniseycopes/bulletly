@@ -1,5 +1,5 @@
-import { 
-  combineReducers, 
+import {
+  combineReducers,
 } from 'redux'
 
 import {
@@ -16,12 +16,12 @@ import {
   toString,
 } from 'ramda'
 
-import { 
-  RECEIVE_BULLET, 
-  RECEIVE_BULLETS, 
+import {
+  RECEIVE_BULLET,
+  RECEIVE_BULLETS,
   REMOVE_BULLET,
-  REMOVE_TOPIC, 
-} from '../../actions'
+  REMOVE_TOPIC,
+} from 'Actions'
 
 const topicBullets = (state={}, {type, payload}) => {
 
@@ -37,23 +37,23 @@ const topicBullets = (state={}, {type, payload}) => {
       // new
       if (!oldBullet && !bullet.parent_id)
         return assoc(
-          bullet.topic_id, 
+          bullet.topic_id,
           insert(
             bullet.ord - 1,
             bullet.id,
             state[bullet.topic_id]),
           state)
-      
+
       // neither
-      if (!oldBullet && bullet.parent_id || 
-        (bullet.topic_id === oldBullet.topic_id && 
+      if (!oldBullet && bullet.parent_id ||
+        (bullet.topic_id === oldBullet.topic_id &&
         bullet.ord === oldBullet.ord))
         return state
 
       // indent/outdent
       let newState = state
       newState = !oldBullet.parent_id ? assoc(
-        oldBullet.topic_id, 
+        oldBullet.topic_id,
         remove(oldBullet.ord - 1, 1, state[oldBullet.topic_id]),
         newState) : newState
       newState = !bullet.parent_id ? assoc(
@@ -72,7 +72,7 @@ const topicBullets = (state={}, {type, payload}) => {
       bullet = payload.bullet
       if (bullet.parent_id) return state
       return assoc(bullet.topic_id,
-        remove(bullet.ord - 1, 1, state[bullet.topic_id]), 
+        remove(bullet.ord - 1, 1, state[bullet.topic_id]),
         state)
 
     case REMOVE_TOPIC:

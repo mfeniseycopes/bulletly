@@ -2,9 +2,9 @@ import React from 'react'
 import changeHandler from 'memoized-change-handler'
 import { connect } from 'react-redux'
 
-import { createTopic, updateTopic } from '../../actions'
+import { createTopic, updateTopic } from 'Actions'
 
-import topicForm from '../../styles/topic-form.scss'
+import topicForm from 'Styles/topic-form.scss'
 
 class TopicForm extends React.Component {
 

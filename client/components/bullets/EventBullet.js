@@ -2,8 +2,8 @@ import React from 'react'
 import moment from 'moment'
 import Datetime from 'react-datetime'
 
-import BaseBullet from './BaseBullet'
-import datetime from '../../styles/datetime.scss'
+import BaseBullet from 'Components/bullets/BaseBullet'
+import datetime from 'Styles/datetime.scss'
 
 class EventBullet extends BaseBullet {
 

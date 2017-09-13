@@ -1,9 +1,9 @@
 import { values } from 'ramda'
 import React from 'react'
 
-import Bullet from './Bullet'
+import Bullet from 'Components/bullets/Bullet'
 
-import bullets from '../../styles/bullets.scss'
+import bullets from 'Styles/bullets.scss'
 
 const Bullets = props => {
   return (

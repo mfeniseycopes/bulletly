@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter, Link, Redirect, Route } from 'react-router-dom'
 
-import modal from '../styles/modal.scss'
+import modal from 'Styles/modal.scss'
 
 export const ModalLink = ({to, children}) => (
   <Link to={{pathname: to, state: {modal: true}}}>

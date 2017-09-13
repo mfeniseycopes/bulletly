@@ -21,7 +21,7 @@ import {
   RECEIVE_BULLET,
   RECEIVE_BULLETS,
   REMOVE_BULLET,
-} from '../../actions'
+} from 'Actions'
 
 const subBullets = (state={}, {type, payload}) => {
 

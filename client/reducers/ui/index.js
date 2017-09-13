@@ -1,6 +1,6 @@
 import { assoc } from 'ramda'
 
-import { SET_FOCUS } from '../../actions'
+import { SET_FOCUS } from 'Actions'
 
 const defaultUI = () => ({
   focus: {

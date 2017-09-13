@@ -1,6 +1,6 @@
 import React from 'react'
 
-import BaseBullet from './BaseBullet'
+import BaseBullet from 'Components/bullets/BaseBullet'
 
 class TaskBullet extends BaseBullet {
 

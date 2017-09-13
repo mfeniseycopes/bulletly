@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter, Route } from 'react-router-dom'
 
-import store from '../reducers'
-import App from './App'
-import Topics from './topics/Topics'
-import TopicBullets from './topics/TopicBullets'
+import store from 'Reducers'
+import App from 'Components/App'
+import Topics from 'Components/topics/Topics'
+import TopicBullets from 'Components/topics/TopicBullets'
 
 const Root = () => (
   <Provider store={ store }>

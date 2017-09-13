@@ -9,11 +9,11 @@ import {
   receiveBullet,
   removeBullet,
   setFocus,
-} from '../../actions'
+} from 'Actions'
 
-import EventBullet from './EventBullet'
-import NoteBullet from './NoteBullet'
-import TaskBullet from './TaskBullet'
+import EventBullet from 'Components/bullets/EventBullet'
+import NoteBullet from 'Components/bullets/NoteBullet'
+import TaskBullet from 'Components/bullets/TaskBullet'
 
 const componentTypeMap = {
   'event': EventBullet,

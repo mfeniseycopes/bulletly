@@ -1,14 +1,14 @@
-import { 
+import {
   applyMiddleware,
-  combineReducers, 
-  createStore 
+  combineReducers,
+  createStore
 } from 'redux'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import entities from './entities'
-import joins from './joins'
-import ui from './ui'
+import entities from 'Reducers/entities'
+import joins from 'Reducers/joins'
+import ui from 'Reducers/ui'
 
 const root = combineReducers({
   entities,

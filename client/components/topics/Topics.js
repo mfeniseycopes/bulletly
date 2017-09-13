@@ -3,12 +3,12 @@ import React from 'react'
 import { connect, } from 'react-redux'
 import { values, } from 'ramda'
 
-import { retrieveTopics, createTopic, } from '../../actions'
-import TopicItem from './TopicItem'
-import TopicForm from './TopicForm'
-import { ModalLink, ModalRoute } from '../ModalRouter'
+import { retrieveTopics, createTopic, } from 'Actions'
+import TopicItem from 'Components/topics/TopicItem'
+import TopicForm from 'Components/topics/TopicForm'
+import { ModalLink, ModalRoute } from 'Components/ModalRouter'
 
-import topics from '../../styles/topics.scss'
+import topics from 'Styles/topics.scss'
 
 class Topics extends React.Component {
 

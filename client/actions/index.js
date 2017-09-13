@@ -10,7 +10,7 @@ import {
   postSubBullet,
   putBullet,
   deleteBullet,
-} from '../api'
+} from 'APIs'
 
 const identity = x => x
 

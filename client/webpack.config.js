@@ -37,5 +37,12 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     extensions: [".js", ".jsx", "*"],
+    alias: {
+      "Actions": path.resolve(__dirname, 'actions'),
+      "APIs": path.resolve(__dirname, 'api'),
+      "Components": path.resolve(__dirname, 'components'),
+      "Reducers": path.resolve(__dirname, 'reducers'),
+      "Styles": path.resolve(__dirname, 'styles'),
+    }
   },
 };

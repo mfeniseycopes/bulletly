@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { destroyTopic } from '../../actions'
+import { destroyTopic } from 'Actions'
 
-import topicForm from '../../styles/topic-form.scss'
+import topicForm from 'Styles/topic-form.scss'
 
 class TopicDeleteForm extends React.Component {
 
@@ -34,7 +34,7 @@ class TopicDeleteForm extends React.Component {
 
   render() {
     return (
-      <form 
+      <form
         className='topic-form topic-delete-form'
         onSubmit={this.handleSubmit}>
 
@@ -43,12 +43,12 @@ class TopicDeleteForm extends React.Component {
         </label>
 
         <div className='topic-form-button-container'>
-          <button 
+          <button
             className='button'
             onClick={this.handleCancel} >
             Cancel
           </button>
-          <button 
+          <button
             className='button delete-button'>
             Delete
           </button>

@@ -9,9 +9,9 @@ import {
 
 import {
   RECEIVE_TOPIC,
-  RECEIVE_TOPICS, 
+  RECEIVE_TOPICS,
   REMOVE_TOPIC,
-} from '../../actions'
+} from 'Actions'
 
 const topics = (state = {}, { type, payload }) => {
 
@@ -39,4 +39,4 @@ const topics = (state = {}, { type, payload }) => {
   return newState
 }
 
-export default topics 
+export default topics

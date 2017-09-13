@@ -2,8 +2,8 @@ import {
   combineReducers,
 } from 'redux'
 
-import topics from './topics'
-import bullets from './bullets'
+import topics from 'Reducers/entities/topics'
+import bullets from 'Reducers/entities/bullets'
 
 const entities = combineReducers({
   topics,
