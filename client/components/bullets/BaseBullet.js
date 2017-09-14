@@ -19,9 +19,10 @@ class BaseBullet extends React.Component {
   }
 
   componentDidMount() {
-    // prevent default `Enter` key event for codemirror editor
+    // prevent default `Enter`, 'Tab' keys event for codemirror editor
     // was buggily adding newlines, which should be prevented in main bullets
     this.codemirror.options.extraKeys.Enter = () => {}
+    this.codemirror.options.extraKeys.Tab = () => {}
 
     // if this bullet is in focus
     // set the cursor in inner codemirror editor
@@ -87,6 +88,7 @@ class BaseBullet extends React.Component {
     this.props.setFocus(this.props.bullet.id, line, ch)
   }
 
+  // helper to create new bullet with same parent and ord + 1
   newSiblingBullet(type=this.props.bullet.type) {
     const bullet = this.props.bullet
 
@@ -99,6 +101,7 @@ class BaseBullet extends React.Component {
     }
   }
 
+  // helper method to create new bullet that is first child
   newSubBullet(type=this.props.bullet.type) {
     const bullet = this.props.bullet
 
@@ -111,43 +114,48 @@ class BaseBullet extends React.Component {
     }
   }
 
+  // create and move cursor to sibling bullet
   createNextBullet(type) {
     return this.props.createBullet(this.newSiblingBullet(type))
       .then(bullet => this.props.setFocus(bullet.id, 0, 0))
   }
 
+  // create and move cursor to sub-bullet
   createSubBullet(bullet = this.newSubBullet()) {
     return this.props.createSubBullet(this.props.bullet.id, bullet)
       .then(subBullet => this.props.setFocus(subBullet.id, 0, 0))
   }
 
+  // update current bullet
   updateBullet(e) {
     if (e) e.preventDefault()
 
-    if (this.props.bullet.title !== this.state.title ||
-        this.props.bullet.due_date !== this.state.due_date) {
-      return this.props.updateBullet(this.state, this.props.bullet)
-        .then(() => this.updateTimoutId = null)
-    }
-    return Promise.resolve()
+    return this.props.updateBullet(this.state, this.props.bullet)
+      .then(() => this.updateTimoutId = null)
   }
 
+  // destroy and shift focus to correct bullet
   destroyBullet() {
     let focus = [null, null, null]
     const { parentBullet, prevBullet, nextBullet } = this.props
 
+    // go up
     if (prevBullet) {
       focus = [prevBullet.id, prevBullet.title.length, prevBullet.title.length]
+    // go to parent
     } else if (parentBullet) {
       focus = [parentBullet.id, parentBullet.title.length, parentBullet.title.length]
+    // go to sibling
     } else if (nextBullet) {
       focus = [nextBullet.id, 0, 0]
     }
+    // TODO: need access to bullet below, but maybe higher up the tree
 
     return this.props.destroyBullet(this.props.bullet.id)
       .then(() => focus ? this.props.setFocus(...focus) : null)
   }
 
+  // indent bullet
   indentBullet() {
     const { prevId, prevBullet } = this.props
     const bullet = this.state
@@ -158,6 +166,7 @@ class BaseBullet extends React.Component {
       parent_id: prevBullet.id,
     }
 
+    // indent and keep focus on new element
     return this.props.updateBullet(shiftedBullet, bullet)
       .then(shiftedBullet => this.props.setFocus(shiftedBullet.id, 0, 0))
   }
@@ -172,10 +181,12 @@ class BaseBullet extends React.Component {
       parent_id: parentBullet.parent_id,
     }
 
+    // outdent and keep focus on new element
     return this.props.updateBullet(shiftedBullet, bullet)
       .then(shiftedBullet => this.props.setFocus(shiftedBullet.id, 0, 0))
   }
 
+  // should probably use a library for this
   handleKeyPress(e) {
 
     const ctrl = e.ctrlKey ? 'Control+' : ''
@@ -200,9 +211,11 @@ class BaseBullet extends React.Component {
       case 'Enter':
         e.preventDefault()
         e.stopPropagation()
+        // if children, create new first child
         if (this.props.bullet.child_ids.length > 0) {
           this.updateBullet(e)
             .then(this.createSubBullet.bind(this))
+        // if no children, create sibling
         } else {
           this.updateBullet(e)
             .then(this.createNextBullet.bind(this))
@@ -269,10 +282,12 @@ class BaseBullet extends React.Component {
     }
   }
 
+  // to be extended for specific bullet types
   symbol() {
     throw 'Sub-classes of BaseBullet must provide a symbol method'
   }
 
+  // flexible render method to be used by sub classes in 'render' method
   protoRender(preForm, postForm) {
     const {dateFloater, due_date, id, title, type,} = this.state
     const { child_ids } = this.props.bullet
@@ -322,6 +337,7 @@ class BaseBullet extends React.Component {
     )
   }
 
+  // to be extended for specific bullet types
   render() {
     throw 'Sub-classes of BulletItem must provide a render method'
   }

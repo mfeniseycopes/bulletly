@@ -25,19 +25,20 @@ class EventBullet extends BaseBullet {
       {dateFloater: forcedVal !== undefined ? forcedVal : !dateFloater}))
   }
 
-  dateOnChange() {
+  dateOnChange(e) {
     this.setState(
       () => ({due_date: e.toISOString()}),
       () => this.updateBullet()
         .then(() => this.setState({dateFloater: false})))
   }
 
+  // Datetime automatically closes on blur, so I need to keep track internally
+  // also
   dateOnBlur() {
     this.setState({dateFloater: false, blurring: true})
   }
 
   dateOnClick() {
-    debugger
     this.state.blurring ?
       this.setState({blurring: false}) :
       this.setState({blurring: false, dateFloater: true})
@@ -50,6 +51,8 @@ class EventBullet extends BaseBullet {
       moment(due_date).format('MM/DD') :
       <i className="fa fa-calendar-plus-o" aria-hidden="true"></i>
 
+    // if not autoFocused that datepicker will not appear
+    // (this focus is actually on the hidden date input)
     const floater = dateFloater ? (
       <Datetime
         className='datetime'
