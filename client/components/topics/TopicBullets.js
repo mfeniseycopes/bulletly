@@ -14,6 +14,8 @@ import {
   setFocus,
 } from 'Actions'
 
+import topicBullets from 'Styles/topics/topic-bullets.scss'
+
 class TopicBullets extends React.Component {
 
   constructor(props) {
@@ -46,31 +48,39 @@ class TopicBullets extends React.Component {
     if (this.state.fetching) return <div>'...loading'</div>
 
     return (
-      <article className='bullets'>
+      <div className='topic-view'>
 
-        <ModalRoute
-          path={`${this.props.match.path}/edit`}
-          component={TopicForm}/>
+        <article className='bullets'>
 
-        <ModalLink
-          to={`${this.props.location.pathname}/edit`}>
-          ✏️
-        </ModalLink>
+          <ModalRoute
+            path={`${this.props.match.path}/edit`}
+            component={TopicForm}/>
 
-        <ModalRoute
-          path={`${this.props.match.path}/confirm-delete`}
-          component={TopicDeleteForm}/>
+          <ModalRoute
+            path={`${this.props.match.path}/confirm-delete`}
+            component={TopicDeleteForm}/>
 
-        <ModalLink
-          to={`${this.props.location.pathname}/confirm-delete`}>
-          Ⓧ
-        </ModalLink>
+          <Bullets
+            bullet_ids={this.props.topic.bullet_ids}
+            createBullet={this.createBullet} />
 
-        <Bullets
-          bullet_ids={this.props.topic.bullet_ids}
-          createBullet={this.createBullet} />
+        </article>
 
-      </article>
+        <section className='topic-actions'>
+
+          <ModalLink
+            to={`${this.props.location.pathname}/edit`}>
+            <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </ModalLink>
+
+          <ModalLink
+            to={`${this.props.location.pathname}/confirm-delete`}>
+            <i className="fa fa-trash-o" aria-hidden="true"></i>
+          </ModalLink>
+
+        </section>
+
+      </div>
     )
   }
 }

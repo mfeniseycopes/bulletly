@@ -1,0 +1,20 @@
+.topic-view {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  .bullets {
+    width: 100%;
+  }
+
+  .topic-actions {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+
+    a {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  }
+}
