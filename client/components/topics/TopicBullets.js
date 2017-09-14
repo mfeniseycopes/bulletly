@@ -34,7 +34,7 @@ class TopicBullets extends React.Component {
       this.setState({ fetching: true })
 
       this.props.retrieveTopicBullets(newProps.match.params.topicId)
-        .then(() => this.props.setFocus(this.props.topic.bullet_ids[0]))
+        .then(() => this.props.setFocus(this.props.topic.bullet_ids[0], 0, 0))
         .then(() => this.setState({ fetching: false }))
     }
   }

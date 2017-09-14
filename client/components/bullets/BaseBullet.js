@@ -19,6 +19,7 @@ class BaseBullet extends React.Component {
   }
 
   componentDidMount() {
+    this.codemirror.options.extraKeys.Enter = () => {}
     if (this.props.focused) {
       if (!this.codemirror.hasFocus()) {
         const {line, ch} = this.props.focus
