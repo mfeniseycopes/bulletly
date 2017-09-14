@@ -19,7 +19,12 @@ class BaseBullet extends React.Component {
   }
 
   componentDidMount() {
+    // prevent default `Enter` key event for codemirror editor
+    // was buggily adding newlines, which should be prevented in main bullets
     this.codemirror.options.extraKeys.Enter = () => {}
+
+    // if this bullet is in focus
+    // set the cursor in inner codemirror editor
     if (this.props.focused) {
       if (!this.codemirror.hasFocus()) {
         const {line, ch} = this.props.focus
@@ -30,6 +35,8 @@ class BaseBullet extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    // if an outside event has focused on the bullet
+    // set the cursor in the inner codemirror editor
     if (!prevProps.focused && this.props.focused) {
       if (!this.codemirror.hasFocus()) {
         const {line, ch} = this.props.focus
@@ -40,23 +47,29 @@ class BaseBullet extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    // update only if new bullet
+    // state should be keeping track of any other relevant changes to
+    // same bullet
     if (this.props.bullet.id !== newProps.bullet.id) {
       this.setState({...newProps.bullet})
     }
   }
 
+  // clear update timeout
   componentWillUnmount() {
     clearTimeout(this.updateTimeoutId)
   }
 
   handleMarkdownChange(val) {
+    // update state, then update focus
     this.setState(
       {title: val},
       () => {
         const {ch, line} = this.codemirror.getCursor()
-        this.props.setFocus( this.props.bullet.id, line, ch)
+        this.props.setFocus(this.props.bullet.id, line, ch)
       })
 
+    // set bullet to update later
     if (!this.updateTimeoutId)
      this.updateTimeoutId = setTimeout(this.updateBullet, 10)
   }
@@ -69,6 +82,7 @@ class BaseBullet extends React.Component {
   }
 
   handleClick(e) {
+    // clicks move the cursor automatically, but focus should update
     const {line, ch} = this.codemirror.getCursor()
     this.props.setFocus(this.props.bullet.id, line, ch)
   }

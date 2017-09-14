@@ -9,17 +9,17 @@ window.postTopic = postTopic
 window.postTopicBullet = postTopicBullet
 window.postSubBullet = postSubBullet
 
-const render = (Component, id) => 
+const render = (Component, id) =>
   ReactDOM.render(
-    <AppContainer>  
+    <AppContainer>
       <Component />
     </AppContainer>,
     document.getElementById(id))
 
-if (module.hot) 
-  module.hot.accept('./components/Root.js', () => { 
+if (module.hot)
+  module.hot.accept('./components/Root.js', () => {
     let NextRoot = require('./components/Root.js').default
-    render(Root, 'react-root') 
+    render(Root, 'react-root')
   })
 
 
