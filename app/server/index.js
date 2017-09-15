@@ -9,7 +9,7 @@ const topicRouter = require('./routes/topicRouter')
 app.use(bodyParser.json())
 app.use('/bullets', bulletRouter)
 app.use('/topics', topicRouter)
-app.use('/static', express.static('public'))
+app.use('/static', express.static('./public'))
 
 app.get('/', (req, res) => {
   res.render('index.pug')
@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
   console.log(req.path)
 })
 
-const startServer = () => 
-  app.listen(3000, () => 
+const startServer = () =>
+  app.listen(3000, () =>
     console.log("---Server listening on port 3000"))
 
 startServer()
