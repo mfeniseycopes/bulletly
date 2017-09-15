@@ -1,6 +1,9 @@
 const Sequelize = require('sequelize')
 console.log('----> DB CONNECTION')
-const db = new Sequelize('bullet_journal_dev', '', '', {
+
+const dbName = process.env.DATABASE_URL || 'bullet_journal_dev'
+
+const db = new Sequelize(dbName, '', '', {
   dialect: 'postgres',
   pool: {
     max: 5,
