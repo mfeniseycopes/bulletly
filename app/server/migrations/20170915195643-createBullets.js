@@ -3,6 +3,11 @@
 module.exports = {
   up: (queryInterface, {DataTypes, fn}) => {
     return queryInterface.createTable('bullets', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       ord: DataTypes.INTEGER,
       type: {
         type: DataTypes.ENUM('task', 'note', 'event'),
@@ -24,7 +29,6 @@ module.exports = {
       },
       completed_on: DataTypes.DATE,
       recurrence: DataTypes.STRING,
-
       topic_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
