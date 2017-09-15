@@ -12,7 +12,9 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'Untitled Topic',
-      }
+      },
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
     });
   },
 

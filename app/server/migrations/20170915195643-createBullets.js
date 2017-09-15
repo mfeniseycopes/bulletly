@@ -34,6 +34,8 @@ module.exports = {
         allowNull: false,
       },
       parent_id: DataTypes.INTEGER,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
     })
   },
 
