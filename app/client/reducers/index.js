@@ -17,7 +17,7 @@ const root = combineReducers({
 
 const middlewares = [thunk]
 if (process.env.NODE_ENV === 'development') {
-  middlewares.push(require('redux-logger'))
+  middlewares.push(require('redux-logger').default)
 }
 
 export default createStore(root, applyMiddleware(middlewares))
