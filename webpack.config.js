@@ -11,7 +11,7 @@ var devTool;
 var entry;
 var output = {
   filename: 'bundle.js',
-  path: path.join(__dirname),
+  path: path.join(__dirname, 'server', 'public'),
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -22,11 +22,11 @@ if (process.env.NODE_ENV === 'production') {
     })
   ]
 
-  plugins = [...plugins, ...prodPlugins] 
+  plugins = [...plugins, ...prodPlugins]
 
   devTool = 'source-map'
 
-  entry = './index.js' 
+  entry = path.join(__dirname, 'client', 'index.js')
 
 } else {
 
@@ -43,18 +43,16 @@ if (process.env.NODE_ENV === 'production') {
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://0.0.0.0:8080',
     'webpack/hot/only-dev-server',
-    path.join(__dirname, 'index.js')
+    path.join(__dirname, 'client', 'index.js')
   ]
 
   output.publicPath = 'http://localhost:8080/'
 }
 
 module.exports = {
-  context: __dirname,
+  context: path.resolve(__dirname, 'client'),
 	entry,
-  output: {
-    filename: './bundle.js',
-  },
+  output,
   module: {
     loaders: [
       {
@@ -94,7 +92,7 @@ module.exports = {
   },
 	devServer: {
 		hot: true,
-		contentBase: path.resolve(__dirname),
+		contentBase: path.resolve(__dirname, 'client'),
 		publicPath: 'http://localhost:8080/',
 		headers: {
 			"Access-Control-Allow-Origin": "http://localhost:3000",
