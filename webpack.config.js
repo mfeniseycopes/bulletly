@@ -11,7 +11,7 @@ var devTool;
 var entry;
 var output = {
   filename: 'bundle.js',
-  path: path.join(__dirname, 'server', 'public'),
+  path: path.join(__dirname, 'app', 'server', 'public'),
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 
   devTool = 'source-map'
 
-  entry = path.join(__dirname, 'client', 'index.js')
+  entry = path.join(__dirname, 'app', 'client', 'index.js')
 
 } else {
 
@@ -43,14 +43,14 @@ if (process.env.NODE_ENV === 'production') {
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://0.0.0.0:8080',
     'webpack/hot/only-dev-server',
-    path.join(__dirname, 'client', 'index.js')
+    path.join(__dirname, 'app', 'client', 'index.js')
   ]
 
   output.publicPath = 'http://localhost:8080/'
 }
 
 module.exports = {
-  context: path.resolve(__dirname, 'client'),
+  context: path.resolve(__dirname, 'app', 'client'),
 	entry,
   output,
   module: {
@@ -82,16 +82,16 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", "*"],
     alias: {
-      "Actions": path.resolve(__dirname, 'client', 'actions'),
-      "APIs": path.resolve(__dirname, 'client', 'api'),
-      "Components": path.resolve(__dirname, 'client', 'components'),
-      "Reducers": path.resolve(__dirname, 'client', 'reducers'),
-      "Styles": path.resolve(__dirname, 'client', 'styles'),
+      "Actions": path.resolve(__dirname, 'app', 'client', 'actions'),
+      "APIs": path.resolve(__dirname, 'app', 'client', 'api'),
+      "Components": path.resolve(__dirname, 'app', 'client', 'components'),
+      "Reducers": path.resolve(__dirname, 'app', 'client', 'reducers'),
+      "Styles": path.resolve(__dirname, 'app', 'client', 'styles'),
     }
   },
 	devServer: {
 		hot: true,
-		contentBase: path.resolve(__dirname, 'client'),
+		contentBase: path.resolve(__dirname, 'app', 'client'),
 		publicPath: 'http://localhost:8080/',
 		headers: {
 			"Access-Control-Allow-Origin": "http://localhost:3000",
