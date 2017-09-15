@@ -1,27 +1,36 @@
-const Sequelize = require('sequelize')
-console.log('----> DB CONNECTION')
+'use strict';
 
-const dbName = process.env.DATABASE_URL || 'bullet_journal_dev'
+var fs        = require('fs');
+var path      = require('path');
+var Sequelize = require('sequelize');
+var basename  = path.basename(module.filename);
+var env       = process.env.NODE_ENV || 'development';
+var config    = require(__dirname + '/../config/config.json')[env];
+var db        = {};
 
-const db = new Sequelize(dbName, '', '', {
-  dialect: 'postgres',
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000,
+if (config.use_env_variable) {
+  var sequelize = new Sequelize(process.env[config.use_env_variable]);
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+  })
+  .forEach(file => {
+    var model = sequelize['import'](path.join(__dirname, file));
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
   }
-})
+});
 
-// db.authenticate()
-//   .then(() => console.log('Connected to db'))
-//   .catch((e) => console.log('Failed to connect to db: ', e))
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-const Bullet = db.import('./bullet.js')
-const Topic = db.import('./topic.js')
-
-Bullet.associate(db)
-Topic.associate(db)
-
-//db.sync({force: true})
-
-module.exports = db
+module.exports = db;

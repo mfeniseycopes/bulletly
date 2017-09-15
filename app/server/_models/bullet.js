@@ -31,7 +31,7 @@ const bulletDefn = (db, DataTypes) => {
   }, {
     hooks: {
       beforeCreate: bullet => {
-        bullet.due_date = bullet.due_date || new Date()
+        bullet.due_date = bullet.due_date || new Date() 
         return db.transaction(t => {
           return Bullet.findAll({
             where: {
@@ -46,19 +46,19 @@ const bulletDefn = (db, DataTypes) => {
                 other.update({
                   ord: other.ord + 1
                 }, {
-                  validations: false,
-                  hooks: false,
-                  transaction: t
-                })))
+                  validations: false, 
+                  hooks: false, 
+                  transaction: t 
+                })))       
           })
         })
       },
       beforeUpdate: bullet => {
         return db.transaction(t => {
           let oldBullet
-          const options = {
+          const options = { 
             transaction: t,
-            validations: false,
+            validations: false, 
             hooks: false,
           }
 
@@ -67,11 +67,11 @@ const bulletDefn = (db, DataTypes) => {
               oldBullet = _oldBullet // closure
 
               if (bullet.parent_id === oldBullet.parent_id &&
-                bullet.ord === oldBullet.ord)
+                bullet.ord === oldBullet.ord) 
                 return []
 
-              // indent/outdent
-              // below on previous decrement ord
+              // indent/outdent 
+              // below on previous decrement ord 
               // below (inclusive) on current increment ord
               const query = {
                 where: {
@@ -83,7 +83,7 @@ const bulletDefn = (db, DataTypes) => {
                     ord: { $gt: oldBullet.ord },
                     parent_id: oldBullet.parent_id,
                     topic_id: oldBullet.topic_id,
-                  }]
+                  }] 
                 }
               }
 
@@ -99,7 +99,7 @@ const bulletDefn = (db, DataTypes) => {
 
                   return other.update(change, options)
                 })
-              )
+              )       
             })
         })
       },

@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('topics', { 
+  up: (queryInterface, { DataTypes }) => {
+    return queryInterface.createTable('topics', {
       title: {
-        type: queryInterface.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'Untitled Topic',
       }
