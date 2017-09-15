@@ -12,7 +12,7 @@ app.use('/topics', topicRouter)
 app.use('/static', express.static('./public'))
 
 app.get('/', (req, res) => {
-  res.render('index.pug')
+  res.render('index.pug', {NODE_ENV: process.env.NODE_ENV})
   console.log(req.body)
   console.log(req.path)
 })
