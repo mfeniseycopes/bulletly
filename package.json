@@ -6,6 +6,7 @@
   "scripts": {
     "client-start": "webpack-dev-server --inline --progress",
     "server-start": "cd app/server && node index.js",
+    "start": "cd app/server && node index.js",
     "console": "node util/console.js",
     "c": "node util/console.js",
     "postinstall": "webpack"

@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
 
 import Root from './components/Root'
 
@@ -9,12 +8,21 @@ window.postTopic = postTopic
 window.postTopicBullet = postTopicBullet
 window.postSubBullet = postSubBullet
 
-const render = (Component, id) =>
-  ReactDOM.render(
-    <AppContainer>
-      <Component />
-    </AppContainer>,
-    document.getElementById(id))
+let render
+if (process.env.NODE_ENV === 'development') {
+  const { AppContainer } = require('react-hot-loader')
+  render = (Component, id) =>
+    ReactDOM.render(
+      <AppContainer>
+        <Component />
+      </AppContainer>,
+      document.getElementById(id))
+} else {
+  render = (Component, id) =>
+    ReactDOM.render(
+      <Component />,
+      document.getElementById(id))
+}
 
 if (module.hot)
   module.hot.accept('./components/Root.js', () => {
