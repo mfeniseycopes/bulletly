@@ -1,5 +1,5 @@
 const topicRouter = require('express').Router()
-const { models: { bullet: Bullet, topic: Topic } } = require('../models')
+const { bullet: Bullet, topic: Topic } = require('../models')
 const { destroy, toJSON, update } = require('../util/pointfree')
 const { singleResponse, arrayResponse, four04Response } = require('../util/response')
 
@@ -10,7 +10,7 @@ const createBullet = bullet => topic =>
   topic.createBullet(bullet) :
   Promise.resolve()
 
-// ROUTES 
+// ROUTES
 
 topicRouter.all('/', (req, res, next) => {
   res.contentType('application/json')

@@ -17,8 +17,8 @@ const topicDefn = (db, DataTypes) => {
   })
 
   Topic.associate = db => {
-  
-    Topic.hasMany(db.models.bullet, {
+
+    Topic.hasMany(db.bullet, {
       foreignKey: 'topic_id',
       as: 'bullets',
       hooks: true,

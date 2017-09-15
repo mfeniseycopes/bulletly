@@ -1,5 +1,5 @@
 const bulletRouter = require('express').Router()
-const { models: { bullet: Bullet } } = require('../models')
+const { bullet: Bullet } = require('../models')
 const { destroy, toJSON, update } = require('../util/pointfree')
 const { singleResponse, arrayResponse } = require('../util/response')
 
