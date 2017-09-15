@@ -10,6 +10,10 @@
     "c": "node util/console.js",
     "postinstall": "webpack"
   },
+  "engines": {
+    "node": "6.9.1",
+    "npm": "3.10.8"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
