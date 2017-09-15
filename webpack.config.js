@@ -66,7 +66,6 @@ module.exports = {
       {
         test: /\.scss/,
         loaders: ['style-loader', 'css-loader', 'sass-loader'],
-        include: __dirname + '/styles'
       },
       {
         test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -83,11 +82,11 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", "*"],
     alias: {
-      "Actions": path.resolve(__dirname, 'actions'),
-      "APIs": path.resolve(__dirname, 'api'),
-      "Components": path.resolve(__dirname, 'components'),
-      "Reducers": path.resolve(__dirname, 'reducers'),
-      "Styles": path.resolve(__dirname, 'styles'),
+      "Actions": path.resolve(__dirname, 'client', 'actions'),
+      "APIs": path.resolve(__dirname, 'client', 'api'),
+      "Components": path.resolve(__dirname, 'client', 'components'),
+      "Reducers": path.resolve(__dirname, 'client', 'reducers'),
+      "Styles": path.resolve(__dirname, 'client', 'styles'),
     }
   },
 	devServer: {
