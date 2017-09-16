@@ -96,20 +96,20 @@ class BaseBullet extends React.Component {
       ord: bullet.ord + 1,
       parent_id: bullet.parent_id,
       topic_id: bullet.topic_id,
-      type,
+      type: type || this.props.bullet.type,
       title: '',
     }
   }
 
   // helper method to create new bullet that is first child
-  newSubBullet(type=this.props.bullet.type) {
+  newSubBullet(type) {
     const bullet = this.props.bullet
 
     return {
       ord: 1,
       parent_id: bullet.id,
       topic_id: bullet.topic_id,
-      type,
+      type: type || this.props.bullet.type,
       title: '',
     }
   }
