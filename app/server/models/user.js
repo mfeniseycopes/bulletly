@@ -18,6 +18,15 @@ const userDefn = (db, DataTypes) => {
     }
   })
 
+  User.associate = db => {
+    
+    User.hasMany(db.topic, {
+      foreignKey: 'owner_id',
+      as: 'topics',
+      hooks: true,
+    })
+  }
+
   return User
 }
 
