@@ -7,6 +7,11 @@ module.exports = app => {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  const fieldMapping = {
+    usernameField: 'email',
+    passwordField: 'password',
+  }
+
   passport.serializeUser((user, done) => {
     done(null, user.id) 
   })
@@ -17,8 +22,8 @@ module.exports = app => {
   })
 
   passport.use('local-register', new LocalStrategy(
+    fieldMapping,
     (email, password, done) => {
-
       let passwordHash = null
       if (password)
         passwordHash = User.generatePasswordHash(password) 
@@ -26,16 +31,17 @@ module.exports = app => {
       User.create({ email, passwordHash })
         .then(user => done(null, user))
         .catch(err => {
+          debugger
           done(null, false, { message: err })
         })
     })
   )
 
   passport.use('local-login', new LocalStrategy(
+    fieldMapping,
     (email, password, done) => {
       User.findOne({ email: email })
         .then(user => {
-          debugger
           (user && User.isPassword(user, password)) ?
             done(null, user) :
             done(null, false, { message: 'Invalid credentials' })
