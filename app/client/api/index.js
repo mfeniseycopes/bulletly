@@ -7,6 +7,7 @@ const statusMiddleware = response =>
 
 const defaults = { 
   headers: { 'Content-Type': 'application/json' },
+  credentials: 'same-origin',
 }
 
 // improved `fetch` that will respond to success for 2XX

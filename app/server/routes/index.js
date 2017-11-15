@@ -9,6 +9,7 @@ const setupTopics = require('./topics')
 module.exports = (app) => {
 
   app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ entended: true }))
   const passport = setupPassport(app)
 
   setupAuth('/auth', app, passport)
