@@ -13,23 +13,19 @@ const setupAuth = (baseRoute, app, passport) => {
     next()
   })
 
-  authRouter.post('/register', (req, res, next) => {
-    const password = req.body.password
-    let passwordHash = null
-    if (password)
-      passwordHash = bcrypt.hashSync(password, 10)
-
-    const user = {
-      email: req.body.email,
-      passwordHash
-    }
-    req.login(user, err => console.log(err))
-    User
-      .create(user)
-      .then(user => {
-        singleResponse(res)(user)
-      })
-  })
+  authRouter.post(
+    '/register', (req, res, next) =>
+    passport.authenticate('local-register', 
+      (err, user, info) => {
+        if (user)
+          singleResponse(res)(user)
+        else {
+          res.status(422)
+          res.send(info.toJSON())
+        }
+      }
+    )(req, res, next)
+  )
 
   app.use(baseRoute, authRouter)
 }

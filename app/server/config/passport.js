@@ -1,24 +1,36 @@
+const bcrypt = require('bcrypt')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const { user: User } = require('../models')
 
 module.exports = app => {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  passport.use(new LocalStrategy(
-    function(email, password, done) {
-      User.findOne({ email: email }, function(err, user) {
-        if (err) return done(err)
-        if (!user) {
-          return done(null, false, { message: 'Incorrect email.' })
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Incorrect password.' })
-        }
-        return done(null, user)
-      })
-    }
-  ))
+  passport.serializeUser((user, done) => {
+    done(null, user.id) 
+  })
+
+  passport.deserializeUser((id, done) => {
+    User.findById(id)
+      .then(user => done(null, user))
+  })
+
+  passport.use('local-register', new LocalStrategy(
+    (email, password, done) => {
+
+      let passwordHash = null
+      if (password)
+        passwordHash = bcrypt.hashSync(password, 10)
+
+      User.create({ email, passwordHash })
+        .then(user => done(null, user))
+        .catch(err => {
+          done(null, false, { message: err })
+        })
+    })
+  )
+
 
   return passport
 }
