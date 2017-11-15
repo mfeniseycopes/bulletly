@@ -1,5 +1,5 @@
 const Router = require('express').Router
-const { bullet: Bullet, topic: Topic } = require('../models')
+const { bullet: Bullet, topic: Topic, user: User } = require('../models')
 const { destroy, toJSON, update } = require('../util/pointfree')
 const { singleResponse, arrayResponse, four04Response } = require('../util/response')
 

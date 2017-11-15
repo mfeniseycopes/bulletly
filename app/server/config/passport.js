@@ -30,10 +30,7 @@ module.exports = app => {
 
       User.create({ email, passwordHash })
         .then(user => done(null, user))
-        .catch(err => {
-          debugger
-          done(null, false, { message: err })
-        })
+        .catch(err => done(null, false, { message: err }))
     })
   )
 

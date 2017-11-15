@@ -10,6 +10,9 @@ import {
   postSubBullet,
   putBullet,
   deleteBullet,
+  postRegister,
+  postLogin,
+  deleteLogout,
 } from 'APIs'
 
 const identity = x => x
@@ -27,6 +30,7 @@ export const [
   RECEIVE_TOPICS,
   REMOVE_TOPIC,
   SET_FOCUS,
+  RECEIVE_CURRENT_USER,
 ] = [
   'RECEIVE_BULLET',
   'RECEIVE_BULLETS',
@@ -35,6 +39,7 @@ export const [
   'RECEIVE_TOPICS',
   'REMOVE_TOPIC',
   'SET_FOCUS',
+  'RECEIVE_CURRENT_USER',
 ]
 
 // ACTION CREATORS
@@ -76,6 +81,11 @@ export const setFocus = (id, line, ch) => ({
     line,
     ch,
   }
+})
+
+export const receiveCurrentUser = user => ({
+  type: RECEIVE_CURRENT_USER,
+  payload: { user }
 })
 
 // TOPIC THUNKS
@@ -128,3 +138,17 @@ export const updateBullet = (bullet, oldBullet) => dispatch =>
 export const destroyBullet = id => dispatch =>
   deleteBullet(id)
     .then(dispatchAction(dispatch, removeBullet))
+
+// AUTH THUNKS
+
+export const register = user =>
+  register(user)
+    .then(dispatchAction(dispatch, receiveCurrentUser))
+
+export const login = user =>
+  login(user)
+    .then(dispatchAction(dispatch, receiveCurrentUser))
+
+export const logout = () =>
+  logout()
+    .then(dispatchAction(dispatch, receiveCurrentUser))

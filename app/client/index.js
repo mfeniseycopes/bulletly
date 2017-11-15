@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom'
 
 import Root from './components/Root'
 
-import {postTopic, postTopicBullet, postSubBullet} from './api'
-window.postTopic = postTopic
-window.postTopicBullet = postTopicBullet
-window.postSubBullet = postSubBullet
+import { postRegister, postLogin, deleteLogout } from './api'
+
+window.postRegister = postRegister
 
 let render
 if (process.env.NODE_ENV === 'development') {

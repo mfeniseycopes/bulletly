@@ -61,3 +61,14 @@ export const putBullet = bullet =>
 
 export const deleteBullet = id =>
   betterFetch(`/bullets/${id}`, { method: 'delete' })
+
+// AUTH
+
+export const postRegister = user =>
+  betterFetch('/auth/register', { method: 'post', body: JSON.stringify(user) })
+
+export const postLogin = user =>
+  betterFetch('/auth/login', { method: 'post', body: JSON.stringify(user) })
+
+export const deleteLogout = () =>
+  betterFetch('/auth/logout', { method: 'delete' })

@@ -14,7 +14,7 @@ const setupAuth = (baseRoute, app, passport) => {
   })
 
   authRouter.post(
-    '/register', (req, res, next) =>
+    '/register', (req, res, next) => 
     passport.authenticate('local-register', 
       (err, user, info) => {
         if (user)
@@ -30,7 +30,6 @@ const setupAuth = (baseRoute, app, passport) => {
   authRouter.post('/login', (req, res, next) =>
     passport.authenticate('local-login',
       (err, user, info) => {
-        debugger
         if (user)
           singleResponse(res)(user)
         else {
