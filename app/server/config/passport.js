@@ -36,14 +36,12 @@ module.exports = app => {
 
   passport.use('local-login', new LocalStrategy(
     fieldMapping,
-    (email, password, done) => {
-      User.findOne({ email: email })
-        .then(user => {
+    (email, password, done) =>
+      User.findOne({ where: { email: email } })
+        .then(user => 
           (user && User.isPassword(user, password)) ?
             done(null, user) :
-            done(null, false, { message: 'Invalid credentials' })
-        })
-    }
+            done(null, false, { message: 'Invalid credentials' }))
   ))
 
   return passport

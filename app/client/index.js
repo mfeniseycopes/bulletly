@@ -6,6 +6,8 @@ import Root from './components/Root'
 import { postRegister, postLogin, deleteLogout } from './api'
 
 window.postRegister = postRegister
+window.postLogin = postLogin
+window.deleteLogout = deleteLogout
 
 let render
 if (process.env.NODE_ENV === 'development') {
