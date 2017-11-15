@@ -11,17 +11,12 @@ const userDefn = (db, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     }, 
-  }, {
-    hooks: {
-      beforeCreate: user =>
-      user.passwordHash = bcrypt.hash(user.password, 10),
-    }
   })
 
   User.associate = db => {
     
     User.hasMany(db.topic, {
-      foreignKey: 'owner_id',
+      foreignKey: 'ownerId',
       as: 'topics',
       hooks: true,
     })

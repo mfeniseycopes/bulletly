@@ -19,7 +19,7 @@ const topicDefn = (db, DataTypes) => {
   Topic.associate = db => {
 
     Topic.belongsTo(db.user, {
-      foreignKey: 'owner_id',
+      foreignKey: 'ownerId',
       as: 'owner',
       hooks: true,
     })

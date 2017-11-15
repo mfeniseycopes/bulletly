@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, {DataTypes, fn}) => {
-    queryInterface.addColumn('topics', 'owner_id', {
+    return queryInterface.addColumn('topics', 'ownerId', {
       type: DataTypes.INTEGER,
       references: {
         model: 'users',
@@ -13,6 +13,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    queryInterface.removeColumn('topics', 'owner_id')
+    queryInterface.removeColumn('topics', 'ownerId')
   }
 };
