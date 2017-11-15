@@ -22,6 +22,12 @@ const userDefn = (db, DataTypes) => {
     })
   }
 
+  User.generatePasswordHash = password =>
+    bcrypt.hashSync(password, 10)
+
+  User.isPassword = (user, password) =>
+    bcrypt.compareSync(password, user.passwordHash);
+
   return User
 }
 

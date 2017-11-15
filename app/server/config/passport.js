@@ -21,7 +21,7 @@ module.exports = app => {
 
       let passwordHash = null
       if (password)
-        passwordHash = bcrypt.hashSync(password, 10)
+        passwordHash = User.generatePasswordHash(password) 
 
       User.create({ email, passwordHash })
         .then(user => done(null, user))
@@ -31,6 +31,17 @@ module.exports = app => {
     })
   )
 
+  passport.use('local-login', new LocalStrategy(
+    (email, password, done) => {
+      User.findOne({ email: email })
+        .then(user => {
+          debugger
+          (user && User.isPassword(user, password)) ?
+            done(null, user) :
+            done(null, false, { message: 'Invalid credentials' })
+        })
+    }
+  ))
 
   return passport
 }

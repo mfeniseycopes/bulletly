@@ -21,11 +21,30 @@ const setupAuth = (baseRoute, app, passport) => {
           singleResponse(res)(user)
         else {
           res.status(422)
-          res.send(info.toJSON())
+          res.send(JSON.stringify(info))
         }
       }
     )(req, res, next)
   )
+
+  authRouter.post('/login', (req, res, next) =>
+    passport.authenticate('local-login',
+      (err, user, info) => {
+        debugger
+        if (user)
+          singleResponse(res)(user)
+        else {
+          res.status(404)
+          res.send(JSON.stringify(info))
+        }
+      }
+    )(req, res, next)
+  )
+
+  authRouter.delete('/logout', (req, res, next) => {
+    req.logout()
+    res.send('success')
+  })
 
   app.use(baseRoute, authRouter)
 }
