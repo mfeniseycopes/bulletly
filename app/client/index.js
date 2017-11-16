@@ -3,12 +3,6 @@ import ReactDOM from 'react-dom'
 
 import Root from './components/Root'
 
-import { postRegister, postLogin, deleteLogout } from './api'
-
-window.postRegister = postRegister
-window.postLogin = postLogin
-window.deleteLogout = deleteLogout
-
 let render
 if (process.env.NODE_ENV === 'development') {
   const { AppContainer } = require('react-hot-loader')

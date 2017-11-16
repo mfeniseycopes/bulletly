@@ -141,14 +141,14 @@ export const destroyBullet = id => dispatch =>
 
 // AUTH THUNKS
 
-export const register = user =>
-  register(user)
+export const register = user => dispatch =>
+  postRegister(user)
     .then(dispatchAction(dispatch, receiveCurrentUser))
 
-export const login = user =>
-  login(user)
+export const login = user => dispatch =>
+  postLogin(user)
     .then(dispatchAction(dispatch, receiveCurrentUser))
 
-export const logout = () =>
-  logout()
+export const logout = () => dispatch =>
+  deleteLogout()
     .then(dispatchAction(dispatch, receiveCurrentUser))

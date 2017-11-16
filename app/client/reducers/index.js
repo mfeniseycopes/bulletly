@@ -8,11 +8,13 @@ import thunk from 'redux-thunk'
 import entities from 'Reducers/entities'
 import joins from 'Reducers/joins'
 import ui from 'Reducers/ui'
+import session from 'Reducers/session'
 
 const root = combineReducers({
   entities,
   joins,
   ui,
+  session,
 })
 
 const middlewares = [thunk]
