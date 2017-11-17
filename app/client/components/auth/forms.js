@@ -2,9 +2,9 @@ import React from 'react'
 import changeHandler from 'memoized-change-handler'
 import { connect } from 'react-redux'
 
-import { register } from 'Actions'
+import { login, register } from 'Actions'
 
-class RegisterForm extends React.Component {
+class AuthForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = { email: '', password: '' }
@@ -14,9 +14,9 @@ class RegisterForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    debugger
+    debugger    
     const user = { ...(this.state) }
-    this.props.register(user)
+    this.props.formAction(user)
       .then(() => this.props.history.replace('/'))
   }
 
@@ -39,15 +39,29 @@ class RegisterForm extends React.Component {
             </label>
           </li>
           <li>
-            <button type='submit'>Register</button>
+            <button type='submit'>{this.props.buttonText}</button>
           </li>
         </ul>
       </form>
     )
   }
 }
-const mapDispatchToProps = {
-  register,
-}
 
-export default connect(null, mapDispatchToProps)(RegisterForm)
+const mapDispatchToProps = (dispatch, {formAction}) => ({
+  formAction: user => dispatch(formAction(user)),
+})
+
+const ConnectedAuthForm = connect(null, mapDispatchToProps)(AuthForm)
+
+export const RegisterForm = props => (
+  <ConnectedAuthForm {...props} 
+    formAction={register} 
+    buttonText='Register' />
+)
+
+export const LoginForm = props => (
+  <ConnectedAuthForm {...props} 
+    formAction={login}
+    buttonText='Login' />
+)
+
