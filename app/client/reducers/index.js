@@ -22,4 +22,10 @@ if (process.env.NODE_ENV === 'development') {
   middlewares.push(require('redux-logger').default)
 }
 
-export default createStore(root, applyMiddleware(...middlewares))
+const preloadState = () => ({
+  session: {
+    user: window.user,
+  } 
+})
+
+export default createStore(root, preloadState(), applyMiddleware(...middlewares))

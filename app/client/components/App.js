@@ -6,7 +6,7 @@ const App = ({ children }) => (
   <main className='app'>
 
     <navbar>
-      <h1><Link to='/'>bulletr</Link></h1>
+      <h1><Link to='/'>bulletly</Link></h1>
     </navbar>
 
     <main>
