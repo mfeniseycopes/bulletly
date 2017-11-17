@@ -39,7 +39,7 @@ const setupAuth = (baseRoute, app, passport) => {
 
   authRouter.delete('/logout', (req, res, next) => {
     req.logout()
-    res.send(JSON.stringify({}))
+    res.send('null')
   })
 
   app.use(baseRoute, authRouter)

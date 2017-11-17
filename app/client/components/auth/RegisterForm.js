@@ -17,6 +17,7 @@ class RegisterForm extends React.Component {
     debugger
     const user = { ...(this.state) }
     this.props.register(user)
+      .then(() => this.props.history.replace('/'))
   }
 
   render() {

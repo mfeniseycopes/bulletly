@@ -1,19 +1,25 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import LoggedIn from 'Components/auth/LoggedIn'
+import LoggedOut from 'Components/auth/LoggedOut'
+
 import styles from 'Styles/app.scss'
 
-const App = ({ children }) => (
+const App = ({ loggedIn }) => (
   <main className='app'>
 
     <navbar>
       <h1><Link to='/'>bulletly</Link></h1>
     </navbar>
 
-    <main>
-      { children }
-    </main>
+    { loggedIn ? <LoggedIn/> : <LoggedOut/> }
 
   </main>
 )
 
-export default App
+const mapStateToProps = state => ({
+  loggedIn: !!state.session.user,
+})
+
+export default connect(mapStateToProps)(App)

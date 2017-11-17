@@ -21,7 +21,7 @@ module.exports = (app) => {
   app.get('/', (req, res) => {
     res.render('index.pug', {
       NODE_ENV: process.env.NODE_ENV, 
-      user: req.user ? JSON.stringify(req.user) : '{}',
+      user: req.user ? JSON.stringify(req.user) : 'null',
     })
   })
 }

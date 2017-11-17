@@ -32,5 +32,6 @@ const modalize = component => props => {
     </div>)
 }
 
-export const ModalRoute = withRouter(props =>
-  <Route {...props} component={modalize(props.component)}/>)
+export const ModalRoute = withRouter(props => {
+  return <Route {...props} component={modalize(props.component)}/>
+})
