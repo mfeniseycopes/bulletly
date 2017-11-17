@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import LoggedIn from 'Components/auth/LoggedIn'
 import LoggedOut from 'Components/auth/LoggedOut'
 
@@ -22,4 +22,4 @@ const mapStateToProps = state => ({
   loggedIn: !!state.session.user,
 })
 
-export default connect(mapStateToProps)(App)
+export default withRouter(connect(mapStateToProps)(App))
