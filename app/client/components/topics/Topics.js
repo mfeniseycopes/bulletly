@@ -6,7 +6,7 @@ import { values, } from 'ramda'
 import { retrieveTopics, createTopic, } from 'Actions'
 import TopicItem from 'Components/topics/TopicItem'
 import TopicForm from 'Components/topics/TopicForm'
-import { ModalLink, ModalRoute } from 'Components/ModalRouter'
+import { ModalLink, ModalRoute } from 'Components/utils/ModalRouter'
 
 import topics from 'Styles/topics.scss'
 

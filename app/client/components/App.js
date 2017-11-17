@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
-import LoggedIn from 'Components/auth/LoggedIn'
-import LoggedOut from 'Components/auth/LoggedOut'
+import LoggedIn from 'Components/portals/LoggedIn'
+import LoggedOut from 'Components/portals/LoggedOut'
 
 import styles from 'Styles/app.scss'
 

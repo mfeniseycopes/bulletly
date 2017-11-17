@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
 
 import Bullets from 'Components/bullets/Bullets'
-import { ModalLink, ModalRoute, }from 'Components/ModalRouter'
+import { ModalLink, ModalRoute, }from 'Components/utils/ModalRouter'
 import TopicForm from 'Components/topics/TopicForm'
 import TopicDeleteForm from 'Components/topics/TopicDeleteForm'
 
