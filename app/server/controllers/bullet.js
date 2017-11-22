@@ -4,15 +4,27 @@ const { arrayResponse, singleResponse, } = require('../util/response')
 const BulletController = Object.assign({}, BaseController, {
 
   index: (req, res) => {
-    req.topic
-      .getBullets()
-      .then(arrayResponse(res))
+    if (req.topic) {
+      req.topic
+        .getBullets()
+        .then(arrayResponse(res))
+    } else {
+      req.user
+        .getBullets()
+        .then(arrayResponse(res))
+    }
   },
 
   create: (req, res) => {
-    req.topic
-      .createBullet(req.body)
-      .then(singleResponse(res))
+    if (req.topic) {
+      req.topic
+        .createBullet(Object.assign({ ownerId: req.topic.ownerId }, req.body))
+        .then(singleResponse(res))
+    } else if (req.bullet) {
+      req.bullet
+        .createChild(Object.assign({ ownerId: req.bullet.ownerId }, req.body))
+        .then(singleResponse(res))
+    }
   },
 
   update: (req, res) => {
@@ -24,7 +36,7 @@ const BulletController = Object.assign({}, BaseController, {
   destroy: (req, res) => {
     req.bullet
       .destroy()
-      .then(singleResponse(res))
+      .then(() => singleResponse(res)(req.bullet))
   },
 
 })

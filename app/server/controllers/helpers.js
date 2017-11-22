@@ -4,6 +4,11 @@ const {
 
 module.exports = {
 
+  setResponseType: type => (req, res, next) => {
+    res.contentType(type)
+    next()
+  },
+
   ensureSession: (req, res, next) => {
     if (req.isAuthenticated())
       next()
@@ -14,9 +19,9 @@ module.exports = {
     } 
   },
 
-  authenticateBullet: (req, res, next) => {
+  authenticateBullet: idField => (req, res, next) => {
     Bullet 
-      .findById(req.params.parentId, { where: { ownerId: req.user.id } })
+      .findById(req.params[idField], { where: { ownerId: req.user.id } })
       .then(bullet => {
         if (bullet) {
           req.bullet  = bullet 
@@ -29,9 +34,9 @@ module.exports = {
       })
   },
 
-  authenticateTopic: (req, res, next) => {
+  authenticateTopic: idField => (req, res, next) => {
     Topic
-      .findById(req.params.topicId, { where: { ownerId: req.user.id } })
+      .findById(req.params[idField], { where: { ownerId: req.user.id } })
       .then(topic => {
         if (topic) {
           req.topic = topic

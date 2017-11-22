@@ -2,7 +2,8 @@ const bulletController = require('../controllers/bullet')
 const topicController = require('../controllers/topic')
 const { 
   authenticateTopic, 
-  ensureSession } = require('../controllers/helpers')
+  ensureSession,
+  setResponseType, } = require('../controllers/helpers')
 
 const setupTopics = (baseRoute, app, passport) => {
   
@@ -10,10 +11,7 @@ const setupTopics = (baseRoute, app, passport) => {
 
   // ROUTES
   topicRouter.all('/', 
-    (req, res, next) => {
-      res.contentType('application/json')
-      next()
-    },
+    setResponseType('application/json'),
     ensureSession
   )
 
@@ -24,19 +22,19 @@ const setupTopics = (baseRoute, app, passport) => {
     topicController.create)
   
   topicRouter.put('/:topicId', 
-    authenticateTopic,
+    authenticateTopic('topicId'),
     topicController.update)
 
   topicRouter.delete('/:topicId', 
-    authenticateTopic,
+    authenticateTopic('topicId'),
     topicController.destroy)
 
   topicRouter.get('/:topicId/bullets',
-    authenticateTopic,
+    authenticateTopic('topicId'),
     bulletController.index)
 
   topicRouter.post('/:topicId/bullets', 
-    authenticateTopic,
+    authenticateTopic('topicId'),
     bulletController.create)
 
   app.use(baseRoute, topicRouter)
