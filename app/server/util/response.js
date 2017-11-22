@@ -1,11 +1,12 @@
 const { toJSON } = require('./pointfree')
 
-const singleResponse = res => record =>
+const singleResponse = res => record => {
   record ?
     res
-      .status(200)
-      .send(toJSON(record)) :
-      four04Response(res)()
+    .status(200)
+    .send(toJSON(record)) :
+    four04Response(res)()
+}
 
 const arrayResponse = res => records =>
   res

@@ -1,9 +1,3 @@
-const BaseController = {
-
-  beforeAction: function(actions, fn) {
-    actions.forEach(action => this[action] = fn(action))
-  },
-
-}
+const BaseController = {}
 
 module.exports = BaseController
