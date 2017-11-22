@@ -132,6 +132,12 @@ const bulletDefn = (db, DataTypes) => {
 
 
   Bullet.associate = db => {
+    
+    Bullet.belongsTo(db.user, {
+      foreignKey: 'ownerId',
+      as: 'owner',
+      hooks: true,
+    })
 
     Bullet.belongsTo(db.topic, {
       foreignKey: 'topic_id',

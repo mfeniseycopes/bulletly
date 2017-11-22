@@ -44,13 +44,5 @@ module.exports = app => {
             done(null, false, { message: 'Invalid credentials' }))
   ))
 
-  passport.isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated())
-      next()
-    else
-      res.status = 401
-      res.send('{ Error: "Invalid credentials"}')
-  }
-
   return passport
 }

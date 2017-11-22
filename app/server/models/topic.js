@@ -8,11 +8,13 @@ const topicDefn = (db, DataTypes) => {
     }
   }, {
     hooks: {
-      afterCreate: topic =>
+      afterCreate: topic => {
         topic.createBullet({
+          ownerId: topic.ownerId,
           ord: 1,
           type: 'note',
-        }),
+        })
+      },
     }
   })
 
