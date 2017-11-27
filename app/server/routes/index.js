@@ -25,7 +25,7 @@ module.exports = (app) => {
   setupAuth('/auth', app, passport)
   setupBullets('/bullets', app, passport)
   setupTopics('/topics', app, passport)
-  app.use('/static', static('../public'))
+  app.use('/static', static('./public'))
 
   // load index and javascripts
   app.get('/', (req, res) => {
