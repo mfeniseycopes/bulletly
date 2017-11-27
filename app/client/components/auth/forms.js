@@ -14,7 +14,7 @@ class AuthForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    debugger    
+    
     const user = { ...(this.state) }
     this.props.formAction(user)
       .then(() => this.props.history.replace('/'))
